@@ -1,4 +1,4 @@
-#### 📖 Git Commit Convention
+#### 📖 Git Commit & Branch naming Convention
 | 이모지 | 타입 | 상황 |
 | --- | --- | --- |
 | 🎨 | design | CSS 등 사용자 UI 디자인 변경 |
