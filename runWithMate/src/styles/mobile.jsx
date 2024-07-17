@@ -14,7 +14,8 @@ const Container = styled.div`
 const Content = styled.div`
     position: relative;
     width: 100%;
-    max-width: 428px;
+    /* max-width: 428px; */
+    max-width: 393px;
     min-height: 100vh;
     overflow: auto;
     box-shadow: 0px 0px 32px #0000002f;
