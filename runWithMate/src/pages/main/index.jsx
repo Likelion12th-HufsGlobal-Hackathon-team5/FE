@@ -178,7 +178,7 @@ function Main (){
                 <ContentsBox>
                     경쟁은 간혹 부정적인 의미로 많이 남죠.<br/>
                     하지만 잘 갖춰진 경쟁의 세계는<br/>
-                    오히려 긍정적인 효과를 극대화시킬 수 있습니다!
+                    오히려 긍정적인 효과를 극대화시킬 수 있습니다! haha
                     <Point>
                         <Circle>
                             <FaRunning className='run'/>
