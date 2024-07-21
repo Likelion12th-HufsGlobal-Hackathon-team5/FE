@@ -117,7 +117,7 @@ const GotoMainBtn=styled.button`
     }
 `;
 function Login(){
-    // useEffect(()=>{
+    // useEffect(()=>{s
     //     // 카카오 SDK 초기화
     //     const kakaoAppKey='70b6406b2ded139d1c5117b59f7d6ab8'
 

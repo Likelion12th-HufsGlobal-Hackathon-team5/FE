@@ -10,19 +10,20 @@ const OtherPlayerContainer = styled.div`
 const OtherUserName = styled.p`
     margin-left : 1.5vh;
     margin-top : 1vh;
+    width : 20%;
+    height : 5%;
 
 `
 
 const Other = styled.div`
     display: flex;
-    width : 30%;
-    padding: 0.5vh 1vh;
+    width : 12vh;
+    height : 5vh;
     justify-content: center;
     align-items: center;
-    gap: 2vh;
     border-radius: 1vh;
     background: var(--Grays-Gray-4, #D1D1D6);
-    margin-left: 16vh;
+    margin-left: 10vh;
 `
 
 
