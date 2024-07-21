@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 
-import GameMarker from '../assets/images/gameMarker.png';
-import PointMarker from '../assets/images/pointMarker.png';
+// import GameMarker from '../assets/images/gameMarker.png';
+// import PointMarker from '../assets/images/pointMarker.png';
 
 const Container = styled.div`
     display: flex;
@@ -21,41 +21,50 @@ const MapContainer = styled.div`
 
 function Test() {
     useEffect(() => {
-        // 카카오 맵 스크립트가 로드되어야 합니다.
-        if (window.kakao && window.kakao.maps) {
+        const script = document.createElement('script');
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=70b6406b2ded139d1c5117b59f7d6ab8&autoload=false`;
+        script.async = true;
+        document.head.appendChild(script);
+    
+        script.onload = () => {
+          window.kakao.maps.load(() => {
             const mapContainer = document.getElementById('map');
-            const mapOption = {
-                center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-                level: 3,
-                // draggable:true,
-                // scrrollwheel:true,
-                // disabledoubleClick:false,
-                // disableDoubleClickZoom:false,
-            };
-            // new window.kakao.maps.Map(mapContainer, mapOption);
-            var map = new kakao.maps.Map(mapContainer, mapOption);
-
-            var imageSrc={PointMarker},
-                imageSize=new kakao.maps.Size(64,69),
-                imageOption={offset:new kakao.maps.Point(27,69)}
             
-            var markerImage=new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-                markerPosition = new kakao.maps.LatLng(33.450701, 126.570667)
-
-            // 마커가 표시될 위치
-            var markerPosition=new kakao.maps.LatLng(33.450701, 126.570667);
-
-            var marker=new kakao.maps.Marker({
-                position:markerPosition,
-                image:markerImage
+            if (!mapContainer) {
+                console.error('Map container not found');
+                return;
+            }
+            
+            const mapCenter = new window.kakao.maps.LatLng(33.450701, 126.570667);
+            const mapOption = {
+              center: mapCenter,
+              level: 3,
+            };
+            const map = new window.kakao.maps.Map(mapContainer, mapOption);
+          
+            // 지도 크기 변경 후 다시 렌더링
+            window.addEventListener('resize',()=>{
+                map.relayout();
+                console.log('rerendering')
             });
 
-            // 마커가 지도 위에 표시되도록 설정합니다.
-            marker.setMap(map);
-        }else {
-            console.error('카카오 맵 API가 로드되지 않았습니다.');
-        }
-    }, []);
+            // 지도가 보이지 않다가 보이게 될 떄 relayout 호출
+            const observer=new MutationObserver(()=>{
+                map.relayout();
+            });
+            observer.observe(mapContainer, {
+                attributes:true, 
+                // childList:true, 
+                // subtree:true
+            });
+        });
+        };
+    
+        return () => {
+        //   document.head.removeChild(script);
+          console.log('잉')
+        };
+      }, []);
 
     return (
         <Container>
