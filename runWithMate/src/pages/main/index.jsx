@@ -17,19 +17,29 @@ const Container=styled.div`
 
     flex-wrap: wrap;
     gap: 16px;
+
+    min-height: 889px;
+    max-height: 100vh;
 `;
 const MainHeader=styled.p`
+    padding: 0% 1% ;
     margin-top: 8vh;
     
     font-size: 42px;
     font-weight: 900;
+    /* word-spacing: 1px; */
 `;
 const Intro=styled.p`
     justify-content: left;
+
+    /* padding: 0% 1% ; */
+
     color: #2E2929;
 
     width: 80%;
     font-size: 16px;
+    line-height: 1.2;
+
     .blue{
         font-size: 16px;
         color: #217EEF;
@@ -43,11 +53,12 @@ const ContentsBox=styled.div`
     padding: 2vh;
 
     width: 80%;
-    border: 1px solid  #AEAEB2;
+    border: 2.5px solid  #AEAEB2;
     border-radius: 10px;
 
     font-size: 13px;
     font-weight: 400;
+    line-height: 1.2;
 `;
 const Point=styled.div`
     display: flex;

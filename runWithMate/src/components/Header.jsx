@@ -82,7 +82,7 @@ function Header(){
                         <p>
                             Run
                             <span className='with'>with</span>
-                            </p> 
+                        </p> 
                         <br />
                         Mate<br />
                     </Text>

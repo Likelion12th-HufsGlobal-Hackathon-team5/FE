@@ -9,28 +9,44 @@ const Container=styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 
     padding: 2vw;
+    min-height: 889px;
+    max-height: 100vh;
 
     img{
-        margin: 4% 0%;
+        margin-bottom: 4%;
+    }
+    p{
+        margin: 0;
     }
 
     .girlImg{
-        width: 92.5%;
+        /* width: 92.5%; */
+        width: 80%;
     }
 
     .kakao{
         color:#2E2929;
         margin: 5% 0;
-        font-size: 13px;
+        font-size: 12px;
+        font-weight: 400;
     }
 
     .kakaoBold{
         color:#2E2929;
-        font-size: 14px;
-        font-weight: 700;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .kakaoImg{
+        width: 90%;
+
+        /* &:hover{
+            transition: all 0.2s;
+            background-color: rgba(107,99,26,0.35);
+        } */
     }
 `;
 
@@ -41,9 +57,9 @@ const Text=styled.div`
     flex-wrap: wrap;
     gap: 0.5vh;
 
-    margin-top: 10%;
+    margin-top: 5%;
 
-    color: black;
+    color: #2E2929;
     font-weight: 800;
     font-size: 40px;
     line-height: 1.3;
@@ -52,12 +68,12 @@ const Text=styled.div`
         margin-top: 3%;
         margin-bottom: 35%;
         color: #2E2929;
-        font-weight: 300;
+        font-weight: 400;
         font-size: 16px;
     }
 
     .introBold{
-        font-weight: 700;
+        font-weight: 800;
         font-size: 16px;
     }
 
@@ -75,9 +91,10 @@ const GotoMainBtn=styled.button`
     align-items: center;
 
     flex-wrap: wrap;
-    gap: 26%;
+    gap: 22.5%;
 
-    width: 92.5%;
+    /* width: 92.5%; */
+    width: 90%;
 
     padding: 3.5% 4%;
     color: white;
@@ -147,7 +164,11 @@ function Login(){
                     </p>
                 </Text>
                 <p className='kakao'>카카오 로그인 후 <span className='kakaoBold'>Run With Mate!</span>를  시작해보세요 !!</p>
-                <img src={KakaoImg} onClick={handleKakaoLogin}/>
+                <img 
+                    src={KakaoImg} 
+                    className='kakaoImg'
+                    onClick={handleKakaoLogin}
+                    />
                 <StyledLink to='/'>
                     <GotoMainBtn>
                         <BiHome className='homeIcon'/>

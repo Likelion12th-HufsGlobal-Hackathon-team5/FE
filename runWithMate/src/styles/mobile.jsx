@@ -22,44 +22,8 @@ const Content = styled.div`
     background-color: #ffffff;
 `;
 
-const Header = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 40px;
-    padding: 25px;
-`;
-
-
-const Logo = styled.img`
-    width: 135px;
-    height: 60px;
-`;
-
-const Footer = styled.div`
-    position: absolute;
-    bottom: 0;
-    display: flex;
-
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding:1vw 0vw;
-    
-`;
-
-const Text = styled.div`
-    width: 100%;
-    text-align: center;
-
-    font-weight: 500;
-    color:${({theme})=>theme.colors.black};
-`;
-
 const Mobile = () => {
     const navigate=useNavigate();
-
     const location = useLocation();
     
     return (

@@ -12,7 +12,10 @@ function App() {
     <>
     <Router>
       <Routes>
-        <Route path="/" element={<Mobile />}>
+        <Route 
+          path="/" 
+          element={<Mobile />}
+          >
           {elements}
         </Route>
       </Routes>
