@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
 
 const SettingForm = styled.form`
-    display: flex;
-    width: 42.5vh;
-    height: 45vh;
+    width: 85%;
+    height: 100%;
     padding: 3vh;
     flex-direction: column;
     align-items: flex-start;
@@ -35,7 +34,7 @@ const SetSubtitle = styled.p`
 `;
 
 const PontInput = styled.input`
-    display: flex;
+    width : 100%;
     padding: 2vh; 
     justify-content: flex-end;
     align-items: center;
@@ -90,8 +89,7 @@ const ButtonContainer = styled.div`
 `;
 
 const SettingButton = styled.button`
-    display: flex;
-    width: 7vh; 
+    width: 100%; 
     padding: 0.8vh 1.1vh; 
     justify-content: center;
     align-items: center;
@@ -108,8 +106,7 @@ const SettingButton = styled.button`
 `;
 
 const SettingInput = styled.input`
-    display: flex;
-    width: 9vh;
+    width: 100%;
     padding: 1vh 1vh;
     justify-content: center;
     align-items: center;
@@ -119,8 +116,8 @@ const SettingInput = styled.input`
     background: #FFF;
 `
 const SaveSetting = styled.button`
-    display: flex;
-    height: 8vh;
+    width : 100%;
+    height: 100%;
     justify-content: center;
     align-items: center;
     gap: 1vh;

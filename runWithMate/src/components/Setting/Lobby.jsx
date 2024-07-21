@@ -3,9 +3,8 @@ import Player from './Player';
 import OtherPlayer from './Player2';
 
 const LobbyForm = styled.form`
-    display: flex;
-    width: 42.5vh;
-    height: 50vh;
+    width: 85%;
+    height: 100%;
     padding: 3vh;
     flex-direction: column;
     align-items: flex-start;
@@ -38,29 +37,40 @@ const LobbySubtitle = styled.p`
 
 const CodeContainer = styled.div`
     display: flex;
-
+    width : 100%;
+    height : 100%;
 `
 
 const InviteCodeContainer = styled.div`
+    flex-direction: column;
+    width : 50%;
+    height : 100%;
 `
 const KakaoCodeContainer = styled.div`
+    flex-direction: column;
+    width : 50%;
+    height : 100%;
 `
 
 const Kakaobutton = styled.button`
-    display: flex;
-    padding: 0vh 2vh;
-    justify-content: center;
-    align-items: center;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    width : 100%;
+    height : 100%;
     border-radius: 1vh;
     background: #FAE100;
-`
+    font-family: Inter, sans-serif;
+    font-size: 2vh; 
+    color: #000; 
+    `
 
 const Line = styled.div`
-  border-left: 0.3vh solid black;  
-  width: 0%;
-  height : 90%;
+  border-left: 0.3vh solid black;
+  width: 1vh;
+  height: 6vh;
   color: #217EEF;
-  margin : 10px;
+  margin-top : 2vh;
 `;
 
 const HorizontalLine = styled.div`
@@ -71,6 +81,8 @@ const HorizontalLine = styled.div`
 `;
 
 const ReadyContainer = styled.div`
+    width : 100%;
+    height : 100%;
 `
 
 

@@ -22,7 +22,6 @@ const globalStyles = css`
         border: 0;
         font-size: 10px;
         vertical-align: baseline;
-        overflow: hidden;
     }
     body{
         line-height: 1;

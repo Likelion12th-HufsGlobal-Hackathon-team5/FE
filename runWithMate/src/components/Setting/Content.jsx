@@ -21,7 +21,6 @@ const RoomInfo = styled.p`
     font-style: normal;
     font-weight: 600;
     line-height: calc(24 / 1080 * 100vh);
-    letter-spacing: -0.5px;
     position: relative;
     top: calc(21 / 1080 * 100vh);
 `

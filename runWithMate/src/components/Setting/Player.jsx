@@ -7,6 +7,8 @@ const PlayerContainer = styled.div`
     display : flex;
     margin-top : 3vh;
     margin-left : 2vh;
+    width : 100%;
+    height : 100%;
 `
 
 const UserName = styled.p`
@@ -17,6 +19,7 @@ const UserName = styled.p`
 
 const Host = styled.div`
     display: flex;
+    width : 30%;
     padding: 0.5vh 1vh;
     justify-content: center;
     align-items: center;
