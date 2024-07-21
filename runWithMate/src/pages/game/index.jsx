@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import styled from '@emotion/styled';
-
+import Giveup from '../../components/game/gameGiveUp/giveup';
 import Map from '../../components/game/Map';
 
 import {BsFillPersonFill} from 'react-icons/bs'
@@ -211,6 +211,19 @@ function Game(){
     //     }
     // },[positions]);
 
+
+    //이하 모달창의 상태관리
+
+    const [isGiveupOpen, setIsGiveupOpen] = useState(false);
+
+    const openGiveup = () => {
+        setIsGiveupOpen(true);
+    };
+
+    const closeGiveup = () => {
+        setIsGiveupOpen(false);
+    };
+
     return(
         <>
             <Container>
@@ -218,11 +231,12 @@ function Game(){
                 <GameInfo>
                     <GameInfoHeader>
                         Game Info
-                        <GameStopButton>
+                        <GameStopButton onClick={openGiveup}>
                             기권
                         </GameStopButton>
+                        {isGiveupOpen && <Giveup onClose={closeGiveup} />}
                     </GameInfoHeader>
-                    <GameInfoContents>
+                    <GameInfoContents>  
                         <GameInfoContentEach>
                             남은 시간<br/>
                             14:53

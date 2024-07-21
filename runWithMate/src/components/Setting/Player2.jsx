@@ -15,13 +15,14 @@ const OtherUserName = styled.p`
 
 const Other = styled.div`
     display: flex;
+    width : 30%;
     padding: 0.5vh 1vh;
     justify-content: center;
     align-items: center;
     gap: 2vh;
     border-radius: 1vh;
     background: var(--Grays-Gray-4, #D1D1D6);
-    margin-left: 8.5vh;
+    margin-left: 16vh;
 `
 
 
