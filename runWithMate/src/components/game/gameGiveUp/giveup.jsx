@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { PiWarningFill } from "react-icons/pi";
-import { MdOutlineCancel } from "react-icons/md";
+import { BsXCircleFill } from "react-icons/bs";
 
 const Container = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const Modal = styled.div`
   position: relative; 
 `;
 
-const CancleButton = styled(MdOutlineCancel)`
+const CancleButton = styled(BsXCircleFill)`
   font-size: 4vh; 
   color: #FFF; 
   position: absolute; 
