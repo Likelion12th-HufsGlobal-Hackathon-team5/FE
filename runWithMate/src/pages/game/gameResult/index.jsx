@@ -47,7 +47,7 @@ const Point=styled.div`
     padding: 3vh;
     border-bottom: black solid 3px;
 
-    font-size: 16px;
+    /* font-size: 16px; */
 `;
 const MyPoint=styled.div`
     display: flex;
@@ -55,11 +55,18 @@ const MyPoint=styled.div`
     align-items: center;
     justify-content: space-between;
 
-    width: 80%;
-    font-size: 16px;
-    .point{
-        font-weight: 700;
+    /* width: 80%; */
+    width: 100%;
+    
+    /* color: blue; */
+    /* background-color: black; */
+    p{
         font-size: 16px;
+
+    }
+    .point{
+        font-size: 16px;
+        font-weight: 800;
     }
 `;
 const OpponentPoint=styled.div`
@@ -68,11 +75,18 @@ const OpponentPoint=styled.div`
     align-items: center;
     justify-content: space-between;
 
-    width: 80%;
-    font-size: 16px;
+    /* width: 80%; */
+    width: 100%;
+    /* font-size: 16px; */
+
+    p{
+        font-size: 16px;
+    }
+
+
     .point{
         font-size: 16px;
-        font-weight: 700;
+        font-weight: 800;
     }
 `;
 const AllPoint=styled.div`
@@ -128,7 +142,6 @@ const AgainGame=styled.button`
 
     box-sizing: border-box;
 
-    /* padding: calc(3.5% - 3px) calc(4% - 3px); */
     padding: 3.5% 4%;
     color: white;
     background-color: #2E2929;
@@ -168,11 +181,11 @@ function GameResult(){
                 </UserName>
                 <Point>
                     <MyPoint>
-                        <p>획득 포인트</p>
+                        <p>나의 획득 point</p>
                         <p className='point'>1200 점</p>
                     </MyPoint>
                     <OpponentPoint>
-                        <p>획득 포인트</p>
+                        <p>상대의 획득 point</p>
                         <p className='point'>1200 점</p>
                     </OpponentPoint>
                 </Point>
