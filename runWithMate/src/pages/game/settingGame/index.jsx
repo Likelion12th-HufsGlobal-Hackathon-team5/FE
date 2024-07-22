@@ -4,6 +4,7 @@ import Content from '../../../components/Setting/Content';
 import Setting from '../../../components/Setting/Setting';
 import Lobby from '../../../components/Setting/Lobby';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const Container = styled.div`
   display : flex;
@@ -39,6 +40,11 @@ const StartGame = styled.button`
 
 
 function SettingGame() {
+
+  const [Point,setPoint] = useState(23500)
+  const [btn, setbtn] = useState('');
+
+
   const navigate = useNavigate();
 
   const handleStartGame = () => {
@@ -52,7 +58,7 @@ function SettingGame() {
       <Header />
       <Background>
         <Content />
-        <Setting />
+        <Setting Mypoint = {Point} setMypoint={setPoint} setActiveButton ={setbtn} activeButton = {btn}/>
         <Lobby />
         <StartGame onClick={handleStartGame}>게임 시작하기</StartGame>
       </Background>
