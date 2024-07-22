@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { BsCaretDownFill } from "react-icons/bs";
-import ToggleItems from "./ToggleItems";
 
 function MyWalletToggle() {
   const [visibleItems, setVisibleItems] = useState([false, false, false, false]);
@@ -17,37 +16,48 @@ function MyWalletToggle() {
   const StyledBsCaretDownFill = styled(BsCaretDownFill)`
     font-size: 25px;
     transform: ${({ isActive }) =>
-      isActive ? "rotate(180deg)" : "rotate(0deg)"}; // active 상태에 따라 회전
+      isActive ? "rotate(180deg)" : "rotate(0deg)"};
   `;
 
   return (
     <ToggleContainer>
-      {["2024.07.17", "2024.07.02", "2024.07.09", "2024.07.09"].map(
-        (date, index) => (
-          <React.Fragment key={index}>
-            <HeaderWrap>
-              <ItemBox
-                onClick={() => handleItemBoxClick(index)}
-                isActive={visibleItems[index]} // active 상태를 props로 전달
-              >
-                <DateBox>{date}</DateBox>
-                <IconBox>
-                  <StyledBsCaretDownFill isActive={visibleItems[index]} />{" "}
-                  {/* 아이콘에 active 상태 전달 */}
-                </IconBox>
-              </ItemBox>
-              {visibleItems[index] && (
-                <ToggleItemsStyled>
-                  <ToggleItems />
-                </ToggleItemsStyled>
-              )}
-            </HeaderWrap>
-          </React.Fragment>
-        )
-      )}
+      {["2024.07.17", "2024.07.02", "2024.07.09", "2024.07.09"].map((date, index) => (
+        <React.Fragment key={index}>
+          <HeaderWrap>
+            <ItemBox
+              onClick={() => handleItemBoxClick(index)}
+              isActive={visibleItems[index]}
+            >
+              <DateBox>{date}</DateBox>
+              <IconBox>
+                <StyledBsCaretDownFill isActive={visibleItems[index]} />
+              </IconBox>
+            </ItemBox>
+            {visibleItems[index] && (
+              <ToggleItemsStyled>
+                <ToggleItemsContainer>
+                  <ContentsBox>
+                    <ReasonBox>출석 체크 포인트</ReasonBox>
+                    <PointAddedMinus reason="출석">+ 50</PointAddedMinus>
+                  </ContentsBox>
+                  <ContentsBox>
+                    <ReasonBox>홍수지님과의 게임 승리 보상</ReasonBox>
+                    <PointAddedMinus reason="게임">+ 300</PointAddedMinus>
+                  </ContentsBox>
+                  <ContentsBox>
+                    <ReasonBox>유지희님과의 게임 승리 보상</ReasonBox>
+                    <PointAddedMinus reason="게임">+ 200</PointAddedMinus>
+                  </ContentsBox>
+                </ToggleItemsContainer>
+              </ToggleItemsStyled>
+            )}
+          </HeaderWrap>
+        </React.Fragment>
+      ))}
     </ToggleContainer>
   );
 }
+
 
 export default MyWalletToggle;
 
@@ -58,11 +68,11 @@ const ToggleContainer = styled.div`
   flex-direction: column;
   flex-wrap: wrap;
   gap: 1.5vh;
-  border-radius: 2vh;
+  border-radius: 0vh 0vh 2vh 2vh;
 `;
 
 const ItemBox = styled.div`
-  padding: 2vh;
+ padding: 2vh;
   background-color: ${({ isActive }) =>
     isActive ? "#1b63bb" : "#ffffff"}; // active 상태에 따라 배경색 변경
   color: ${({ isActive }) =>
@@ -73,15 +83,12 @@ const ItemBox = styled.div`
   align-items: center; // 수직 가운데 정렬
   border-radius: 3vh;
   cursor: pointer;
-  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
-  z-index: 2; // ItemBox의 z-index를 높임
+  position: relative; // position 속성 추가
+  z-index: ${({ isActive }) => (isActive ? "2" : "1")};
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
 `;
 
 const HeaderWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0vh;
-  position: relative; // HeaderWrap에 상대 위치 설정
 `;
 
 const DateBox = styled.div`
@@ -95,9 +102,44 @@ const IconBox = styled.div`
 `;
 
 const ToggleItemsStyled = styled.div`
-  position: absolute; // ToggleItems를 절대 위치로 설정
-  top: 100%; // ItemBox의 아래에 위치
-  z-index: 1; // ToggleItems의 z-index를 낮춤
-  width: 100%; // ToggleItems의 너비를 ItemBox와 동일하게 설정
-  box-sizing: border-box; // 패딩과 테두리를 포함하여 크기 계산
+  z-index: 1;
+  position: relative; // position 속성 추가
+  top: -3vh; // width를 100%로 설정하여 ItemBox 아래에 위치하도록 함
+`;
+
+const ToggleItemsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 2vh;
+  padding: 5vh 2vh 2vh 2vh;
+  background-color: #ffffff;
+  border-radius: 0vh 0vh 2vh 2vh;
+  margin: 0vh 0vh -2vh 0vh;
+`;
+
+const ContentsBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ReasonBox = styled.div`
+  font-weight: 400;
+  font-size: 14px;
+  align-items: center;
+`;
+
+const PointAddedMinus = styled.div`
+  font-weight: 600;
+  font-size: 16px;
+  align-items: center;
+  color: ${(props) =>
+    props.reason === "출석"
+      ? "#2DEE9B"
+      : props.reason === "게임"
+      ? "#1B63BB"
+      : "inherit"};
 `;

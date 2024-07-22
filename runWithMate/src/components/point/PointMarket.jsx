@@ -36,7 +36,7 @@ const PointMarketBox = styled.div`
   flex-wrap: wrap;
   flex-direction: column;
   align-items: left;
-  gap: 0.8px;
+  gap: 1vh;
   border-radius: 2vh;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow  0.3s;
@@ -63,6 +63,7 @@ const Coments = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  gap: 0.5vh;
 `;
 
 const IconBox = styled.div`
