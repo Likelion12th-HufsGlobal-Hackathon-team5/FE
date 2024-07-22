@@ -31,7 +31,7 @@ const MyWallet = () => {
           </Description>
         </Coments>
       </MyWalletBox>
-      {isToggleVisible && <MyWalletToggleStyled />}
+      {isToggleVisible &&<MyWalletToggleStyled><MyWalletToggle /></MyWalletToggleStyled> }
     </MyWalletContainer>
   );
 };
@@ -41,7 +41,6 @@ export default MyWallet;
 const MyWalletContainer = styled.div`
   display: flex;
   flex-direction: column;
-  position: relative; // 부모 요소에 상대 위치 설정
 `;
 
 const MyWalletBox = styled.div`
@@ -52,11 +51,12 @@ const MyWalletBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-  gap: 0.8px;
+  gap: 1vh;
   border-radius: 2vh;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s;
-  z-index: 2;
+  z-index: 1;
+  position: relative;
 
   &:hover {
     background-color: #1B63BB;
@@ -71,12 +71,14 @@ const MyWalletBox = styled.div`
     color: #217eef;
     border: #ffffff solid 3px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 2;
   `}
 `;
 
-const MyWalletToggleStyled = styled(MyWalletToggle)`
-top: 50%;
-  z-index: 1; // MyWalletBox보다 낮은 z-index 설정
+const MyWalletToggleStyled = styled.div`
+  position: relative; // position을 absolute로 변경
+  top: -3vh; // MyWallet과 약 3vh 겹치도록 위로 이동
+  z-index: 1;
 `;
 
 const Title = styled.div`
@@ -88,6 +90,7 @@ const Title = styled.div`
 const Coments = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 0.5vh;
 `;
 
 const IconBox = styled.div`
@@ -108,6 +111,7 @@ const Paragraph = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  gap: 0.5vh;
 `;
 
 const Line = styled.div`
