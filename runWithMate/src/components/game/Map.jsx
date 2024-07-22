@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Global, css } from '@emotion/react';
 import styled from '@emotion/styled';
+import PointMarkerImg from '../../assets/images/pointMarker.png';
 
 const Container = styled.div`
   display: flex;
@@ -45,9 +46,16 @@ function Map() {
 
       const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
+      const imageSrc = PointMarkerImg;  
+      const imageSize = new window.kakao.maps.Size(64/2, 69/2); 
+      // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+      const imageOption = { offset: new window.kakao.maps.Point(27, 69) }; 
+
+      const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
       const markerPosition = new window.kakao.maps.LatLng(lat, lng);
       const marker = new window.kakao.maps.Marker({
         position: markerPosition,
+        image: markerImage, // 마커이미지 설정 
       });
       marker.setMap(map);
     };
@@ -79,7 +87,7 @@ function Map() {
 }
 
 const StyledMap = styled(Map)`
-  /* border: 2px solid red;  */
+  /* border: 2px solid red; */
   height: 50%;
 `;
 
