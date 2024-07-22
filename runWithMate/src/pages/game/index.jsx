@@ -11,6 +11,13 @@ const Container=styled.div`
 
     /* background-color: red; */
 `;
+const MapContainer=styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+`;
 
 function Game(){
 
@@ -18,7 +25,9 @@ function Game(){
         <>
             <Container>
                 <GameInfo />
-                <Map />
+                <MapContainer>
+                    <Map />
+                </MapContainer>
                 <GameRanking />
             </Container>
         </>
