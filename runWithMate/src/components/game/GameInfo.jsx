@@ -4,6 +4,8 @@ import styled from '@emotion/styled';
 import Giveup from '../../components/game/gameGiveUp/giveup';
 
 const GameInfoDiv=styled.div`
+    z-index: 10;
+    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -20,6 +22,8 @@ const GameInfoDiv=styled.div`
     width: 100%;
 
     border-bottom: 3px solid black;
+
+    background-color: white;
 `;
 const GameInfoHeader=styled.div`
     display: flex;

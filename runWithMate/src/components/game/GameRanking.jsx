@@ -2,6 +2,8 @@ import styled from '@emotion/styled';
 import {BsFillPersonFill} from 'react-icons/bs';
 
 const GameRankingDiv=styled.div`
+    z-index: 10;
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -16,6 +18,8 @@ const GameRankingDiv=styled.div`
     .header{
         font-weight: 700;
     }
+
+    background-color: white;
 `;
 const GameRankingInfoAboutMe=styled.div`
     display: flex;
