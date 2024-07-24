@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
@@ -73,13 +73,18 @@ const Content = styled.p`
   line-height: 3.2vh;
 `;
 
-const Giveup = ({ onClose }) => {
+const Giveup = ({ onClose , betting }) => {
 
+  const [Point, setPoint] = useState(0);
   const navigate = useNavigate();
 
   const handleMainPage = () => {
+    setPoint(prevPoint => prevPoint - betting);
     navigate('/main');
   };
+
+  // WebSocket을 더 공부해봐야 알겠지만 우선 버튼을 눌렀을떄 포인트가 빠져나가는 형식으로 제작
+
 
   return ReactDOM.createPortal(
     <Container>
