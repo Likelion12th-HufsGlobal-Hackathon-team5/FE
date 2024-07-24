@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Global, css } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -22,6 +22,8 @@ const globalStyles = css`
 `;
 
 function Map() {
+  const [currentPosition, setCurrentPosition] = useState({ lat: null, lng: null });
+
   useEffect(() => {
     const loadKakaoMapScript = () => {
       const script = document.createElement('script');
@@ -29,7 +31,17 @@ function Map() {
       script.async = true;
       script.onload = () => {
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(displayMap, showError);
+          const options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          };
+          navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            setCurrentPosition({ lat: latitude, lng: longitude });
+            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`); // 콘솔에 출력
+            displayMap(latitude, longitude);
+          }, showError, options);
         } else {
           alert("Geolocation is not supported by this browser.");
         }
@@ -37,9 +49,7 @@ function Map() {
       document.head.appendChild(script);
     };
 
-    const displayMap = (position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
+    const displayMap = (lat, lng) => {
       const mapContainer = document.getElementById('map');
       const mapOption = {
         center: new window.kakao.maps.LatLng(lat, lng),
@@ -47,6 +57,14 @@ function Map() {
       };
 
       const map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+      // 현재 위치 마커 추가
+      const currentLocationMarker = new window.kakao.maps.Marker({
+        map: map,
+        position: new window.kakao.maps.LatLng(lat, lng),
+        title: '현재 위치'
+      });
+      currentLocationMarker.setMap(map);
 
       const PointPositions = [
         {
@@ -146,11 +164,19 @@ function Map() {
     loadKakaoMapScript();
   }, []);
 
-  return <MapContainer id="map" />;
+  return (
+    <MapContainer id="map">
+      {currentPosition.lat && currentPosition.lng && (
+        <div>
+          <p>Latitude: {currentPosition.lat}</p>
+          <p>Longitude: {currentPosition.lng}</p>
+        </div>
+      )}
+    </MapContainer>
+  );
 }
 
 const StyledMap = styled(Map)`
-  /* border: 2px solid red; */
   height: 50%;
 `;
 
