@@ -118,7 +118,7 @@ function GameInfo(){
                         </GameInfoContentEach>
                         <Line />
                         <GameInfoContentEach>
-                            획득 점수<br/>
+                            베팅 포인트<br/>
                             2000점
                         </GameInfoContentEach>
                         <Line />
