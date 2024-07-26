@@ -1,6 +1,9 @@
+// src/pages/Map.js
+
 import React, { useEffect, useState } from 'react';
 import { Global, css } from '@emotion/react';
 import styled from '@emotion/styled';
+import useWebSocket from '../../hooks/useWebSocket';
 
 import PointMarkerImg from '../../assets/images/pointMarker.png';
 import DopamineMarkerImg from '../../assets/images/dopamineMarker.png';
@@ -21,8 +24,11 @@ const globalStyles = css`
   }
 `;
 
+const WEBSOCKET_URL = 'ws://your-websocket-url'; // Replace with your actual WebSocket URL
+
 function Map() {
   const [currentPosition, setCurrentPosition] = useState({ lat: null, lng: null });
+  const { sendMessage } = useWebSocket(WEBSOCKET_URL);
 
   useEffect(() => {
     const loadKakaoMapScript = () => {
@@ -39,9 +45,17 @@ function Map() {
           navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;
             setCurrentPosition({ lat: latitude, lng: longitude });
-            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`); // 콘솔에 출력
             displayMap(latitude, longitude);
           }, showError, options);
+
+          // 위치 정보를 주기적으로 업데이트
+          setInterval(() => {
+            navigator.geolocation.getCurrentPosition((position) => {
+              const { latitude, longitude } = position.coords;
+              setCurrentPosition({ lat: latitude, lng: longitude });
+              sendMessage({ lat: latitude, lng: longitude });
+            }, showError, options);
+          }, 1000); // 1초마다 업데이트
         } else {
           alert("Geolocation is not supported by this browser.");
         }
@@ -162,7 +176,7 @@ function Map() {
     };
 
     loadKakaoMapScript();
-  }, []);
+  }, [sendMessage]);
 
   return (
     <MapContainer id="map">
