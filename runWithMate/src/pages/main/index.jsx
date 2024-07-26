@@ -1,6 +1,9 @@
-import {Link} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled'
 import Header from '../../components/Header';
+
+import axios from 'axios';
+import useWebSocket from '../../hooks/useWebSocket';
 
 import GameIcon from '../../assets/images/gameIcon.png';
 import PointIcon from '../../assets/images/pointIcon.png';
@@ -9,6 +12,8 @@ import BrainIcon from '../../assets/images/brainIcon.png';
 import {BsCaretRightFill} from 'react-icons/bs';
 import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
+
+const websocketUrl='ws서버-url';
 
 const Container=styled.div`
     display: flex;
@@ -173,6 +178,27 @@ const GotoHeader=styled.div`
     font-weight: 700;
 `;
 function Main (){
+    const navigate = useNavigate();
+    const SERVER_URL='server-url';
+    
+    const handleCreateGameRoom = async () => {
+        try {
+            const response = await axios.post(`http://${SERVER_URL}/api/games/join`); // Adjust the URL as needed
+            console.log('Game room created:', response.data);
+        } catch (error) {
+            console.error('Failed to create game room:', error);
+        }
+    };
+
+    const onMessage = (message) => {
+        const data = JSON.parse(message.data);
+        if (data.action === 'game_room_created') {
+            const roomId = data.roomId;
+            navigate(`/game/${roomId}`);
+        }
+    };
+
+    useWebSocket(websocketUrl, onMessage);
 
     return(
         <>
@@ -218,7 +244,7 @@ function Main (){
                         </PointText>
                     </Point>
                 </ContentsBox>
-                <GotoGame to='/settingGame'>
+                <GotoGame to='/settingGame' onClick={handleCreateGameRoom}>
                     <img src={GameIcon} className='gameIcon'/>
                     <GotoText>
                         <GotoHeader>
