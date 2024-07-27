@@ -3,54 +3,58 @@ import styled from "@emotion/styled";
 import PointImg from "../../../assets/images/profile.png";
 
 function GameResultBox() {
-  const [gameData, setGameData] = useState(null);
+    const [gameData, setGameData] = useState(null);
 
-  useEffect(() => {
-    // 목 데이터 생성
-    const mockGameData = {
-      type: "game_finished",
-      finish_type: "time_exceed",
-      winner: "승자 ID",
-      winner_name: "player1",
-      loser_name: "player2",
-      point_p1: 800,
-      point_p2: 1000,
-      dopamin_p1: 30,
-      dopamin_p2: 25,
-    };
-
-    // 목 데이터를 상태에 즉시 설정
-    setGameData(mockGameData);
-  }, []);
-
-  // gameData가 null인지 확인
-  if (!gameData) {
-    return null; // 또는 다른 대체 UI를 반환할 수 있습니다.
-  }
+    useEffect(() => {
+      // 로컬 스토리지에서 게임 데이터 불러오기
+      const storedGameData = localStorage.getItem("gameData");
+      if (storedGameData) {
+        setGameData(JSON.parse(storedGameData));// 게임데이터 있으면 그거 불러오기
+      } else { // 아니면 목데이터 생성해서 로컬에 저장하고 부르기
+        // 목 데이터 생성
+        const mockGameData = {
+          type: "game_finished",
+          finish_type: "time_exceed",
+          winner: "승자 ID",
+          winner_name: "player1",
+          loser_name: "player2",
+          point_p1: 3000,
+          point_p2: 1000,
+          dopamin_p1: 30,
+          dopamin_p2: 25,
+        };
+  
+        // 목 데이터를 로컬 스토리지에 저장
+        localStorage.setItem("gameData", JSON.stringify(mockGameData));
+        setGameData(mockGameData);
+      }
+    }, []);
+  
+    // gameData가 null인지 확인
+    if (!gameData) {
+      return "게임 결과를 불러오는 중입니다."; // 또는 다른 대체 UI를 반환할 수 있습니다.
+    }
+  
 
   return (
     <ResultContainer>
       <UserPhoto />
       <Title>
-        {gameData.point_p1 > gameData.point_p2 ? (
-          <UserName>{gameData.winner_name}님이</UserName>
-        ) : (
-          <UserName>{gameData.loser_name}님이</UserName>
-        )}
-        <WinLose>승리하셨습니다!</WinLose>{" "}
+        <UserName>{gameData.winner_name}님이</UserName>
+        <WinLose>승리하셨습니다!</WinLose>
       </Title>
       <Point>
         <PointResultBox>
           <span>
-            <p>{gameData.winner_name}님의</p>
-            <p>획득 point</p>
+            <p>내가 게임에서</p>
+            <p>획득한 point</p>
           </span>
           <p className="point">{gameData.point_p1} 점</p>
         </PointResultBox>
         <PointResultBox>
           <span>
-            <p>{gameData.loser_name}님의</p>
-            <p>획득 point</p>
+            <p>상대가 게임에서</p>
+            <p>획득한 point</p>
           </span>
           <p className="point">{gameData.point_p2} 점</p>
         </PointResultBox>
