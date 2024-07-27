@@ -1,5 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import styled from '@emotion/styled'
+
+import styled from '@emotion/styled';
+
 import Header from '../../components/Header';
 
 import axios from 'axios';
@@ -9,13 +11,16 @@ import GameIcon from '../../assets/images/gameIcon.png';
 import PointIcon from '../../assets/images/pointIcon.png';
 import BrainIcon from '../../assets/images/brainIcon.png';
 
-import {BsCaretRightFill} from 'react-icons/bs';
+import { BsCaretRightFill } from 'react-icons/bs';
 import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
+import { useState } from 'react';
+
 
 const websocketUrl='ws서버-url';
 
 const Container=styled.div`
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -26,18 +31,15 @@ const Container=styled.div`
     min-height: 889px;
     max-height: 100vh;
 `;
-const MainHeader=styled.p`
-    padding: 0% 1% ;
+const MainHeader = styled.p`
+    padding: 0% 1%;
     margin-top: 8vh;
     
     font-size: 42px;
     font-weight: 900;
-    /* word-spacing: 1px; */
 `;
-const Intro=styled.p`
+const Intro = styled.p`
     justify-content: left;
-
-    /* padding: 0% 1% ; */
 
     color: #2E2929;
 
@@ -45,27 +47,27 @@ const Intro=styled.p`
     font-size: 16px;
     line-height: 1.2;
 
-    .blue{
+    .blue {
         font-size: 16px;
         color: #217EEF;
         font-weight: 700;
     }
 `;
-const ContentsBox=styled.div`
+const ContentsBox = styled.div`
     display: flex;
     flex-direction: column; 
 
     padding: 2vh;
 
     width: 80%;
-    border: 2.5px solid  #AEAEB2;
+    border: 2.5px solid #AEAEB2;
     border-radius: 10px;
 
     font-size: 13px;
     font-weight: 400;
     line-height: 1.2;
 `;
-const Point=styled.div`
+const Point = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -75,7 +77,7 @@ const Point=styled.div`
 
     margin-top: 2vh;
 `;
-const PointText=styled.div`
+const PointText = styled.div`
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -83,14 +85,14 @@ const PointText=styled.div`
     flex-wrap: wrap;
     gap: 0.3vh;
 
-    p{
+    p {
         font-weight: 700;
         font-size: 16px;
     }
 
     font-size: 13px;
 `;
-const Circle=styled.div`
+const Circle = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -101,62 +103,59 @@ const Circle=styled.div`
     padding: 1vh;
 
     color: white;
-    background-color:  #2E2929;
+    background-color: #2E2929;
     border-radius: 100%;
 
-    .run{
-        width:22px;
+    .run {
+        width: 22px;
         height: 28px;
     }
-    .people{
+    .people {
         width: 28px;
         height: 21px;
     }
-    .brain{
+    .brain {
         width: 24px;
         height: 22px;
     }
 `;
-const GotoGame=styled(Link)`
+const GotoGame = styled(Link)`
     display: flex;
     flex-direction: row;
     justify-content: left;
     align-items: center;
 
     padding: 4vh 4vh;
-    /* padding: 4vh; */
-    /* width: 72.5%; */
     width: 80%;
 
     color: white;
     background-color: #2E2929;
     border-radius: 20px;
 
-    .gameIcon{
+    .gameIcon {
         width: 38px;
         height: auto;
     }
 `;
-const GotoPointshop=styled(Link)`
+const GotoPointshop = styled(Link)`
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 
     padding: 4vh 3vh;
-    /* width: 72.5%; */
     width: 80%;
 
     color: white;
     background-color: #217EEF;
     border-radius: 20px;
 
-    .pointIcon{
+    .pointIcon {
         width: 39px;
         height: 42px;
     }
-    `;
-const GotoText=styled.div`
+`;
+const GotoText = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -166,7 +165,7 @@ const GotoText=styled.div`
     text-align: left;
     line-height: 1.2;
 `;
-const GotoHeader=styled.div`
+const GotoHeader = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -177,10 +176,13 @@ const GotoHeader=styled.div`
     font-size: 20px;
     font-weight: 700;
 `;
+
+
 function Main (){
     const navigate = useNavigate();
     const SERVER_URL='server-url';
-    
+    const [onDiv, setonDiv] = useState(true);
+  
     const handleCreateGameRoom = async () => {
         try {
             const response = await axios.post(`http://${SERVER_URL}/api/games/join`); // Adjust the URL as needed
@@ -199,8 +201,15 @@ function Main (){
     };
 
     useWebSocket(websocketUrl, onMessage);
+  
+  
+  const handleDiv = () => {
+        localStorage.setItem("look", onDiv);
+        setonDiv(false);
+    }
 
-    return(
+
+    return (
         <>
             <Container>
                 <Header />
@@ -208,17 +217,17 @@ function Main (){
                     Run With Mate!
                 </MainHeader>
                 <Intro>
-                    지친 당신의 일상을 벗어나 <br/>
-                    <span className='blue'>Run With Mate!</span>와 함께<br/>
+                    지친 당신의 일상을 벗어나 <br />
+                    <span className='blue'>Run With Mate!</span>와 함께<br />
                     친구와 당신의 능력을 시험해보세요!
                 </Intro>
                 <ContentsBox>
-                    경쟁은 간혹 부정적인 의미로 많이 남죠.<br/>
-                    하지만 잘 갖춰진 경쟁의 세계는<br/>
+                    경쟁은 간혹 부정적인 의미로 많이 남죠.<br />
+                    하지만 잘 갖춰진 경쟁의 세계는<br />
                     오히려 긍정적인 효과를 극대화시킬 수 있습니다! haha
                     <Point>
                         <Circle>
-                            <FaRunning className='run'/>
+                            <FaRunning className='run' />
                         </Circle>
                         <PointText>
                             <p>일단 뛰세요!</p>
@@ -227,7 +236,7 @@ function Main (){
                     </Point>
                     <Point>
                         <Circle>
-                            <IoPeople className='people'/>
+                            <IoPeople className='people' />
                         </Circle>
                         <PointText>
                             <p>친구와 함께해서 더 재밌게!</p>
@@ -236,7 +245,7 @@ function Main (){
                     </Point>
                     <Point>
                         <Circle>
-                            <img src={BrainIcon} className='brain'/>
+                            <img src={BrainIcon} className='brain' />
                         </Circle>
                         <PointText>
                             <p>도파민을 자극합니다</p>
@@ -244,6 +253,7 @@ function Main (){
                         </PointText>
                     </Point>
                 </ContentsBox>
+
                 <GotoGame to='/settingGame' onClick={handleCreateGameRoom}>
                     <img src={GameIcon} className='gameIcon'/>
                     <GotoText>
@@ -255,7 +265,7 @@ function Main (){
                     </GotoText>
                 </GotoGame>
                 <GotoPointshop to='/point'>
-                    <img src={PointIcon} className='pointIcon'/>
+                    <img src={PointIcon} className='pointIcon' />
                     <GotoText>
                         <GotoHeader>
                             포인트샵 바로 가기
@@ -264,7 +274,7 @@ function Main (){
                         다양한 상품을 둘러보세요
                     </GotoText>
                 </GotoPointshop>
-            </Container>        
+            </Container>
         </>
     )
 }
