@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Global, css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { useLocation } from 'react-router-dom';
+import useWebSocket from '../../hooks/useWebSocket';
 
 import PointMarkerImg from '../../assets/images/pointMarker.png';
 import DopamineMarkerImg from '../../assets/images/dopamineMarker.png';
@@ -21,15 +23,47 @@ const globalStyles = css`
   }
 `;
 
+const WEBSOCKET_URL = 'ws://your-websocket-url'; // Replace with your actual WebSocket URL
+
 function Map() {
+  const [currentPosition, setCurrentPosition] = useState({ lat: null, lng: null });
+  const { sendMessage } = useWebSocket(WEBSOCKET_URL);
+  const location = useLocation(); // 현재 경로를 감지
+
   useEffect(() => {
+    let intervalId;
+
     const loadKakaoMapScript = () => {
       const script = document.createElement('script');
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=70b6406b2ded139d1c5117b59f7d6ab8&libraries=services`;
       script.async = true;
       script.onload = () => {
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(displayMap, showError);
+          const options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          };
+          navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            setCurrentPosition({ lat: latitude, lng: longitude });
+            displayMap(latitude, longitude);
+          }, showError, options);
+
+          // 위치 정보를 주기적으로 업데이트
+          intervalId = setInterval(() => {
+            if (location.pathname === '/game') {
+              navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                setCurrentPosition({ lat: latitude, lng: longitude });
+                sendMessage({ lat: latitude, lng: longitude });
+                console.log(`latitude : ${latitude} longitude : ${longitude}`);
+              }, showError, options);
+            } else {
+              // 위치 정보 출력이 필요 없는 경우도 포함
+              console.log(`Current path is not /game. Location info not displayed.`);
+            }
+          }, 1000); // 1초마다 업데이트
         } else {
           alert("Geolocation is not supported by this browser.");
         }
@@ -37,9 +71,7 @@ function Map() {
       document.head.appendChild(script);
     };
 
-    const displayMap = (position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
+    const displayMap = (lat, lng) => {
       const mapContainer = document.getElementById('map');
       const mapOption = {
         center: new window.kakao.maps.LatLng(lat, lng),
@@ -47,6 +79,14 @@ function Map() {
       };
 
       const map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+      // 현재 위치 마커 추가
+      const currentLocationMarker = new window.kakao.maps.Marker({
+        map: map,
+        position: new window.kakao.maps.LatLng(lat, lng),
+        title: '현재 위치'
+      });
+      currentLocationMarker.setMap(map);
 
       const PointPositions = [
         {
@@ -59,7 +99,7 @@ function Map() {
         },
         {
           title: '한국외대 백년관',
-          latlng: new window.kakao.maps.LatLng(37.3376, 127.2658 )
+          latlng: new window.kakao.maps.LatLng(37.3376, 127.2658)
         },
         {
           title: '한국외대 공학관',
@@ -82,7 +122,7 @@ function Map() {
         },
         {
           title: '도파민03',
-          latlng: new window.kakao.maps.LatLng(37.3368, 127.267 )
+          latlng: new window.kakao.maps.LatLng(37.3368, 127.267)
         },
         {
           title: '도파민04',
@@ -144,13 +184,27 @@ function Map() {
     };
 
     loadKakaoMapScript();
-  }, []);
 
-  return <MapContainer id="map" />;
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [sendMessage, location.pathname]); // location.pathname을 의존성 배열에 추가
+
+  return (
+    <MapContainer id="map">
+      {currentPosition.lat && currentPosition.lng && (
+        <div>
+          <p>Latitude: {currentPosition.lat}</p>
+          <p>Longitude: {currentPosition.lng}</p>
+        </div>
+      )}
+    </MapContainer>
+  );
 }
 
 const StyledMap = styled(Map)`
-  /* border: 2px solid red; */
   height: 50%;
 `;
 

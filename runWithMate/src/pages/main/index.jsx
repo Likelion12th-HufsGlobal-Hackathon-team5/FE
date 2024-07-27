@@ -1,6 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
+
 import styled from '@emotion/styled';
+
 import Header from '../../components/Header';
+
+import axios from 'axios';
+import useWebSocket from '../../hooks/useWebSocket';
 
 import GameIcon from '../../assets/images/gameIcon.png';
 import PointIcon from '../../assets/images/pointIcon.png';
@@ -11,7 +16,11 @@ import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 import { useState } from 'react';
 
-const Container = styled.div`
+
+const websocketUrl='ws서버-url';
+
+const Container=styled.div`
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -167,19 +176,38 @@ const GotoHeader = styled.div`
     font-size: 20px;
     font-weight: 700;
 `;
-function Main() {
 
-    const [onDiv, setonDiv] = useState(true);
+
+function Main (){
     const navigate = useNavigate();
+    const SERVER_URL='server-url';
+    const [onDiv, setonDiv] = useState(true);
+  
+    const handleCreateGameRoom = async () => {
+        try {
+            const response = await axios.post(`http://${SERVER_URL}/api/games/join`); // Adjust the URL as needed
+            console.log('Game room created:', response.data);
+        } catch (error) {
+            console.error('Failed to create game room:', error);
+        }
+    };
 
+    const onMessage = (message) => {
+        const data = JSON.parse(message.data);
+        if (data.action === 'game_room_created') {
+            const roomId = data.roomId;
+            navigate(`/game/${roomId}`);
+        }
+    };
 
-    const handleDiv = () => {
-        //to='/settingGame' state={{ look :onDiv }}
-        // alert();
-        // navigate("/settingGame" ,{state : {look : onDiv}});
+    useWebSocket(websocketUrl, onMessage);
+  
+  
+  const handleDiv = () => {
         localStorage.setItem("look", onDiv);
         setonDiv(false);
     }
+
 
     return (
         <>
@@ -225,8 +253,9 @@ function Main() {
                         </PointText>
                     </Point>
                 </ContentsBox>
-                <GotoGame to='/settingGame' onClick={handleDiv}>
-                    <img src={GameIcon} className='gameIcon' />
+
+                <GotoGame to='/settingGame' onClick={handleCreateGameRoom}>
+                    <img src={GameIcon} className='gameIcon'/>
                     <GotoText>
                         <GotoHeader>
                             게임 시작하기

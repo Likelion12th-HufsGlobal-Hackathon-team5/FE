@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
+
+import useWebSocket from '../../../hooks/useWebSocket';
+
 import { useNavigate } from 'react-router-dom';
 import { PiWarningFill } from "react-icons/pi";
 import { BsXCircleFill } from "react-icons/bs";
@@ -73,17 +76,38 @@ const Content = styled.p`
   line-height: 3.2vh;
 `;
 
+const SERVER_URL = 'server-url';
+const roomId='roomId'
+
 const Giveup = ({ onClose , betting }) => {
 
   const [Point, setPoint] = useState(0);
   const navigate = useNavigate();
 
-  const handleMainPage = () => {
-    setPoint(prevPoint => prevPoint - betting);
-    navigate('/main');
+  const { sendMessage, closeWebSocket } = useWebSocket(`ws://${SERVER_URL}/surrender/${roomId}`);
+
+  // WebSocket을 더 공부해봐야 알겠지만
+  // 우선 버튼을 눌렀을떄 포인트가 빠져나가는 형식으로 제작
+  // const handleMainPage = () => {
+  //   setPoint(prevPoint => prevPoint - betting);
+  //   navigate('/main');
+  // };
+
+  // ws event
+  const handleSendMessage=()=>{
+    const message={type : 'greeting', payload:'hello~ this is jihee~'};
+    sendMessage(message);
   };
 
-  // WebSocket을 더 공부해봐야 알겠지만 우선 버튼을 눌렀을떄 포인트가 빠져나가는 형식으로 제작
+  // handleMainPage 이벤트 합쳐버림
+  const handleCloseConnection = async () => {
+    setPoint(prevPoint => prevPoint - betting);
+    closeWebSocket();
+    // WebSocket이 닫힌 후 navigate 실행
+    setTimeout(() => {
+      navigate('/main');
+    }, 100); // 짧은 지연 시간을 주어 WebSocket이 닫힐 시간을 줍니다.
+  };
 
 
   return ReactDOM.createPortal(
@@ -97,7 +121,9 @@ const Giveup = ({ onClose , betting }) => {
         <Content>
           배팅한 포인트는 자동으로 상대방에게 넘어갑니다.
         </Content>
-        <MainButton onClick={handleMainPage}>기권하고 메인으로 돌아가기</MainButton>
+        <MainButton onClick={handleCloseConnection}>
+          기권하고 메인으로 돌아가기
+          </MainButton>
       </Modal>
     </Container>,
     document.body

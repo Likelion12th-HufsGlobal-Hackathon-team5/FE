@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import Icon from '../assets/images/NoBgIcon.png';
@@ -72,6 +73,13 @@ const StyledLink=styled(Link)`
 `;
 
 function Header(){
+    const location = useLocation();
+
+    useEffect(()=>{
+        if(location.pathname==='/main'){
+            localStorage.clear();
+        }
+    },[location.pathname]);
 
     return(
         <>

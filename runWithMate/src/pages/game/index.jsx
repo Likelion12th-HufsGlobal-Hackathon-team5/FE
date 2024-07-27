@@ -1,3 +1,5 @@
+import React, {useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import Map from '../../components/game/Map';
@@ -20,6 +22,18 @@ const MapContainer=styled.div`
 `;
 
 function Game(){
+    const navigate=useNavigate();
+    // 기본값으로 3분 설정
+    const [timeLimit,setTimeLimit]=useState(18);
+
+    useEffect(()=>{
+        const timer=setTimeout(()=>{
+            navigate('/gameResult');
+        },timeLimit*1000);
+        // timeLimit을 milliseconds 로 설정
+
+        return () => clearTimeout(timer); // clear the timer when the component is unmounted
+  }, [timeLimit, history]);
 
     return(
         <>
