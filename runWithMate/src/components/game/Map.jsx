@@ -1,8 +1,7 @@
-// src/pages/Map.js
-
 import React, { useEffect, useState } from 'react';
 import { Global, css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { useLocation } from 'react-router-dom';
 import useWebSocket from '../../hooks/useWebSocket';
 
 import PointMarkerImg from '../../assets/images/pointMarker.png';
@@ -29,8 +28,11 @@ const WEBSOCKET_URL = 'ws://your-websocket-url'; // Replace with your actual Web
 function Map() {
   const [currentPosition, setCurrentPosition] = useState({ lat: null, lng: null });
   const { sendMessage } = useWebSocket(WEBSOCKET_URL);
+  const location = useLocation(); // 현재 경로를 감지
 
   useEffect(() => {
+    let intervalId;
+
     const loadKakaoMapScript = () => {
       const script = document.createElement('script');
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=70b6406b2ded139d1c5117b59f7d6ab8&libraries=services`;
@@ -49,12 +51,18 @@ function Map() {
           }, showError, options);
 
           // 위치 정보를 주기적으로 업데이트
-          setInterval(() => {
-            navigator.geolocation.getCurrentPosition((position) => {
-              const { latitude, longitude } = position.coords;
-              setCurrentPosition({ lat: latitude, lng: longitude });
-              sendMessage({ lat: latitude, lng: longitude });
-            }, showError, options);
+          intervalId = setInterval(() => {
+            if (location.pathname === '/game') {
+              navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                setCurrentPosition({ lat: latitude, lng: longitude });
+                sendMessage({ lat: latitude, lng: longitude });
+                console.log(`latitude : ${latitude} longitude : ${longitude}`);
+              }, showError, options);
+            } else {
+              // 위치 정보 출력이 필요 없는 경우도 포함
+              console.log(`Current path is not /game. Location info not displayed.`);
+            }
           }, 1000); // 1초마다 업데이트
         } else {
           alert("Geolocation is not supported by this browser.");
@@ -91,7 +99,7 @@ function Map() {
         },
         {
           title: '한국외대 백년관',
-          latlng: new window.kakao.maps.LatLng(37.3376, 127.2658 )
+          latlng: new window.kakao.maps.LatLng(37.3376, 127.2658)
         },
         {
           title: '한국외대 공학관',
@@ -114,7 +122,7 @@ function Map() {
         },
         {
           title: '도파민03',
-          latlng: new window.kakao.maps.LatLng(37.3368, 127.267 )
+          latlng: new window.kakao.maps.LatLng(37.3368, 127.267)
         },
         {
           title: '도파민04',
@@ -176,7 +184,13 @@ function Map() {
     };
 
     loadKakaoMapScript();
-  }, [sendMessage]);
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [sendMessage, location.pathname]); // location.pathname을 의존성 배열에 추가
 
   return (
     <MapContainer id="map">
