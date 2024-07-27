@@ -7,8 +7,10 @@ import globalStyles from './styles/globalstyles.jsx';
 
 const rootElement = document.getElementById('root');
 createRoot(rootElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <>
     <Global styles={globalStyles} />
     <App />
-  </React.StrictMode>
+  </>
+  /* </React.StrictMode> */
 );

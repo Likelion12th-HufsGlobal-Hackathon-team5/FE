@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
+import { useLocation } from "react-router-dom";
+
+const HostDiv = styled.div`
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(128, 128, 128, 0.5);
+    z-index: 1; 
+`;
 
 const SettingButton = styled.div`
     background: ${props => props.active ? "#217EEF" : "#FFF"};
@@ -7,20 +18,19 @@ const SettingButton = styled.div`
     width: 100%;
     padding: 0.8vh 1.1vh;
     display: flex;
-    justify-content: center; /* 가로 가운데 정렬 */
-    align-items: center; /* 세로 가운데 정렬 */
+    justify-content: center;
+    align-items: center;
     border-radius: 0.5vh;
     border: 0.1vh solid #217EEF;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s, border 0.3s;
-    font-size: 2vh; /* 폰트 크기 예시 */
+    font-size: 2vh;
 
     &:hover {
         background: #1B63BB;
         color: #FFF;
     }
 `;
-
 
 const SettingForm = styled.form`
     width: 85%;
@@ -100,9 +110,9 @@ const ViewPoint = styled.p`
 `;
 
 const HorizontalLine = styled.div`
-  border-top: 0.1vh solid black;
-  width: 100%;
-  color: #217EEF;
+    border-top: 0.1vh solid black;
+    width: 100%;
+    color: #217EEF;
 `;
 
 const ButtonContainer = styled.div`
@@ -118,8 +128,9 @@ const SettingInput = styled.input`
     align-items: center;
     gap: 1vh;
     border-radius: 0.5vh;
-    border: 0.1vh solid #217EEF;
-    background: #FFF;
+    border: 0.1vh solid ${props => props.active ? "#217EEF" : "#217EEF"};
+    background: ${props => props.active ? "#217EEF" : "#FFF"};
+    color: ${props => props.active ? "#FFF" : "#217EEF"};
 `;
 
 const SaveSetting = styled.button`
@@ -137,9 +148,23 @@ const SaveSetting = styled.button`
 `;
 
 export default function Setting({ Mypoint, setMypoint }) {
+
+
+    const [nowDiv , setnowDiv] = useState(false);
     const [betting, setBetting] = useState('');
-    const [initpoint, setinitpoint] = useState(Mypoint);
+    const [initpoint, setInitPoint] = useState(Mypoint);
     const [activeButton, setActiveButton] = useState("");
+    const [activeInput, setActiveInput] = useState(false);
+
+    useEffect(() => {
+        setnowDiv(localStorage.getItem("look"));
+        localStorage.removeItem("look");
+    },[])
+
+
+    const HandlenowDiv = () => {
+        setnowDiv(!nowDiv);
+    }
 
     const handleInputChange = (e) => {
         const value = e.target.value === '' ? '' : parseInt(e.target.value, 10);
@@ -148,11 +173,17 @@ export default function Setting({ Mypoint, setMypoint }) {
 
     useEffect(() => {
         const bettingValue = betting === '' ? 0 : betting;
-        setinitpoint(Mypoint - bettingValue);
+        setInitPoint(Mypoint - bettingValue);
     }, [betting, Mypoint]);
 
     const handleButtonClick = (id) => {
         setActiveButton(id);
+        setActiveInput(false); // 버튼 클릭 시 input 액티브 해제
+    };
+
+    const InputTime = (e) => {
+        setActiveInput(e.target.value !== ''); // input에 값이 있으면 액티브 상태로 설정
+        setActiveButton(''); // input 액티브 시 버튼 액티브 해제
     };
 
     const buttons = [
@@ -161,32 +192,41 @@ export default function Setting({ Mypoint, setMypoint }) {
         { id: 'Ten', label: '10분' }
     ];
 
+
+
     return (
-        <SettingForm>
-            <SetTitle>게임 설정</SetTitle>
-            <SetSubtitle>배팅 포인트</SetSubtitle>
-            <PontInput 
-                placeholder='포인트를 입력해주세요 P' 
-                value={betting} 
-                onChange={handleInputChange} 
-            />
-            <MypointTitle>내 잔여 포인트</MypointTitle>
-            <ViewPoint>{initpoint}P</ViewPoint>
-            <HorizontalLine />
-            <SetSubtitle>시간제한 분</SetSubtitle>
-            <ButtonContainer>
-                {buttons.map(button => (
-                    <SettingButton 
-                        key={button.id}
-                        active={activeButton === button.id}
-                        onClick={() => handleButtonClick(button.id)}
-                    >
-                        {button.label}
-                    </SettingButton>
-                ))}
-                <SettingInput placeholder='수동설정' />
-            </ButtonContainer>
-            <SaveSetting>설정 저장</SaveSetting>
-        </SettingForm>
+        <>
+            <SettingForm>
+                {!nowDiv && <HostDiv />}
+                <SetTitle>게임 설정</SetTitle>
+                <SetSubtitle>배팅 포인트</SetSubtitle>
+                <PontInput 
+                    placeholder='포인트를 입력해주세요 P' 
+                    value={betting} 
+                    onChange={handleInputChange} 
+                />
+                <MypointTitle>내 잔여 포인트</MypointTitle>
+                <ViewPoint>{initpoint}P</ViewPoint>
+                <HorizontalLine />
+                <SetSubtitle>시간제한 분</SetSubtitle>
+                <ButtonContainer>
+                    {buttons.map(button => (
+                        <SettingButton 
+                            key={button.id}
+                            active={activeButton === button.id}
+                            onClick={() => handleButtonClick(button.id)}
+                        >
+                            {button.label}
+                        </SettingButton>
+                    ))}
+                    <SettingInput
+                        placeholder='수동설정'
+                        onChange={InputTime}
+                        active={activeInput}
+                    />
+                </ButtonContainer>
+                <SaveSetting onClick={HandlenowDiv}>설정 저장</SaveSetting>
+            </SettingForm>
+        </>
     );
 }
