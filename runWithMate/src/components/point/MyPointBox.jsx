@@ -10,7 +10,7 @@ function MyPointBox() {
     const mockUserData = {
       id: "user123",
       nickname: "김런메",
-      profile_image: PointImg, // 이미지 경로를 사용하여 프로필 이미지 표시
+      profile_image: "/img/profile.png", // 이미지 경로를 사용하여 프로필 이미지 표시
       point: "1200",
       last_check: "2024-07-26 10:00:00",
     };

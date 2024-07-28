@@ -7,6 +7,7 @@ import GameResult from './pages/game/gameResult';
 import Point from './pages/point';
 import SiteMap from './pages/siteMap';
 import Map from '../src/components/game/Map';
+import PointShop from '../src/pages/pointShop/index';
 
 const routes=[
     {
@@ -48,6 +49,11 @@ const routes=[
         path: '/point',
         element: <Point />,
         name: '07. 포인트 페이지'
+    },
+    {
+        path: '/pointshop',
+        element: <PointShop />,
+        name: '08. 포인트 샵(마켓) 페이지'
     },
     {
         path:'/game/map',
