@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { useLocation } from "react-router-dom";
 
 const HostDiv = styled.div`
     width: 100%;
@@ -149,22 +148,20 @@ const SaveSetting = styled.button`
 
 export default function Setting({ Mypoint, setMypoint }) {
 
-
-    const [nowDiv , setnowDiv] = useState(false);
+    const [nowDiv, setnowDiv] = useState(false);
     const [betting, setBetting] = useState('');
     const [initpoint, setInitPoint] = useState(Mypoint);
     const [activeButton, setActiveButton] = useState("");
-    const [activeInput, setActiveInput] = useState(false);
+    const [timeLimit, setTimeLimit] = useState("");
 
     useEffect(() => {
         setnowDiv(localStorage.getItem("look"));
         localStorage.removeItem("look");
-    },[])
-
+    }, []);
 
     const HandlenowDiv = () => {
         setnowDiv(!nowDiv);
-    }
+    };
 
     const handleInputChange = (e) => {
         const value = e.target.value === '' ? '' : parseInt(e.target.value, 10);
@@ -178,19 +175,30 @@ export default function Setting({ Mypoint, setMypoint }) {
 
     const handleButtonClick = (id) => {
         setActiveButton(id);
-        setActiveInput(false); // 버튼 클릭 시 input 액티브 해제
+        setTimeLimit(id);
     };
 
     const InputTime = (e) => {
-        setActiveInput(e.target.value !== ''); // input에 값이 있으면 액티브 상태로 설정
+        const value = e.target.value === '' ? '' : parseInt(e.target.value, 10) * 60000; // 입력값을 분에서 밀리초로 변환
+        setTimeLimit(value);
         setActiveButton(''); // input 액티브 시 버튼 액티브 해제
     };
 
     const buttons = [
-        { id: 'Three', label: '3분' },
-        { id: 'Five', label: '5분' },
-        { id: 'Ten', label: '10분' }
+        { id: 180000, label: '3분' },
+        { id: 300000, label: '5분' },
+        { id: 600000, label: '10분' }
     ];
+
+    const Sendsetting = () => {
+        const data = {
+            bet_point: betting,
+            time_limit: timeLimit
+        };
+        alert(timeLimit);
+
+        // stomp.send("/send/update_room/{roomId}",token, JSON.stringify(data))
+    }
 
 
 
@@ -220,12 +228,12 @@ export default function Setting({ Mypoint, setMypoint }) {
                         </SettingButton>
                     ))}
                     <SettingInput
-                        placeholder='수동설정'
+                        placeholder='수동설정 (분)'
                         onChange={InputTime}
-                        active={activeInput}
+                        active={timeLimit && activeButton === ''}
                     />
                 </ButtonContainer>
-                <SaveSetting onClick={HandlenowDiv}>설정 저장</SaveSetting>
+                <SaveSetting onClick={Sendsetting}>설정 저장</SaveSetting>
             </SettingForm>
         </>
     );

@@ -187,11 +187,13 @@ function Main (){
         try {
             const response = await axios.post(`http://${SERVER_URL}/api/games/join`); // Adjust the URL as needed
             // 수정 1
-            setonDiv(false);
+            
             console.log('Game room created:', response.data);
         } catch (error) {
             console.error('Failed to create game room:', error);
         }
+        setonDiv(false);
+        alert(onDiv);
     };
 
     const onMessage = (message) => {
