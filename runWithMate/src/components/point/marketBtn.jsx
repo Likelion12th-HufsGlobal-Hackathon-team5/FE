@@ -4,23 +4,29 @@ import { BsCapsulePill } from "react-icons/bs";
 import { CgGym } from "react-icons/cg";
 
 function MarketBtn() {
-    const StyledBsCapsulePill = styled(BsCapsulePill)`
-        font-size: 30px;
-    `;
-    const StyledCgGym = styled(CgGym)`
-        font-size: 40px;
-        margin: -0.52vh -0.3vh;
-    `;
+  const StyledBsCapsulePill = styled(BsCapsulePill)`
+    font-size: 30px;
+  `;
+  const StyledCgGym = styled(CgGym)`
+    font-size: 40px;
+    margin: -0.52vh -0.3vh;
+  `;
   return (
     <Container>
       <ButtonBox>
-        <StyledBsCapsulePill/>
-        <StyledParagraph fontWeight="700" fontSize="16px">건강 기능 식품</StyledParagraph> 구매하러 가기
+        <StyledBsCapsulePill />
+        <StyledParagraph fontWeight="700" fontSize="16px">
+          건강 기능 식품
+        </StyledParagraph>{" "}
+        구매하러 가기
       </ButtonBox>
       <ButtonBox>
-        <StyledCgGym/>
-        <StyledParagraph fontWeight="700" fontSize="16px">헬스 용품</StyledParagraph> 구매하러 가기
-      </ButtonBox>  
+        <StyledCgGym />
+        <StyledParagraph fontWeight="700" fontSize="16px">
+          헬스 용품
+        </StyledParagraph>{" "}
+        구매하러 가기
+      </ButtonBox>
     </Container>
   );
 }
@@ -32,7 +38,6 @@ const Container = styled.div`
   flex-wrap: wrap;
   flex-direction: column;
   gap: 1vh;
-  margin-top: 1vh;
   justify-content: center;
 `;
 
@@ -54,9 +59,9 @@ const ButtonBox = styled.button`
   transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s;
 
   &:hover {
-    background-color: #1DCF82;
+    background-color: #1dcf82;
     color: #ffffff;
-    border: #1DCF82 solid 3px;
+    border: #1dcf82 solid 3px;
   }
 
   &:active {

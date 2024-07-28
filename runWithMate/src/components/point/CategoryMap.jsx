@@ -150,7 +150,7 @@ function CategoryMap() {
         <CategoryItem src={CategoryGym} alt="category Gym" onClick={() => handleCategoryClick('GYM_CATEGORY_CODE')} />
         <CategoryItem src={CategoryPilates} alt="category Pilates" onClick={() => handleCategoryClick('PILATES_CATEGORY_CODE')} />
       </CategoryContainer>
-      <MapContainer id="map"></MapContainer>
+      <MapContainer id="map" style={{ width: '100%', height: '40vh' }}></MapContainer>
     </Container>
   );
 }
