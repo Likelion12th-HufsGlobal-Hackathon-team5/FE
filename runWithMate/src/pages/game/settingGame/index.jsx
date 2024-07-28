@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import Header from '../../../components/Header';
-import Content from '../../../components/setting/Content';
-import Setting from '../../../components/setting/Setting';
-import Lobby from '../../../components/setting/Lobby';
+import Content from '../../../components/Setting/Content';
+import Setting from '../../../components/Setting/Setting';
+import Lobby from '../../../components/Setting/Lobby';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 

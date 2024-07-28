@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import GameOver from "../../components/game/gameOver/GameOver";
+import GameOver from "../../components/game/GameOver/GameOver";
 import Map from "../../components/game/Map";
 import GameInfo from "../../components/game/GameInfo";
 import GameRanking from "../../components/game/GameRanking";

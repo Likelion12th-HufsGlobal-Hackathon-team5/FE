@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import Player from './Player';
 import OtherPlayer from './Player2';
+import { BsLink45Deg } from "react-icons/bs";
 
 const LobbyForm = styled.form`
     width: 85%;
@@ -12,8 +13,8 @@ const LobbyForm = styled.form`
     border: 0.7vh solid #217EEF;
     background: #FFF;
     position: relative;
-    top : 10vh;
-    left : 4vh;
+    top: 10vh;
+    left: 4vh;
 `;
 
 const LobbyTitle = styled.h2`
@@ -32,76 +33,80 @@ const LobbySubtitle = styled.p`
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-    margin-top : 2.5vh;
 `;
 
 const CodeContainer = styled.div`
     display: flex;
-    width : 100%;
-    height : 100%;
-`
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+`;
 
-const InviteCodeContainer = styled.div`
-    flex-direction: column;
-    width : 50%;
-    height : 100%;
-`
-const KakaoCodeContainer = styled.div`
-    flex-direction: column;
-    width : 50%;
-    height : 100%;
-`
+const LinkImg = styled(BsLink45Deg)`
+    font-size: 4vh;
+    color: #FFF; 
+    margin-right: 2vh; 
+`;
 
-const Kakaobutton = styled.button`
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    width : 100%;
-    height : 100%;
+const CopyBtn = styled.div`
+    width: 100%;
+    height: 6vh;
+    flex-shrink: 0;
     border-radius: 1vh;
-    background: #FAE100;
-    font-family: Inter, sans-serif;
-    font-size: 2vh; 
-    color: #000; 
-    `
+    background: #000;
+    text-align: center;
+    display: flex; /* Flexbox 사용 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: flex-start; /* 수평 왼쪽 정렬 */
+    padding-left: 1vh; /* 아이콘과 텍스트 사이에 여백 추가 */
+    position: relative;
+    margin-top : 1vh;
+    margin-bottom : 1vh;
+`;
 
-const Line = styled.div`
-  border-left: 0.3vh solid black;
-  width: 1vh;
-  height: 6vh;
-  color: #217EEF;
-  margin-top : 2vh;
+const CopyTitle = styled.h3`
+    color: #FFF;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin: 0; /* margin-top 제거 */
+    margin-left: 1vh; /* 아이콘과 텍스트 사이에 여백 추가 */
 `;
 
 const HorizontalLine = styled.div`
-  border-top: 0.2vh solid black;  
-  width: 100%;
-  color: #217EEF;
-  margin-top : 2vh;
+    border-top: 0.2vh solid black;  
+    width: 100%;
+    color: #217EEF;
+    margin-top: 1vh;
 `;
 
 const ReadyContainer = styled.div`
-    width : 100%;
-    height : 100%;
-`
+    width: 100%;
+    height: 100%;
+`;
 
+export default function Lobby() {
+    const copyUrlToClipboard = () => {
+        const currentUrl = window.location.href;
+        navigator.clipboard.writeText(currentUrl)
+          .then(() => {
+            alert('URL이 클립보드에 복사되었습니다.');
+          })
+          .catch(err => {
+            console.error('URL 복사 실패', err);
+          });
+    };
 
-
-export default function Lobby(){
-    return(
-
+    return (
         <LobbyForm>
             <LobbyTitle>게임 로비</LobbyTitle>
             <CodeContainer>
-                <InviteCodeContainer>
-                    <LobbySubtitle>초대코드</LobbySubtitle>
-                    <h1>벡앤드코드</h1>
-                </InviteCodeContainer>
-                <Line />
-                <KakaoCodeContainer>
-                    <LobbySubtitle>또는</LobbySubtitle>
-                    <Kakaobutton>카카오톡 초대</Kakaobutton>
-                </KakaoCodeContainer>
+                <CopyBtn onClick={copyUrlToClipboard}>
+                    <LinkImg />
+                    <CopyTitle>초대 링크 공유하기</CopyTitle>
+                </CopyBtn>
             </CodeContainer>
             <HorizontalLine />
             <LobbySubtitle>플레이어</LobbySubtitle>
