@@ -50,6 +50,7 @@ function Game() {
         return () => clearTimeout(timer);
     }, []);
 
+    
   return (
     <>
       <Container>
