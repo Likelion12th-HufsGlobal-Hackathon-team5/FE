@@ -11,7 +11,9 @@ function PointShop() {
   return (
     <>
       <Header />
-      <Container>
+      
+      <Wrapper>
+        <Container>
         <PointShopTitle>
           <StyledBsFillCartFill />
           <p>포인트 사용처</p>
@@ -40,21 +42,28 @@ function PointShop() {
           <Description>
             - 구매 가능한 건강 기능 식품, 헬스 용품 찾아보기 -
           </Description>
-          <MarketBtn />
         </BeHealthy>
+          <MarketBtn />
       </Container>
+      </Wrapper>
     </>
   );
 }
 
 export default PointShop;
+const Wrapper =styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 2.5vh;
+`
 
 const Container = styled.div`
-  margin: 4vh;
+  margin: 0vh 4vh;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 3vh;
+  gap: 2.5vh;
 `;
 
 const PointShopTitle = styled.div`
@@ -64,6 +73,7 @@ const PointShopTitle = styled.div`
   align-items: center;
   gap: 1vh;
   padding: 1vh;
+  margin-top: 3vh;
   border-bottom: 3px solid #2e2929;
   p {
     font-weight: 900;
@@ -82,7 +92,6 @@ const GotoExercise = styled.div`
   justify-content: center;
   gap: 1vh;
   background-color: #ffffff;
-  margin-bottom: -2vh;
 `;
 
 const BeHealthy = styled.div`
@@ -92,7 +101,6 @@ const BeHealthy = styled.div`
   align-items: center;
   justify-content: center;
   gap: 1vh;
-  margin-bottom: 2vh;
   background-color: #ffffff;
 `;
 
