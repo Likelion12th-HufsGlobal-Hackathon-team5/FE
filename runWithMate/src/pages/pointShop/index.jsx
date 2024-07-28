@@ -28,7 +28,7 @@ function PointShop() {
           </Description>
         </GotoExercise>
       </Container>
-      <Categorymap />
+      {/* <Categorymap /> */}
       <Container>
         <BeHealthy>
           <Title>
