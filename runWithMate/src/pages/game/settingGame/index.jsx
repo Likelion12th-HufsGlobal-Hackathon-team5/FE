@@ -50,6 +50,7 @@ function SettingGame() {
     navigate('/game');
   };
 
+  
 
   return (
   <>
