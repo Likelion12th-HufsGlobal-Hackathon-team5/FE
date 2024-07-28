@@ -183,6 +183,19 @@ function Main (){
     const navigate = useNavigate();
     const SERVER_URL='http://api.runwithmate.klr.kr';
     const [onDiv, setonDiv] = useState(true);
+  
+    const handleCreateGameRoom = async () => {
+        try {
+            const response = await axios.post(`http://${SERVER_URL}/api/games/join`); // Adjust the URL as needed
+            // 수정 1
+            
+            console.log('Game room created:', response.data);
+        } catch (error) {
+            console.error('Failed to create game room:', error);
+        }
+        setonDiv(false);
+        alert(onDiv);
+    };
 
     const { connected, roomNumber, createRoom }=UseStomp();
 
