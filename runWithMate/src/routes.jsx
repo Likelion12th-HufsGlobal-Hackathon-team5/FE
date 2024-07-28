@@ -6,7 +6,6 @@ import Game from './pages/game';
 import GameResult from './pages/game/gameResult';
 import Point from './pages/point';
 import SiteMap from './pages/siteMap';
-import GameCopy from './pages/game/index copy';
 import Map from '../src/components/game/Map';
 
 const routes=[
@@ -54,11 +53,6 @@ const routes=[
         path:'/game/map',
         element:<Map />,
         name:'05-1.게임 - 카카오맵 페이지'
-    },
-    {
-        path:'/gameover',
-        element:<GameCopy />,
-        name:'05-1.게임 - 게임 오버 페이지'
     },
 ]
 
