@@ -1,7 +1,9 @@
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import Player from './Player';
 import OtherPlayer from './Player2';
 import { BsLink45Deg } from "react-icons/bs";
+import { useNavigate } from 'react-router-dom';
 
 const LobbyForm = styled.form`
     width: 85%;
@@ -44,15 +46,20 @@ const CodeContainer = styled.div`
 
 const LinkImg = styled(BsLink45Deg)`
     font-size: 4vh;
-    color: #FFF; 
+    color: #FFF;
     margin-right: 2vh; 
-`;
+    transition: color 0.3s;
+
+
+    
+  `;
 
 const CopyBtn = styled.div`
     width: 100%;
     height: 6vh;
     flex-shrink: 0;
     border-radius: 1vh;
+    border: #000;
     background: #000;
     text-align: center;
     display: flex; /* Flexbox 사용 */
@@ -60,20 +67,49 @@ const CopyBtn = styled.div`
     justify-content: flex-start; /* 수평 왼쪽 정렬 */
     padding-left: 1vh; /* 아이콘과 텍스트 사이에 여백 추가 */
     position: relative;
-    margin-top : 1vh;
-    margin-bottom : 1vh;
-`;
-
-const CopyTitle = styled.h3`
+    margin-top: 1vh;
+    margin-bottom: 1vh;
     color: #FFF;
     font-family: Inter;
-    font-size: 16px;
+    font-size: 40px; /* 글씨 크기 변경 */
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    margin: 0; /* margin-top 제거 */
-    margin-left: 1vh; /* 아이콘과 텍스트 사이에 여백 추가 */
+
+    
+    &:hover {
+        border-radius: 1vh;
+        border: 3px solid #141414;
+        background: #4E4E4E;
+    }
+
+    
+  &:active {
+    border-radius: 10px;
+    background: #FFF;
+    color : #000;
+
+    .icon{
+        color:black;
+    }
+  }
+
+  /* .icon:active{
+    color:black;
+  } */
+    
 `;
+
+// const CopyTitle = styled.h3`
+//     color: #FFF;
+//     font-family: Inter;
+//     font-size: 16px;
+//     font-style: normal;
+//     font-weight: 700;
+//     line-height: normal;
+//     margin: 0; /* margin-top 제거 */
+//     margin-left: 1vh; /* 아이콘과 텍스트 사이에 여백 추가 */
+// `;
 
 const HorizontalLine = styled.div`
     border-top: 0.2vh solid black;  
@@ -88,24 +124,66 @@ const ReadyContainer = styled.div`
 `;
 
 export default function Lobby() {
+    const navigate = useNavigate();
+    const [timerId, setTimerId] = useState(null);
+    const [Active , setActive] = useState(false);
+
+    const mock = {
+        type: 'room_joined',
+        user1: "mm",
+        user2: "nn",
+        bet_point: 300,
+        time_limit: 10000
+    };
+
     const copyUrlToClipboard = () => {
         const currentUrl = window.location.href;
         navigator.clipboard.writeText(currentUrl)
-          .then(() => {
-            alert('URL이 클립보드에 복사되었습니다.');
-          })
-          .catch(err => {
-            console.error('URL 복사 실패', err);
-          });
+            .then(() => {
+                alert('URL이 클립보드에 복사되었습니다.');
+            })
+            .catch(err => {
+                console.error('URL 복사 실패', err);
+            });
+    };
+
+    const startTimer = () => {
+        const id = setTimeout(() => {
+            if (mock.type !== "room_joined") {
+                alert("대기시간이 초과되어 메인 화면으로 이동합니다.");
+                navigate("/main");
+            }
+        }, 3000);
+        setTimerId(id); // 타이머 ID를 상태에 저장
+    };
+
+    const cancelTimer = () => {
+        if (timerId !== null) {
+            clearTimeout(timerId);
+            setTimerId(null); // 타이머 ID를 null로 리셋
+            console.log('타이머가 취소되었습니다.');
+        }
+    };
+
+    const handleClick = () => {
+        copyUrlToClipboard();
+        startTimer();
+        // 타입이 'room_joined'이면 타이머를 취소
+        if (mock.type === "room_joined") {
+            cancelTimer(); 
+        }
+        setActive(!Active);
+
     };
 
     return (
         <LobbyForm>
             <LobbyTitle>게임 로비</LobbyTitle>
             <CodeContainer>
-                <CopyBtn onClick={copyUrlToClipboard}>
-                    <LinkImg />
-                    <CopyTitle>초대 링크 공유하기</CopyTitle>
+                <CopyBtn 
+                onClick={handleClick}>
+                    <LinkImg className='icon'/>
+                    <h2>초대 링크 공유하기</h2>
                 </CopyBtn>
             </CodeContainer>
             <HorizontalLine />
