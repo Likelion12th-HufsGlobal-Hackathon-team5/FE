@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "@emotion/styled";
-import GameOverImg from "../../../assets/images/GoodJob.png"; // 이미지 경로 확인
 
 const Container = styled.div`
   display: flex;
@@ -78,7 +77,7 @@ const GameOver = () => {
     <Container>
       <Popup>
         <ImgBox>
-          <img src={GameOverImg} alt="Game Over" style={{ maxWidth: '80%', height: 'auto' }} />
+          <img src={"/img/GoodJob.png"} alt="Game Over" style={{ maxWidth: '80%', height: 'auto' }} />
         </ImgBox>
         <DescriptionBox>
           <TitleBox>
