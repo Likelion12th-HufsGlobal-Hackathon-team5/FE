@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
+
 
 const HostDiv = styled.div`
     width: 100%;
@@ -153,6 +155,8 @@ export default function Setting({ Mypoint, setMypoint }) {
     const [initpoint, setInitPoint] = useState(Mypoint);
     const [activeButton, setActiveButton] = useState("");
     const [timeLimit, setTimeLimit] = useState("");
+    
+    const navigate = useNavigate();
 
     useEffect(() => {
         setnowDiv(localStorage.getItem("look"));
@@ -198,9 +202,16 @@ export default function Setting({ Mypoint, setMypoint }) {
         alert(timeLimit);
 
         // stomp.send("/send/update_room/{roomId}",token, JSON.stringify(data))
+
     }
+    
 
-
+    // const oneMinute = () => {
+    //     setTimeout(() => {
+    //         alert("대기시간이 초과되어 메인 화면으로 이동합니다.");
+    //         navigate("/main");
+    //     }, 5000); 
+    // }
 
     return (
         <>
