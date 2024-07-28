@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import styled from '@emotion/styled';
@@ -5,7 +6,8 @@ import styled from '@emotion/styled';
 import Header from '../../components/Header';
 
 import axios from 'axios';
-import useWebSocket from '../../hooks/useWebSocket';
+// import useWebSocket from '../../hooks/useWebSocket';
+import UseStomp from '../../hooks/useStomp';
 
 import GameIcon from '../../assets/images/gameIcon.png';
 import PointIcon from '../../assets/images/pointIcon.png';
@@ -14,7 +16,6 @@ import BrainIcon from '../../assets/images/brainIcon.png';
 import { BsCaretRightFill } from 'react-icons/bs';
 import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
-import { useState } from 'react';
 
 
 const websocketUrl='ws서버-url';
@@ -180,32 +181,25 @@ const GotoHeader = styled.div`
 
 function Main (){
     const navigate = useNavigate();
-    const SERVER_URL='server-url';
+    const SERVER_URL='http://api.runwithmate.klr.kr';
     const [onDiv, setonDiv] = useState(true);
-  
-    const handleCreateGameRoom = async () => {
-        try {
-            const response = await axios.post(`http://${SERVER_URL}/api/games/join`); // Adjust the URL as needed
-            // 수정 1
-            setonDiv(false);
-            console.log('Game room created:', response.data);
-        } catch (error) {
-            console.error('Failed to create game room:', error);
+
+    const { connected, roomNumber, createRoom }=UseStomp();
+
+    const handleButtonClick = async () => {
+        await createRoom();
+        setOnDiv(false);
+        // 상태가 업데이트된 후 로컬 스토리지에 값을 저장하기 위해 useEffect에서 처리
+        if (connected && roomNumber) {
+            navigate('/settingGame');
         }
     };
 
-    const onMessage = (message) => {
-        const data = JSON.parse(message.data);
-        if (data.action === 'game_room_created') {
-            const roomId = data.roomId;
-            navigate(`/game/${roomId}`);
-        }
-    };
-
-    useWebSocket(websocketUrl, onMessage);
-  
-    
-
+    useEffect(() => {
+        // onDiv 상태가 변경될 때마다 로컬 스토리지 업데이트
+        localStorage.setItem("look", onDiv);
+    }, [onDiv]); // onDiv가 변경될 때마다 이 useEffect가 실행됨
+     
 
     return (
         <>
@@ -252,7 +246,10 @@ function Main (){
                     </Point>
                 </ContentsBox>
 
-                <GotoGame to='/settingGame' onClick={handleCreateGameRoom}>
+                <GotoGame to='/settingGame' 
+                    // onClick={handleCreateGameRoom}
+                    onClick={handleButtonClick}
+                    >
                     <img src={GameIcon} className='gameIcon'/>
                     <GotoText>
                         <GotoHeader>
@@ -276,5 +273,6 @@ function Main (){
         </>
     )
 }
+
 
 export default Main;
