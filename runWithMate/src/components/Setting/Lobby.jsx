@@ -123,18 +123,11 @@ const ReadyContainer = styled.div`
     height: 100%;
 `;
 
-export default function Lobby() {
+export default function Lobby({settingmock}) {
     const navigate = useNavigate();
     const [timerId, setTimerId] = useState(null);
     const [Active , setActive] = useState(false);
 
-    const mock = {
-        type: 'room_joined',
-        user1: "mm",
-        user2: "nn",
-        bet_point: 300,
-        time_limit: 10000
-    };
 
     const copyUrlToClipboard = () => {
         const currentUrl = window.location.href;
@@ -149,7 +142,7 @@ export default function Lobby() {
 
     const startTimer = () => {
         const id = setTimeout(() => {
-            if (mock.type !== "room_joined") {
+            if (settingmock.type !== "room_joined") {
                 alert("대기시간이 초과되어 메인 화면으로 이동합니다.");
                 navigate("/main");
             }
@@ -169,7 +162,7 @@ export default function Lobby() {
         copyUrlToClipboard();
         startTimer();
         // 타입이 'room_joined'이면 타이머를 취소
-        if (mock.type === "room_joined") {
+        if (settingmock.type === "room_joined") {
             cancelTimer(); 
         }
         setActive(!Active);
@@ -189,9 +182,9 @@ export default function Lobby() {
             <HorizontalLine />
             <LobbySubtitle>플레이어</LobbySubtitle>
             <ReadyContainer>
-                <Player />
+                <Player playermock = {settingmock} />
                 <HorizontalLine />
-                <OtherPlayer />
+                <OtherPlayer  playermock = {settingmock}/>
             </ReadyContainer>
         </LobbyForm>
     );

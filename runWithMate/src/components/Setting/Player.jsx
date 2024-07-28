@@ -32,11 +32,11 @@ const Host = styled.div`
 
 
 
-export default function Player(){
+export default function Player({playermock}){
     return(
         <PlayerContainer>
             <MdOutlinePerson size='30' />
-            <UserName>000님</UserName>
+            <UserName>{playermock.user1}님</UserName>
             <Host>
                 <p>Host</p>
             </Host>
