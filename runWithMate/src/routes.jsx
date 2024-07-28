@@ -9,6 +9,8 @@ import SiteMap from './pages/siteMap';
 import Map from '../src/components/game/Map';
 import PointShop from '../src/pages/pointShop/index';
 
+import Test from './pages/test';
+
 const routes=[
     {
         path: '/',
@@ -60,6 +62,11 @@ const routes=[
         element:<Map />,
         name:'05-1.게임 - 카카오맵 페이지'
     },
+    {
+        path:'/test',
+        element:<Test />,
+        name:'테스트'
+    }
 ]
 
 export default routes;
