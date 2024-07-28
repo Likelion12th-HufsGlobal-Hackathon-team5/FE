@@ -4,9 +4,10 @@ import CategoryGym from '../../assets/images/cg.png';
 import CategoryPilates from '../../assets/images/cp.png';
 
 const Container = styled.div`
-  width: 100%;
-  height: 100%;
+  /* width: 100%; */
+  /* height: 100%; */
   max-width: 393px;
+  max-height: 435px;
   position: relative;
 `;
 
