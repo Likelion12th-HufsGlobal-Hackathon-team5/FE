@@ -213,12 +213,16 @@ const ItemBox = styled.div`
   cursor: pointer;
   
   &:hover {
+    transition: all 0.2s;
+    
     background-color: #1B63BB;
     color: #ffffff;
     border: solid 1px #1B63BB;
   }
 
   &:active {
+    transition: all 0.2s;
+
     background-color: #217EEF;
     color: #ffffff;
     border: solid 1px #217EEF;
@@ -230,5 +234,4 @@ const CategoryItem = styled.img`
   cursor: pointer;
   width: 30px;
   height: auto;
-  
 `;
