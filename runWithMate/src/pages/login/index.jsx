@@ -118,7 +118,7 @@ const GotoMainBtn=styled.button`
 `;
 function Login(){
     const handleKakaoLogin = () => {
-        window.location.href = 'http://api.runwithmate.klr.kr/oauth2/authorization/kakao';
+        window.location.href = 'https://api.runwithmate.klr.kr/oauth2/authorization/kakao';
       };
       
       
