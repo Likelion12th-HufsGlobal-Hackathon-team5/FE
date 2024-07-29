@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 
+
 const GameRoom = styled.h1`
     color: #000;
     text-align: center;
