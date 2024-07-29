@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import axios from 'axios';
 
-const WEBSOCKET_URL = 'ws://api.runwithmate.klr.kr/connect'; // WebSocket 서버 URL
+const WEBSOCKET_URL = 'wss://api.runwithmate.klr.kr/connect'; // WebSocket 서버 URL
 
 const UseStomp = () => {
   const [connected, setConnected] = useState(false);
@@ -12,7 +12,7 @@ const UseStomp = () => {
     // 방 생성 요청을 보내고 방 번호를 받아옴
     const createRoom = async () => {
       try {
-        const response = await axios.post('http://api.runwithmate.klr.kr/createroom'); // 백엔드의 방 생성 엔드포인트
+        const response = await axios.post('https://api.runwithmate.klr.kr/createroom'); // 백엔드의 방 생성 엔드포인트
         setRoomNumber(response.data.roomNumber); // 응답에서 방 번호 설정
       } catch (error) {
         console.error('방 생성 실패:', error);
