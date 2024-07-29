@@ -1,12 +1,15 @@
+
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { Client } from '@stomp/stompjs';
 import axios from 'axios';
 
 const WEBSOCKET_URL = 'ws://api.runwithmate.klr.kr/connect'; // WebSocket 서버 URL
 
+
 const UseStomp = () => {
   const [connected, setConnected] = useState(false);
   const [roomNumber, setRoomNumber] = useState(null);
+
   const stompClientRef = useRef(null);
 
   const createRoom = useCallback(async () => {
@@ -17,7 +20,21 @@ const UseStomp = () => {
     } catch (error) {
       console.error('방 생성 실패:', error);
     }
-  }, []);
+
+
+ // useEffect(() => {
+    // 방 생성 요청을 보내고 방 번호를 받아옴
+   // const createRoom = async () => {
+     // try {
+       // const response = await axios.post('https://api.runwithmate.klr.kr/createroom'); // 백엔드의 방 생성 엔드포인트
+        //setRoomNumber(response.data.roomNumber); // 응답에서 방 번호 설정
+      //} catch (error) {
+      //  console.error('방 생성 실패:', error);
+     // }
+    //};
+
+    //createRoom();
+  //}, []);
 
   useEffect(() => {
     if (!roomNumber) return;
@@ -33,11 +50,13 @@ const UseStomp = () => {
 
     // STOMP 연결 성공 시 호출되는 함수
     stompClient.onConnect = () => {
+
       console.log('웹소켓 연결됨!!!');
       setConnected(true);
 
       // 특정 주제(채팅 방)를 구독
       stompClient.subscribe(`/room/${roomNumber}`, (message) => {
+
         console.log('받은 메시지:', message.body);
       });
     };
@@ -55,6 +74,7 @@ const UseStomp = () => {
 
     // STOMP 클라이언트 활성화
     stompClient.activate();
+
     stompClientRef.current = stompClient;
 
     return () => {
@@ -71,6 +91,7 @@ const UseStomp = () => {
   }, []);
 
   return { connected, roomNumber, disconnect, createRoom };
+
 };
 
 export default UseStomp;

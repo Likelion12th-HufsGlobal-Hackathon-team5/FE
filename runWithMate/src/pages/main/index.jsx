@@ -186,10 +186,13 @@ function Main (){
     const SERVER_URL='http://api.runwithmate.klr.kr';
     const [onDiv, setonDiv] = useState(true);
 
+
     const handleButtonClick = async () => {
         await createRoom();
         setonDiv(false);
+
         // alert(onDiv);
+
         // 상태가 업데이트된 후 로컬 스토리지에 값을 저장하기 위해 useEffect에서 처리
         if (connected && roomNumber) {
             navigate('/settingGame');

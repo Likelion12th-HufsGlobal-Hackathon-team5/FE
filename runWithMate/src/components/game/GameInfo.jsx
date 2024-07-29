@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 
 import useWebSocket from '../../hooks/useWebSocket';
 
 import Giveup from '../../components/game/gameGiveUp/giveup';
+import Timer from './gameResult/GameTimer';
 import axios from 'axios';
 
 import useStomp  from '../../hooks/useStomp';
@@ -134,6 +135,7 @@ function GameInfo(){
     //     setIsGiveupOpen(false);
     // };
 
+
     return(
         <>
             <GameInfoDiv>
@@ -151,7 +153,7 @@ function GameInfo(){
                     <GameInfoContents>  
                         <GameInfoContentEach>
                             남은 시간<br/>
-                            14:53
+                            <Timer />
                         </GameInfoContentEach>
                         <Line />
                         <GameInfoContentEach>

@@ -50,7 +50,13 @@ function SettingGame() {
     navigate('/game');
   };
 
-  
+  const mock = {
+    type: 'room_joined',
+    user1: "이수혁",
+    user2: "유지희",
+    bet_point: 300,
+    time_limit: 10000
+};
 
   return (
   <>
@@ -58,8 +64,8 @@ function SettingGame() {
       <Header />
       <Background>
         <Content />
-        <Setting Mypoint = {Point} setMypoint={setPoint}/>
-        <Lobby />
+        <Setting Mypoint = {Point} setMypoint={setPoint} settingmock = {mock}/>
+        <Lobby settingmock = {mock}/>
         <StartGame onClick={handleStartGame}>게임 시작하기</StartGame>
       </Background>
     </Container>
