@@ -7,6 +7,8 @@ import Giveup from '../../components/game/gameGiveUp/giveup';
 import Timer from './gameResult/GameTimer';
 import axios from 'axios';
 
+import useStomp  from '../../hooks/useStomp';
+
 const GameInfoDiv=styled.div`
     z-index: 10;
     
@@ -93,15 +95,19 @@ const Line=styled.div`
     height: 85%;
 `;
 
-const WEBSOCKET_URL='ws server url'
+// const WEBSOCKET_URL='ws server url'
 
 function GameInfo(){
+    const { disconnect } = useStomp();
+    
     const [isLoser, setIsLoser]=useState(false);
-    const { sendMessage } = useWebSocket(WEBSOCKET_URL);
+    // const [isGameOver, setIsGameOver] = useState(false); // 게임 오버 상태 추가
+    
+    // const { sendMessage } = useWebSocket(WEBSOCKET_URL);
 
     //이하 모달창의 상태관리
     const [isGiveupOpen, setIsGiveupOpen] = useState(false);
-
+    
     const openGiveup = () => {
         setIsGiveupOpen(true);
     };
@@ -110,24 +116,24 @@ function GameInfo(){
         setIsGiveupOpen(false);
     };
 
-    //
 
-    const handleSurrender=async()=>{
-        // true : 사용자가 기권했음
-        setIsLoser(true);
+    // const handleSurrender=async()=>{
+    //     // true : 사용자가 기권했음
+    //     setIsLoser(true);
+    //     disconnect();
 
-        // ws로 서버에 기권 사실을 알림 / {} 빈 바디
-        sendMessage({type:`surrender`,user:userName});
+    //     // ws로 서버에 기권 사실을 알림 / {} 빈 바디
+    //     sendMessage({type:`surrender`,user:userName});
     
-        try{
-            await axios.post(`/surrender/&{roomId}`,{})
-        } catch (error) {
-            console.error('Error message - during surrender : ', error);
-        }
+    //     try{
+    //         await axios.post(`/surrender/&{roomId}`,{})
+    //     } catch (error) {
+    //         console.error('Error message - during surrender : ', error);
+    //     }
 
-        // giveup 모달창을 닫기 위해 false로 설정
-        setIsGiveupOpen(false);
-    };
+    //     // giveup 모달창을 닫기 위해 false로 설정
+    //     setIsGiveupOpen(false);
+    // };
 
 
     return(
@@ -141,7 +147,7 @@ function GameInfo(){
                         {isGiveupOpen && 
                             <Giveup 
                                 onClose={closeGiveup} 
-                                onSurrender={handleSurrender}
+                                // onSurrender={handleSurrender}
                                 />}
                     </GameInfoHeader>
                     <GameInfoContents>  
