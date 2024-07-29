@@ -181,27 +181,15 @@ const GotoHeader = styled.div`
 
 function Main (){
     const navigate = useNavigate();
+    const { connected, roomNumber, createRoom }=UseStomp();
+
     const SERVER_URL='http://api.runwithmate.klr.kr';
     const [onDiv, setonDiv] = useState(true);
-  
-    const handleCreateGameRoom = async () => {
-        try {
-            const response = await axios.post(`http://${SERVER_URL}/api/games/join`); // Adjust the URL as needed
-            // 수정 1
-            
-            console.log('Game room created:', response.data);
-        } catch (error) {
-            console.error('Failed to create game room:', error);
-        }
-        setonDiv(false);
-        alert(onDiv);
-    };
-
-    const { connected, roomNumber, createRoom }=UseStomp();
 
     const handleButtonClick = async () => {
         await createRoom();
-        setOnDiv(false);
+        setonDiv(false);
+        // alert(onDiv);
         // 상태가 업데이트된 후 로컬 스토리지에 값을 저장하기 위해 useEffect에서 처리
         if (connected && roomNumber) {
             navigate('/settingGame');
@@ -260,7 +248,6 @@ function Main (){
                 </ContentsBox>
 
                 <GotoGame to='/settingGame' 
-                    // onClick={handleCreateGameRoom}
                     onClick={handleButtonClick}
                     >
                     <img src={GameIcon} className='gameIcon'/>
