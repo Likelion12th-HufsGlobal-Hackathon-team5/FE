@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
-import Image from '../../assets/images/Login.png';
-import KakaoImg from '../../assets/images/kakao_login.png';
+
+import Image from '/img/Login.png';
+import KakaoImg from '/img/kakao_login.png';
+
 import {BiHome} from 'react-icons/bi';
 
 const Container=styled.div`

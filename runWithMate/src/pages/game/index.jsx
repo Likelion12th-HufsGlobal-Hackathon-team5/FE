@@ -5,14 +5,14 @@ import GameOver from "../../components/game/GameOver/GameOver";
 import Map from "../../components/game/Map";
 import GameInfo from "../../components/game/GameInfo";
 import GameRanking from "../../components/game/GameRanking";
+import useStomp from '../../hooks/useStomp';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  /* background-color: red; */
 `;
+
 const MapContainer = styled.div`
   position: absolute;
   top: 0;
@@ -23,38 +23,98 @@ const MapContainer = styled.div`
 
 function Game() {
   const navigate = useNavigate();
-  // 기본값으로 3분 설정
-  const [timeLimit, setTimeLimit] = useState(18);
+  const { disconnect } = useStomp();
+  const [timeLimit, setTimeLimit] = useState(3); // 기본값으로 3분 설정 (초 단위)
   const [isGameOver, setIsGameOver] = useState(false); // 게임 오버 상태 추가
+
+  const [data, setData] = useState([]);
+  
+  useEffect(() => {
+    const mock = [
+      {
+        "box_type": "dopamine",
+        "id": 1,
+        "lat": 30,
+        "lng": 50,
+        "box_amount": 10
+      },
+      {
+        "box_type": "dopamine",
+        "id": 2,
+        "lat": 30,
+        "lng": 50,
+        "box_amount": 10
+      },
+      {
+        "box_type": "dopamine",
+        "id": 3,
+        "lat": 30,
+        "lng": 50,
+        "box_amount": 10
+      },
+      {
+        "box_type": "point",
+        "id": 1,
+        "lat": 30,
+        "lng": 50,
+        "box_amount": 10
+      },
+      {
+        "box_type": "point",
+        "id": 2,
+        "lat": 30,
+        "lng": 50,
+        "box_amount": 10
+      },
+      {
+        "box_type": "point",
+        "id": 3,
+        "lat": 30,
+        "lng": 50,
+        "box_amount": 10
+      }
+    ];
+
+    setData(mock);
+  }, []);
+
+  useEffect(() => {
+    // 데이터 그룹화
+    const groupedData = data.reduce((acc, item) => {
+      if (!acc[item.box_type]) {
+        acc[item.box_type] = [];
+      }
+      acc[item.box_type].push(item);
+      return acc;
+    }, {});
+
+    // 각각의 box_type에 대해 localStorage에 저장
+    for (const [key, value] of Object.entries(groupedData)) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  }, [data]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-        setIsGameOver(true); // 게임 오버 상태 변경
-        setTimeout(()=>{
-            navigate("/gameResult");
-        }, 2000);
+      setIsGameOver(true); // 게임 오버 상태 변경
+      setTimeout(() => {
+        navigate("/gameResult");
+      }, 2000);
     }, timeLimit * 1000);
-    
-    // timeLimit을 milliseconds 로 설정
 
     return () => clearTimeout(timer); // clear the timer when the component is unmounted
-  }, [timeLimit, history]);
+  }, [timeLimit, navigate]);
 
-      // 3초 후에 게임 오버 상태 변경
-      useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsGameOver(true); // 게임 오버 상태 변경
-        }, 1000);
+  useEffect(() => {
+    if (isGameOver) {
+      disconnect();
+    }
+  }, [isGameOver, disconnect]);
 
-        // 컴포넌트 언마운트 시 타이머 정리
-        return () => clearTimeout(timer);
-    }, []);
-
-    
   return (
     <>
       <Container>
-        {isGameOver && <GameOver />} {/* GameOver 컴포넌트 추가 */}
+        {isGameOver && <GameOver />}
         <GameInfo />
         <MapContainer>
           <Map />

@@ -105,7 +105,7 @@ const Giveup = ({ onClose , betting }) => {
     closeWebSocket();
     // WebSocket이 닫힌 후 navigate 실행
     setTimeout(() => {
-      navigate('/main');
+      navigate('/gameResult');
     }, 100); // 짧은 지연 시간을 주어 WebSocket이 닫힐 시간을 줍니다.
   };
 
@@ -122,7 +122,7 @@ const Giveup = ({ onClose , betting }) => {
           배팅한 포인트는 자동으로 상대방에게 넘어갑니다.
         </Content>
         <MainButton onClick={handleCloseConnection}>
-          기권하고 메인으로 돌아가기
+          기권하기
           </MainButton>
       </Modal>
     </Container>,
