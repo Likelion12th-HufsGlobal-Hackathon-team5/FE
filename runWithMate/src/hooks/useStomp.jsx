@@ -15,7 +15,7 @@ const UseStomp = () => {
       const response = await axios.post('http://api.runwithmate.klr.kr/createroom'); // 백엔드의 방 생성 엔드포인트
       setRoomNumber(response.data.roomNumber); // 응답에서 방 번호 설정
     } catch (error) {
-      console.error('방 생성 실패:', error);
+      console.error('useStomp.jsx - 방 생성 실패:', error);
     }
   }, []); // useCallback에 빈 배열을 넣어주어 함수의 의존성을 관리
 

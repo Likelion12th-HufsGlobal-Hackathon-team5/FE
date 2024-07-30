@@ -44,23 +44,19 @@ const globalStyles = css`
   }
 `;
 
-const WEBSOCKET_URL = 'ws://api.runwithmate.klr.kr/connect';
-
 function Map() {
+  const location = useLocation();
+  const { connected, stompClientRef, roomNumber } = useStomp();
+  
   const [currentPosition, setCurrentPosition] = useState({ lat: null, lng: null });
   const [loading, setLoading] = useState(true);
-  // const { sendMessage } = useWebSocket(WEBSOCKET_URL);
-  const { connected, stompClientRef, roomNumber } = useStomp();
-  const location = useLocation();
 
   const updatePosition = useCallback(() => {
     if (location.pathname === '/game') {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         setCurrentPosition({ lat: latitude, lng: longitude });
-        // sendMessage({ lat: latitude, lng: longitude });
-        // console.log(`latitude : ${latitude} longitude : ${longitude}`);
-      
+        
         if(connected){
           //stomp를 통해 메세지를 송신
           const stompClient=useStomp().stompClientRef.current;
@@ -83,8 +79,10 @@ function Map() {
 
   useEffect(() => {
     const loadKakaoMapScript = () => {
+      const kakaoAppKey=process.env.REACT_APP_KAKAO_APP_KEY;
+
       const script = document.createElement('script');
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=70b6406b2ded139d1c5117b59f7d6ab8&libraries=services`;
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoAppKey}&libraries=services`;
       script.async = true;
       script.onload = () => {
         if (navigator.geolocation) {
@@ -317,7 +315,6 @@ function Map() {
     <>
       {loading && (
         <LoadingContainer>
-          {/* <img src={"https://i.makeagif.com/media/5-04-2016/NFBED7.gif"} alt="Loading" style={{ marginBottom: '20px' }} /> */}
           <ClipLoader color={"#217EEF"} loading={true}/>
           로딩중입니다...
         </LoadingContainer>

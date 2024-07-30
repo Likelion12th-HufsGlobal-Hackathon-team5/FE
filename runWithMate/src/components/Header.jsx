@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-import Icon from '../assets/images/NoBgIcon.png';
+import Icon from '/img/NoBgIcon.png';
 import { BsHouseDoorFill } from 'react-icons/bs';
 
 const Container=styled.div`
