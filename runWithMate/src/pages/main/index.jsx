@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import styled from '@emotion/styled';
@@ -6,22 +6,17 @@ import styled from '@emotion/styled';
 import Header from '../../components/Header';
 
 import axios from 'axios';
-// import useWebSocket from '../../hooks/useWebSocket';
 import UseStomp from '../../hooks/useStomp';
 
-import GameIcon from '../../assets/images/gameIcon.png';
-import PointIcon from '../../assets/images/pointIcon.png';
-import BrainIcon from '../../assets/images/brainIcon.png';
+import GameIcon from '/img/gameIcon.png';
+import PointIcon from '/img/pointIcon.png';
+import BrainIcon from '/img/brainIcon.png';
 
 import { BsCaretRightFill } from 'react-icons/bs';
 import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 
-
-const websocketUrl='ws서버-url';
-
 const Container=styled.div`
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -182,28 +177,23 @@ const GotoHeader = styled.div`
 function Main (){
     const navigate = useNavigate();
     const { connected, roomNumber, createRoom }=UseStomp();
-
-    const SERVER_URL='http://api.runwithmate.klr.kr';
     const [onDiv, setonDiv] = useState(true);
 
-
-    const handleButtonClick = async () => {
+    const handleButtonClick = useCallback(async()=>{
         await createRoom();
         setonDiv(false);
+    },[createRoom]);
 
-        // alert(onDiv);
-
-        // 상태가 업데이트된 후 로컬 스토리지에 값을 저장하기 위해 useEffect에서 처리
-        if (connected && roomNumber) {
+    useEffect(()=>{
+        if(connected && roomNumber){
             navigate('/settingGame');
         }
-    };
+    },[connected,roomNumber,navigate])
 
     useEffect(() => {
         // onDiv 상태가 변경될 때마다 로컬 스토리지 업데이트
         localStorage.setItem("look", onDiv);
     }, [onDiv]); // onDiv가 변경될 때마다 이 useEffect가 실행됨
-     
 
     return (
         <>
@@ -220,7 +210,7 @@ function Main (){
                 <ContentsBox>
                     경쟁은 간혹 부정적인 의미로 많이 남죠.<br />
                     하지만 잘 갖춰진 경쟁의 세계는<br />
-                    오히려 긍정적인 효과를 극대화시킬 수 있습니다! haha
+                    오히려 긍정적인 효과를 극대화시킬 수 있습니다!
                     <Point>
                         <Circle>
                             <FaRunning className='run' />

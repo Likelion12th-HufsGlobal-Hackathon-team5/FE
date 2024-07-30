@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import PointImg from "../../../assets/images/profile.png";
+import PointImg from "/img/profile.png";
 
 function GameResultBox() {
     const [gameData, setGameData] = useState(null);
