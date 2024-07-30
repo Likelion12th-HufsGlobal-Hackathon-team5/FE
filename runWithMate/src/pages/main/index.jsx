@@ -4,8 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import Header from '../../components/Header';
-
-import axios from 'axios';
 import UseStomp from '../../hooks/useStomp';
 
 import GameIcon from '/img/gameIcon.png';
@@ -15,6 +13,7 @@ import BrainIcon from '/img/brainIcon.png';
 import { BsCaretRightFill } from 'react-icons/bs';
 import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
+import getUserIdAndToken from '../../server/user/getUserIdAndToken';
 
 const Container=styled.div`
     display: flex;
@@ -183,6 +182,19 @@ function Main (){
         await createRoom();
         setonDiv(false);
     },[createRoom]);
+
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+                const myInfo = await getUserIdAndToken();
+                localStorage.setItem("userId", myInfo.userId);
+                localStorage.setItem("accessToken", myInfo.accessToken);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetch();
+    }, []);
 
     useEffect(()=>{
         if(connected && roomNumber){
