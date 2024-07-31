@@ -77,29 +77,33 @@ function Map() {
     }
   }, [location.pathname, connected, roomNumber, stompClientRef]);
 
+  // 수정한 부분
   useEffect(() => {
     const loadKakaoMapScript = () => {
-      const kakaoAppKey=process.env.REACT_APP_KAKAO_APP_KEY;
+      const kakaoAppKey = import.meta.env.VITE_KAKAO_APP_KEY;
 
-      const script = document.createElement('script');
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoAppKey}&libraries=services`;
-      script.async = true;
-      script.onload = () => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setCurrentPosition({ lat: latitude, lng: longitude });
-            displayMap(latitude, longitude);
-          }, showError, {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-          });
-        } else {
-          alert("위치 기능이 허용되지 않았거나, 현재 브라우저에서는 위치 기능을 제공하지 않습니다. ");
-        }
-      };
-      document.head.appendChild(script);
+      if (!document.getElementById('kakao-map-script')) {
+        const script = document.createElement('script');
+        script.id = 'kakao-map-script';
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoAppKey}&libraries=services`;
+        script.async = true;
+        script.onload = () => {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+              const { latitude, longitude } = position.coords;
+              setCurrentPosition({ lat: latitude, lng: longitude });
+              displayMap(latitude, longitude);
+            }, showError, {
+              enableHighAccuracy: true,
+              timeout: 5000,
+              maximumAge: 0
+            });
+          } else {
+            alert("위치 기능이 허용되지 않았거나, 현재 브라우저에서는 위치 기능을 제공하지 않습니다.");
+          }
+        };
+        document.head.appendChild(script);
+      }
     };
 
     loadKakaoMapScript();
