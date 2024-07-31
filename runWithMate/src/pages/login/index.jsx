@@ -5,6 +5,7 @@ import Image from '/img/Login.png';
 import KakaoImg from '/img/kakao_login.png';
 
 import {BiHome} from 'react-icons/bi';
+import { serverIp } from '../../server/serverInfo';
 
 const Container=styled.div`
     display: flex;
@@ -119,7 +120,7 @@ const GotoMainBtn=styled.button`
 `;
 function Login(){
     const handleKakaoLogin = () => {
-        window.location.href = 'https://api.runwithmate.klr.kr/oauth2/authorization/kakao';
+        window.location.href = `${serverIp}/oauth2/authorization/kakao`;
       };
       
       

@@ -1,11 +1,13 @@
 import axios from 'axios';
+import { serverIp } from './serverInfo';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://api.runwithmate.klr.kr',
+    baseURL: serverIp,
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json'
     },
+    withCredentials: true
 });
 
 axiosInstance.interceptors.request.use((config) => {
