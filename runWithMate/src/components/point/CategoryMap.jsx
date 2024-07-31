@@ -4,11 +4,12 @@ import CategoryGymMarker from "../../assets/images/cg.png";
 import CategoryPilatesMarker from "../../assets/images/cp.png";
 
 function CategoryMap() {
+  const [activeCategory, setActiveCategory] = useState(null); // 초기값을 null로 설정
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(null);
 
   useEffect(() => {
+    // 지도 초기화 및 마커 로드 로직
     const script = document.createElement("script");
     script.src =
       "https://dapi.kakao.com/v2/maps/sdk.js?appkey=70b6406b2ded139d1c5117b59f7d6ab8&libraries=services,clusterer,drawing";
@@ -22,34 +23,98 @@ function CategoryMap() {
   }, []);
 
   const initializeMap = () => {
-    const container = document.getElementById("map");
-    const options = {
-      center: new kakao.maps.LatLng(37.566826, 126.9786567),
-      level: 5,
-      draggable: true,
-    };
-    const mapInstance = new kakao.maps.Map(container, options);
-    setMap(mapInstance);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const container = document.getElementById("map");
+
+        const options = {
+          center: new kakao.maps.LatLng(lat, lng),
+          level: 5,
+          draggable: true,
+        };
+        const mapInstance = new kakao.maps.Map(container, options);
+        setMap(mapInstance);
+
+        // 헬스장과 필라테스 시설 검색
+        searchNearbyLocations(lat, lng);
+      },
+      (error) => {
+        console.error("위치 정보를 가져올 수 없습니다.", error);
+        const container = document.getElementById("map");
+        const options = {
+          center: new kakao.maps.LatLng(37.59758314452587, 127.05783587045535),
+          level: 5,
+          draggable: true,
+        };
+        const mapInstance = new kakao.maps.Map(container, options);
+        setMap(mapInstance);
+      }
+    );
   };
 
-  const addGymMarkers = (map) => {
-    const locations = [
-      { name: "크로스핏 제스트 포레스트", lat: 37.47222558339707, lng: 127.03913996075923, },
-      { name: "오프더팻 PT", lat: 37.47069590992369, lng: 127.03976373928046 },
-      { name: "아이러브휘트니스", lat: 37.46831520080698, lng: 127.03912944379503, },
-      { name: "피트니스온 서울시청점", lat: 37.56734468360655, lng: 126.9795321730682, },
-      { name: "시그마스포츠클럽", lat: 37.56844592474795, lng: 126.97826693972671, },
-      { name: "피트니스비엠 광화문점", lat: 37.56832622479662, lng: 126.97660303976384, },
-      { name: "MCTGYM 헬스&PT 을지로", lat: 37.56705874884706, lng: 126.98030477934876, },
-      { name: "무브짐 앤 무브맥스 PT 시청점", lat: 37.563374633967605, lng: 126.97367025826793, },
-      { name: "스포애니 서울시청역점", lat: 37.56315196645955, lng: 126.9751898453901, },
-    ];
+  const searchNearbyLocations = (lat, lng) => {
+    const ps = new kakao.maps.services.Places();
+    const radius = 10000;
 
-    // 카테고리 정보 로컬 스토리지에 저장
-    localStorage.setItem("categoryGym", JSON.stringify(locations));
+    // 헬스장 검색
+    ps.keywordSearch("헬스장", (data, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const gymLocations = data.map(item => ({
+          name: item.place_name,
+          lat: item.y,
+          lng: item.x
+        })).slice(0, 10);
+        localStorage.setItem("categoryGym", JSON.stringify(gymLocations));
+      }
+    }, {
+      location: new kakao.maps.LatLng(lat, lng),
+      radius: radius
+    });
 
+    // 필라테스 검색
+    ps.keywordSearch("필라테스", (data, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const pilatesLocations = data.map(item => ({
+          name: item.place_name,
+          lat: item.y,
+          lng: item.x
+        })).slice(0, 10);
+        localStorage.setItem("categoryPilates", JSON.stringify(pilatesLocations));
+      }
+    }, {
+      location: new kakao.maps.LatLng(lat, lng),
+      radius: radius
+    });
+  };
+
+  const handleCategoryClick = (category) => {
+    if (activeCategory === category) {
+      removeMarkers();
+      setActiveCategory(null);
+    } else {
+      removeMarkers();
+      setActiveCategory(category);
+      
+      // 선택한 카테고리에 따라 마커 로드
+      if (category === "GYM_CATEGORY_CODE") {
+        const gymLocations = JSON.parse(localStorage.getItem("categoryGym")) || [];
+        if (gymLocations.length > 0) {
+          addMarkers(gymLocations, CategoryGymMarker);
+        }
+      } else if (category === "PILATES_CATEGORY_CODE") {
+        const pilatesLocations = JSON.parse(localStorage.getItem("categoryPilates")) || [];
+        if (pilatesLocations.length > 0) {
+          addMarkers(pilatesLocations, CategoryPilatesMarker);
+        }
+      }
+    }
+  };
+
+  const addMarkers = (locations, markerImageSrc) => {
     const markerImage = new kakao.maps.MarkerImage(
-      CategoryGymMarker,
+      markerImageSrc,
       new kakao.maps.Size(23, 31)
     );
 
@@ -64,42 +129,7 @@ function CategoryMap() {
       return marker;
     });
 
-    setMarkers(newMarkers);
-    setActiveCategory("GYM_CATEGORY_CODE");
-  };
-
-  const addPilatesMarkers = (map) => {
-    const locations = [
-      { name: "핏티필라테스 광화문점", lat: 37.5700, lng: 126.9760 },
-      { name: "올곧필라테스 시청점", lat: 37.5665, lng: 126.9770 },
-      { name: "JS웰필라테스", lat: 37.5640, lng: 126.9780 },
-      { name: "모던필라테스 서울 시청점", lat: 37.5650, lng: 126.9790 },
-      { name: "니즈필라테스", lat: 37.5635, lng: 126.9785 },
-      { name: "JS필라테스 을지로 본점", lat: 37.5660, lng: 126.9820 },
-      { name: "스포짐 종로점", lat: 37.5705, lng: 126.9930 },
-    ];
-
-    // 카테고리 정보 로컬 스토리지에 저장
-    localStorage.setItem("categoryPilates", JSON.stringify(locations));
-
-    const markerImage = new kakao.maps.MarkerImage(
-      CategoryPilatesMarker,
-      new kakao.maps.Size(23, 31)
-    );
-
-    const newMarkers = locations.map(({ name, lat, lng }) => {
-      const markerPosition = new kakao.maps.LatLng(lat, lng);
-      const marker = new kakao.maps.Marker({
-        position: markerPosition,
-        title: name,
-        image: markerImage,
-      });
-      marker.setMap(map);
-      return marker;
-    });
-
-    setMarkers(newMarkers);
-    setActiveCategory("PILATES_CATEGORY_CODE");
+    setMarkers(prevMarkers => [...prevMarkers, ...newMarkers]);
   };
 
   const removeMarkers = () => {
@@ -107,24 +137,6 @@ function CategoryMap() {
       marker.setMap(null);
     });
     setMarkers([]);
-  };
-
-  const handleCategoryClick = (category) => {
-    if (activeCategory === category) {
-      removeMarkers(); // 마커 제거
-      setActiveCategory(null); // 상태를 null로 변경
-    } else {
-      if (map) {
-        removeMarkers(); // 기존 마커 제거
-        if (category === "GYM_CATEGORY_CODE") {
-          addGymMarkers(map); // 헬스장 마커 추가
-        } else if (category === "PILATES_CATEGORY_CODE") {
-          addPilatesMarkers(map); // 필라테스 마커 추가
-        }
-        setActiveCategory(category); // 새로운 카테고리로 설정
-      }
-    }
-    console.log(category);
   };
 
   return (
