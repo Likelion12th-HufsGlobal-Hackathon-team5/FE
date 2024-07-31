@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 
-
 const HostDiv = styled.div`
     width: 100%;
     height: 100%;
@@ -118,20 +117,23 @@ const HorizontalLine = styled.div`
 
 const ButtonContainer = styled.div`
     display: flex;
+    flex-direction: row;
     gap: 1.5vh;
     margin-top: 1vh;
 `;
 
 const SettingInput = styled.input`
     width: 100%;
-    padding: 1vh 1vh;
+    padding: 1.5vh 2vh;
+    margin-top: 1vh;
     justify-content: center;
     align-items: center;
-    gap: 1vh;
     border-radius: 0.5vh;
-    border: 0.1vh solid ${props => props.active ? "#217EEF" : "#217EEF"};
-    background: ${props => props.active ? "#217EEF" : "#FFF"};
-    color: ${props => props.active ? "#FFF" : "#217EEF"};
+    border: 0.1vh solid #217EEF;
+    background: #FFF;
+    color: #217EEF;
+    font-size: 2vh;
+    display: ${props => props.show ? 'block' : 'none'};
 `;
 
 const SaveSetting = styled.button`
@@ -148,14 +150,14 @@ const SaveSetting = styled.button`
     margin-top: 2vh;
 `;
 
-export default function Setting({ Mypoint, setMypoint }) {
-
+export default function Setting({ Mypoint, receivedData, wsInstance }) {
     const [nowDiv, setnowDiv] = useState(false);
-    const [betting, setBetting] = useState('');
+    const [betting, setBetting] = useState(0);
     const [initpoint, setInitPoint] = useState(Mypoint);
     const [activeButton, setActiveButton] = useState("");
-    const [timeLimit, setTimeLimit] = useState("");
-    
+    const [timeLimit, setTimeLimit] = useState(0);
+    const [customTime, setCustomTime] = useState("");
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -163,9 +165,20 @@ export default function Setting({ Mypoint, setMypoint }) {
         localStorage.removeItem("look");
     }, []);
 
-    const HandlenowDiv = () => {
-        setnowDiv(!nowDiv);
-    };
+    useEffect(() => {
+        if (receivedData.type === "room_joined") {
+            setBetting(receivedData.bet_point);
+            setTimeLimit(receivedData.time_limit);
+            const button = buttons.find(button => button.id * 1000 === receivedData.time_limit);
+            if (button) {
+                setActiveButton(button.id);
+                setCustomTime("");
+            } else {
+                setActiveButton("custom");
+                setCustomTime(receivedData.time_limit);
+            }
+        }
+    }, [receivedData]);
 
     const handleInputChange = (e) => {
         const value = e.target.value === '' ? '' : parseInt(e.target.value, 10);
@@ -179,19 +192,22 @@ export default function Setting({ Mypoint, setMypoint }) {
 
     const handleButtonClick = (id) => {
         setActiveButton(id);
-        setTimeLimit(id);
+        setTimeLimit(id * 1000);
+        setCustomTime("");
     };
 
     const InputTime = (e) => {
-        const value = e.target.value === '' ? '' : parseInt(e.target.value, 10) * 60000; // 입력값을 분에서 밀리초로 변환
+        const value = e.target.value === '' ? '' : parseInt(e.target.value, 10)
         setTimeLimit(value);
-        setActiveButton(''); // input 액티브 시 버튼 액티브 해제
+        setActiveButton('custom'); // input 액티브 시 버튼 액티브 해제
+        setCustomTime(e.target.value);
     };
 
     const buttons = [
-        { id: 180000, label: '3분' },
-        { id: 300000, label: '5분' },
-        { id: 600000, label: '10분' }
+        { id: 180, label: '3분' },
+        { id: 300, label: '5분' },
+        { id: 600, label: '10분' },
+        { id: 'custom', label: '수동입력' }
     ];
 
     const Sendsetting = () => {
@@ -199,19 +215,8 @@ export default function Setting({ Mypoint, setMypoint }) {
             bet_point: betting,
             time_limit: timeLimit
         };
-        alert(timeLimit);
-
-        // stomp.send("/send/update_room/{roomId}",token, JSON.stringify(data))
-
+        wsInstance("update_setting", data);
     }
-    
-
-    // const oneMinute = () => {
-    //     setTimeout(() => {
-    //         alert("대기시간이 초과되어 메인 화면으로 이동합니다.");
-    //         navigate("/main");
-    //     }, 5000); 
-    // }
 
     return (
         <>
@@ -227,7 +232,7 @@ export default function Setting({ Mypoint, setMypoint }) {
                 <MypointTitle>내 잔여 포인트</MypointTitle>
                 <ViewPoint>{initpoint}P</ViewPoint>
                 <HorizontalLine />
-                <SetSubtitle>시간제한 분</SetSubtitle>
+                <SetSubtitle>시간제한</SetSubtitle>
                 <ButtonContainer>
                     {buttons.map(button => (
                         <SettingButton 
@@ -238,12 +243,13 @@ export default function Setting({ Mypoint, setMypoint }) {
                             {button.label}
                         </SettingButton>
                     ))}
-                    <SettingInput
-                        placeholder='수동설정 (분)'
-                        onChange={InputTime}
-                        active={timeLimit && activeButton === ''}
-                    />
                 </ButtonContainer>
+                <SettingInput
+                    placeholder='수동설정 (초)'
+                    value={customTime}
+                    onChange={InputTime}
+                    show={activeButton === 'custom'}
+                />
                 <SaveSetting onClick={Sendsetting}>설정 저장</SaveSetting>
             </SettingForm>
         </>

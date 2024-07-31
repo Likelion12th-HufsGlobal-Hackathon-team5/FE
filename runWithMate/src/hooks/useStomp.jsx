@@ -1,35 +1,28 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { Client } from '@stomp/stompjs';
-import axios from 'axios';
-import { serverIp, wsIp } from '../server/serverInfo';
+import { wsIp } from '../server/serverInfo';
 
 const WEBSOCKET_URL = `${wsIp}/connect`; // WebSocket 서버 URL
 
-const UseStomp = () => {
+const UseStomp = (onMessageReceived) => {
   const [connected, setConnected] = useState(false);
-  const [roomNumber, setRoomNumber] = useState(null);
-
   const stompClientRef = useRef(null);
 
-  const createRoom = useCallback(async () => {
-    try {
-      const response = await axios.post(`${serverIp}/createroom`); // 백엔드의 방 생성 엔드포인트
-      setRoomNumber(response.data.roomNumber); // 응답에서 방 번호 설정
-    } catch (error) {
-      console.error('useStomp.jsx - 방 생성 실패:', error);
-    }
-  }, []); // useCallback에 빈 배열을 넣어주어 함수의 의존성을 관리
-
   useEffect(() => {
-    if (!roomNumber) return;
+    const roomId = localStorage.getItem('roomId');
+    const accessToken = localStorage.getItem('accessToken');
+    if (!roomId || !accessToken) return;
 
     // STOMP 클라이언트 생성
     const stompClient = new Client({
       brokerURL: WEBSOCKET_URL,
+      connectHeaders: {
+        Authorization: accessToken,
+      },
       debug: (str) => console.log(str),
       reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
+      // heartbeatIncoming: 4000,
+      // heartbeatOutgoing: 4000,
     });
 
     // STOMP 연결 성공 시 호출되는 함수
@@ -38,8 +31,9 @@ const UseStomp = () => {
       setConnected(true);
 
       // 특정 주제(채팅 방)를 구독
-      stompClient.subscribe(`/room/${roomNumber}`, (message) => {
+      stompClient.subscribe(`/room/${roomId}`, (message) => {
         console.log('받은 메시지:', message.body);
+        if (onMessageReceived) onMessageReceived(message);
       });
     };
 
@@ -62,7 +56,14 @@ const UseStomp = () => {
     return () => {
       stompClient.deactivate();
     };
-  }, [roomNumber]);
+  }, []);
+
+  const send = useCallback((destination, headers = {}, body = '') => {
+    if (stompClientRef.current && connected) {
+      stompClientRef.current.publish({ destination, headers, body });
+    }
+  }, [connected]);
+
 
   const disconnect = useCallback(() => {
     if (stompClientRef.current) {
@@ -72,7 +73,7 @@ const UseStomp = () => {
     }
   }, []);
 
-  return { connected, roomNumber, disconnect, createRoom };
+  return { connected, send, disconnect };
 };
 
 export default UseStomp;

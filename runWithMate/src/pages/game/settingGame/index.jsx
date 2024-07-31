@@ -3,8 +3,9 @@ import Header from '../../../components/Header';
 import Content from '../../../components/Setting/Content';
 import Setting from '../../../components/Setting/Setting';
 import Lobby from '../../../components/Setting/Lobby';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import UseStomp from '../../../hooks/useStomp';
 
 const Container = styled.div`
   display : flex;
@@ -38,25 +39,51 @@ const StartGame = styled.button`
   margin-bottom: 10vh; /* 버튼 아래에 여백 추가 */
 `;
 
+const mock = {
+  type: 'room_joined',
+  user1: "로딩중입니다",
+  user2: "로딩중입니다",
+  bet_point: 0,
+  time_limit: 0
+};
 
 function SettingGame() {
-
-  const [Point,setPoint] = useState(23500)
-
-
+  const [Point,setPoint] = useState(23500);
+  const [receivedData, setReceivedData] = useState(mock);
   const navigate = useNavigate();
 
-  const handleStartGame = () => {
-    navigate('/game');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  if (queryParams.get("roomId")) {
+    const roomId = queryParams.get("roomId");
+    localStorage.setItem("roomId",roomId);
+    window.history.replaceState({}, null, location.pathname);
+  }
+
+  // --------------------------
+  // 수신 함수
+  const onMessageReceived = (message) => {
+    setReceivedData(JSON.parse(message.body));
   };
 
-  const mock = {
-    type: 'room_joined',
-    user1: "이수혁",
-    user2: "유지희",
-    bet_point: 300,
-    time_limit: 10000
-};
+  const { connected, send, disconnect }=UseStomp(onMessageReceived);
+
+  // 송신 함수
+  const wsInstance = useCallback((wsMethod, data) => {
+    if (connected) {
+      send(`/send/${wsMethod}/${localStorage.getItem('roomId')}`, {}, JSON.stringify(data));
+    }
+  }, [connected, send]);
+  // --------------------------
+
+  useEffect(() => {
+    wsInstance("check_room", {})
+  }, [connected])
+
+  const handleStartGame = () => {
+    wsInstance("start_game", {});
+    navigate('/game');
+  };
 
   return (
   <>
@@ -64,8 +91,8 @@ function SettingGame() {
       <Header />
       <Background>
         <Content />
-        <Setting Mypoint = {Point} setMypoint={setPoint} settingmock = {mock}/>
-        <Lobby settingmock = {mock}/>
+        <Setting Mypoint={Point} receivedData={receivedData} wsInstance={wsInstance}/>
+        <Lobby receivedData={receivedData}/> {/* receivedData의 초기값을 mock데이터로 설정하고 변경했습니다! */}
         <StartGame onClick={handleStartGame}>게임 시작하기</StartGame>
       </Background>
     </Container>

@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Player from './Player';
 import OtherPlayer from './Player2';
 import { BsLink45Deg } from "react-icons/bs";
-import { useNavigate } from 'react-router-dom';
 
 const LobbyForm = styled.form`
     width: 85%;
@@ -123,15 +122,20 @@ const ReadyContainer = styled.div`
     height: 100%;
 `;
 
-export default function Lobby({settingmock}) {
-    const navigate = useNavigate();
-    const [timerId, setTimerId] = useState(null);
-    const [Active , setActive] = useState(false);
+export default function Lobby({receivedData}) {
+    const [user1, setUser1] = useState("");
+    const [user2, setUser2] = useState("");
 
+    useEffect(() => {
+        if (receivedData.type === "room_joined") {
+            setUser1(receivedData.user1);
+            setUser2(receivedData.user2);
+        }
+    },[receivedData]);
 
     const copyUrlToClipboard = () => {
         const currentUrl = window.location.href;
-        navigator.clipboard.writeText(currentUrl)
+        navigator.clipboard.writeText(`${currentUrl}?roomId=${localStorage.getItem("roomId")}`)
             .then(() => {
                 alert('URL이 클립보드에 복사되었습니다.');
             })
@@ -140,41 +144,12 @@ export default function Lobby({settingmock}) {
             });
     };
 
-    const startTimer = () => {
-        const id = setTimeout(() => {
-            if (settingmock.type !== "room_joined") {
-                alert("대기시간이 초과되어 메인 화면으로 이동합니다.");
-                navigate("/main");
-            }
-        }, 3000);
-        setTimerId(id); // 타이머 ID를 상태에 저장
-    };
-
-    const cancelTimer = () => {
-        if (timerId !== null) {
-            clearTimeout(timerId);
-            setTimerId(null); // 타이머 ID를 null로 리셋
-            console.log('타이머가 취소되었습니다.');
-        }
-    };
-
-    const handleClick = () => {
-        copyUrlToClipboard();
-        startTimer();
-        // 타입이 'room_joined'이면 타이머를 취소
-        if (settingmock.type === "room_joined") {
-            cancelTimer(); 
-        }
-        setActive(!Active);
-
-    };
-
     return (
         <LobbyForm>
             <LobbyTitle>게임 로비</LobbyTitle>
             <CodeContainer>
                 <CopyBtn 
-                onClick={handleClick}>
+                onClick={() => copyUrlToClipboard()}>
                     <LinkImg className='icon'/>
                     <h2>초대 링크 공유하기</h2>
                 </CopyBtn>
@@ -182,9 +157,9 @@ export default function Lobby({settingmock}) {
             <HorizontalLine />
             <LobbySubtitle>플레이어</LobbySubtitle>
             <ReadyContainer>
-                <Player playermock = {settingmock} />
+                <Player playermock = {user1} />
                 <HorizontalLine />
-                <OtherPlayer  playermock = {settingmock}/>
+                <OtherPlayer  playermock = {user2}/>
             </ReadyContainer>
         </LobbyForm>
     );
