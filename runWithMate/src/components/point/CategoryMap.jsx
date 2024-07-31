@@ -1,165 +1,153 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import CategoryGym from "../../assets/images/cg.png";
-import CategoryPilates from "../../assets/images/cp.png";
+import CategoryGymMarker from "../../assets/images/cg.png";
+import CategoryPilatesMarker from "../../assets/images/cp.png";
 
 function CategoryMap() {
-  const [map, setMap] = useState(null); // 카카오 맵 인스턴스를 저장하는 상태
-  const [placeOverlay, setPlaceOverlay] = useState(null); // 장소 정보를 표시할 오버레이를 저장하는 상태
-  const [markers, setMarkers] = useState([]); // 마커를 저장하는 상태
-  const [currCategory, setCurrCategory] = useState(""); // 현재 선택된 카테고리를 저장하는 상태
-  const [ps, setPs] = useState(null); // 장소 검색 서비스 인스턴스를 저장하는 상태
+  const [map, setMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
 
   useEffect(() => {
-    // 카카오 맵 스크립트를 동적으로 추가하여 맵 초기화
     const script = document.createElement("script");
     script.src =
       "https://dapi.kakao.com/v2/maps/sdk.js?appkey=70b6406b2ded139d1c5117b59f7d6ab8&libraries=services,clusterer,drawing";
     script.async = true;
-    script.onload = initializeMap; // 스크립트 로드 후 initializeMap 함수 호출
+    script.onload = initializeMap;
     document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
   }, []);
 
-  function initializeMap() {
-    // 맵 초기화 함수
-    const container = document.getElementById("map"); // 맵을 표시할 DOM 요소
+  const initializeMap = () => {
+    const container = document.getElementById("map");
     const options = {
-      center: new kakao.maps.LatLng(37.566826, 126.9786567), // 맵의 중심 좌표
-      level: 5, // 맵 확대 레벨
+      center: new kakao.maps.LatLng(37.566826, 126.9786567),
+      level: 5,
+      draggable: true,
     };
-    const map = new kakao.maps.Map(container, options); // 카카오 맵 인스턴스 생성
-    setMap(map); // 상태 업데이트
+    const mapInstance = new kakao.maps.Map(container, options);
+    setMap(mapInstance);
+  };
 
-    const ps = new kakao.maps.services.Places(map); // 장소 검색 서비스 인스턴스 생성
-    setPs(ps); // 상태 업데이트
+  const addGymMarkers = (map) => {
+    const locations = [
+      { name: "크로스핏 제스트 포레스트", lat: 37.47222558339707, lng: 127.03913996075923, },
+      { name: "오프더팻 PT", lat: 37.47069590992369, lng: 127.03976373928046 },
+      { name: "아이러브휘트니스", lat: 37.46831520080698, lng: 127.03912944379503, },
+      { name: "피트니스온 서울시청점", lat: 37.56734468360655, lng: 126.9795321730682, },
+      { name: "시그마스포츠클럽", lat: 37.56844592474795, lng: 126.97826693972671, },
+      { name: "피트니스비엠 광화문점", lat: 37.56832622479662, lng: 126.97660303976384, },
+      { name: "MCTGYM 헬스&PT 을지로", lat: 37.56705874884706, lng: 126.98030477934876, },
+      { name: "무브짐 앤 무브맥스 PT 시청점", lat: 37.563374633967605, lng: 126.97367025826793, },
+      { name: "스포애니 서울시청역점", lat: 37.56315196645955, lng: 126.9751898453901, },
+    ];
 
-    const overlay = new kakao.maps.CustomOverlay({ zIndex: 1 }); // 커스텀 오버레이 생성
-    const contentNode = document.createElement("div"); // 오버레이에 들어갈 내용 노드 생성
-    contentNode.className = "placeinfo_wrap"; // 클래스 이름 설정
-    overlay.setContent(contentNode); // 오버레이에 내용 설정
-    setPlaceOverlay(overlay); // 상태 업데이트
+    // 카테고리 정보 로컬 스토리지에 저장
+    localStorage.setItem("categoryGym", JSON.stringify(locations));
 
-    kakao.maps.event.addListener(map, "idle", () =>
-      searchPlaces(ps, overlay, map, currCategory)
-    ); // 맵이 idle 상태일 때 장소 검색
-  }
-
-  function searchPlaces(ps, overlay, map, category) {
-    // 장소 검색 함수
-    if (!category) return; // 카테고리가 없으면 종료
-    overlay.setMap(null); // 오버레이 제거
-    removeMarker(); // 기존 마커 제거
-    ps.categorySearch(
-      category,
-      (data, status) => {
-        // 카테고리로 장소 검색
-        if (status === kakao.maps.services.Status.OK) {
-          displayPlaces(data, overlay, map); // 검색 결과 표시
-        }
-      },
-      { useMapBounds: true }
-    ); // 맵의 경계 내에서만 검색
-  }
-
-  function displayPlaces(places, overlay, map) {
-    // 검색된 장소를 맵에 표시하는 함수
-    const newMarkers = places.map((place, index) => {
-      const marker = addMarker(
-        new kakao.maps.LatLng(place.y, place.x),
-        index,
-        map
-      ); // 마커 추가
-      kakao.maps.event.addListener(marker, "click", () =>
-        displayPlaceInfo(place, overlay)
-      ); // 마커 클릭 시 장소 정보 표시
-      return marker; // 생성된 마커 반환
-    });
-    setMarkers(newMarkers); // 상태 업데이트
-  }
-
-  function addMarker(position, order, map) {
-    // 마커를 추가하는 함수
-    const imageSrc = <CategoryGym />; // 마커 이미지 소스
-    const imageSize = new kakao.maps.Size(27, 28); // 마커 이미지 크기
-    const imgOptions = {
-      spriteSize: new kakao.maps.Size(72, 208), // 스프라이트 이미지 크기
-      spriteOrigin: new kakao.maps.Point(46, order * 36), // 스프라이트에서 마커의 시작 위치
-      offset: new kakao.maps.Point(11, 28), // 마커의 오프셋
-    };
     const markerImage = new kakao.maps.MarkerImage(
-      imageSrc,
-      imageSize,
-      imgOptions
-    ); // 마커 이미지 생성
-    const marker = new kakao.maps.Marker({
-      position, // 마커 위치
-      image: markerImage, // 마커 이미지
+      CategoryGymMarker,
+      new kakao.maps.Size(23, 31)
+    );
+
+    const newMarkers = locations.map(({ name, lat, lng }) => {
+      const markerPosition = new kakao.maps.LatLng(lat, lng);
+      const marker = new kakao.maps.Marker({
+        position: markerPosition,
+        title: name,
+        image: markerImage,
+      });
+      marker.setMap(map);
+      return marker;
     });
-    marker.setMap(map); // 맵에 마커 추가
-    return marker; // 생성된 마커 반환
-  }
 
-  function removeMarker() {
-    // 마커를 제거하는 함수
-    markers.forEach((marker) => marker.setMap(null)); // 모든 마커를 맵에서 제거
-    setMarkers([]); // 상태 업데이트
-  }
+    setMarkers(newMarkers);
+    setActiveCategory("GYM_CATEGORY_CODE");
+  };
 
-  function displayPlaceInfo(place, overlay) {
-    // 장소 정보를 오버레이에 표시하는 함수
-    const contentNode = overlay.getContent(); // 오버레이의 콘텐츠 노드 가져오기
-    let content = `<div class="placeinfo">
-    <a class="title" href="${place.place_url}" target="_blank" title="${place.place_name}">${place.place_name}</a>`; // 장소 제목
+  const addPilatesMarkers = (map) => {
+    const locations = [
+      { name: "핏티필라테스 광화문점", lat: 37.5700, lng: 126.9760 },
+      { name: "올곧필라테스 시청점", lat: 37.5665, lng: 126.9770 },
+      { name: "JS웰필라테스", lat: 37.5640, lng: 126.9780 },
+      { name: "모던필라테스 서울 시청점", lat: 37.5650, lng: 126.9790 },
+      { name: "니즈필라테스", lat: 37.5635, lng: 126.9785 },
+      { name: "JS필라테스 을지로 본점", lat: 37.5660, lng: 126.9820 },
+      { name: "스포짐 종로점", lat: 37.5705, lng: 126.9930 },
+    ];
 
-    if (place.road_address_name) {
-      content += `<span title="${place.road_address_name}">${place.road_address_name}</span>
-      <span class="jibun" title="${place.address_name}">(지번 : ${place.address_name})</span>`;
+    // 카테고리 정보 로컬 스토리지에 저장
+    localStorage.setItem("categoryPilates", JSON.stringify(locations));
+
+    const markerImage = new kakao.maps.MarkerImage(
+      CategoryPilatesMarker,
+      new kakao.maps.Size(23, 31)
+    );
+
+    const newMarkers = locations.map(({ name, lat, lng }) => {
+      const markerPosition = new kakao.maps.LatLng(lat, lng);
+      const marker = new kakao.maps.Marker({
+        position: markerPosition,
+        title: name,
+        image: markerImage,
+      });
+      marker.setMap(map);
+      return marker;
+    });
+
+    setMarkers(newMarkers);
+    setActiveCategory("PILATES_CATEGORY_CODE");
+  };
+
+  const removeMarkers = () => {
+    markers.forEach((marker) => {
+      marker.setMap(null);
+    });
+    setMarkers([]);
+  };
+
+  const handleCategoryClick = (category) => {
+    if (activeCategory === category) {
+      removeMarkers(); // 마커 제거
+      setActiveCategory(null); // 상태를 null로 변경
     } else {
-      content += `<span title="${place.address_name}">${place.address_name}</span>`;
+      if (map) {
+        removeMarkers(); // 기존 마커 제거
+        if (category === "GYM_CATEGORY_CODE") {
+          addGymMarkers(map); // 헬스장 마커 추가
+        } else if (category === "PILATES_CATEGORY_CODE") {
+          addPilatesMarkers(map); // 필라테스 마커 추가
+        }
+        setActiveCategory(category); // 새로운 카테고리로 설정
+      }
     }
-
-    content += `<span class="tel">${place.phone}</span></div><div class="after"></div>`; // 전화번호 추가
-    contentNode.innerHTML = content; // 콘텐츠 노드에 내용 설정
-    overlay.setPosition(new kakao.maps.LatLng(place.y, place.x)); // 오버레이 위치 설정
-    overlay.setMap(map); // 맵에 오버레이 추가
-  }
-
-  function handleCategoryClick(category) {
-    // 카테고리 클릭 핸들러
-    if (category === currCategory) {
-      setCurrCategory(""); // 같은 카테고리 클릭 시 선택 해제
-      removeMarker(); // 마커 제거
-      placeOverlay.setMap(null); // 오버레이 제거
-    } else {
-      setCurrCategory(category); // 선택된 카테고리 업데이트
-      searchPlaces(ps, placeOverlay, map, category); // 선택된 카테고리로 장소 검색
-    }
-  }
+    console.log(category);
+  };
 
   return (
     <Container>
       <CategoryContainer>
-        <ItemBox>
-          <CategoryItem
-          src={CategoryGym}
-          alt="category Gym"
+        <ItemBox
           onClick={() => handleCategoryClick("GYM_CATEGORY_CODE")}
-        />
-        <p style={{ fontSize: "10px", fontWeight: "700", margin: "0vh 0.624vh"}}>헬스장</p>
+          active={activeCategory === "GYM_CATEGORY_CODE"}
+        >
+          <CategoryItem src={"/img/cgc.png"} alt="category Gym" />
+          <p style={{fontSize: "10px", fontWeight: "700", margin: "0vh 0.624vh"}}>헬스장</p>
         </ItemBox>
-        <ItemBox>
-          <CategoryItem
-          src={CategoryPilates}
-          alt="category Pilates"
+        <ItemBox
           onClick={() => handleCategoryClick("PILATES_CATEGORY_CODE")}
-        />
-        <p style={{ fontSize: "10px", fontWeight: "700"}}>필라테스</p>
+          active={activeCategory === "PILATES_CATEGORY_CODE"}
+        >
+          <CategoryItem src={"/img/cpc.png"} alt="category Pilates" />
+          <p style={{ fontSize: "10px", fontWeight: "700" }}>필라테스</p>
         </ItemBox>
-        
       </CategoryContainer>
       <MapContainer
         id="map"
-        style={{ width: "100%", height: "40vh" }}
+        style={{ width: "100%", height: "45vh" }}
       ></MapContainer>
     </Container>
   );
@@ -168,8 +156,6 @@ function CategoryMap() {
 export default CategoryMap;
 
 const Container = styled.div`
-  /* width: 100%; */
-  /* height: 100%; */
   max-width: 393px;
   max-height: 435px;
   position: relative;
@@ -184,7 +170,7 @@ const CategoryContainer = styled.div`
   display: flex;
   flex-direction: row;
   border: solid 1px #ffffff;
-  border-radius: 20%;
+  border-radius: 2.5vh;
   background-color: #ffffff;
   gap: 1vh;
   padding: 1vh;
@@ -194,41 +180,36 @@ const CategoryContainer = styled.div`
   margin: 1vh;
   top: 10px;
   z-index: 10;
-
-  img {
-  }
+  box-shadow: 0 0 5px rgba(86, 86, 86, 0.5);
 `;
 
 const ItemBox = styled.div`
-  background-color: #CDE4FF;
-  border: solid 1px #CDE4FF;
-  border-radius: 20%;
+  background-color: ${({ active }) => (active ? "#217eef" : "#cde4ff")};
+  border: solid 1px ${({ active }) => (active ? "#217eef" : "#cde4ff")};
+  border-radius: 2vh;
   display: flex;
   flex-direction: column;
   gap: 0.5vh;
   align-items: center;
   justify-content: center;
   padding: 1vh;
-  color: #2e2929;
+  color: ${({ active }) => (active ? "#ffffff" : "#2e2929")};
   cursor: pointer;
-  
+  transition: all 0.2s;
+
   &:hover {
-    transition: all 0.2s;
-    
-    background-color: #1B63BB;
+    background-color: #1b63bb;
     color: #ffffff;
-    border: solid 1px #1B63BB;
+    border: solid 1px #1b63bb;
   }
 
   &:active {
-    transition: all 0.2s;
-
-    background-color: #217EEF;
+    background-color: #217eef;
     color: #ffffff;
-    border: solid 1px #217EEF;
+    border: solid 1px #217eef;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   }
-`
+`;
 
 const CategoryItem = styled.img`
   cursor: pointer;
