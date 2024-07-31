@@ -101,6 +101,6 @@ function Header(){
             </Container>
         </>
     )
-};
+}
 
 export default Header;

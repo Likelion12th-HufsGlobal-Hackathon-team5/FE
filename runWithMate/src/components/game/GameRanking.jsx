@@ -104,6 +104,6 @@ function GameRanking(){
                 </GameRankingDiv>
         </>
     )
-};
+}
 
 export default GameRanking;

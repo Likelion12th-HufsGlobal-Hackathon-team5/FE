@@ -19,6 +19,6 @@ function Test(){
             </Container>
         </>
     )
-};
+}
 
 export default Test;

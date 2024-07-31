@@ -52,7 +52,7 @@ function AttendanceBtn() {
       출석하고 포인트 적립하기!
     </AttendanceButton>
   );
-};
+}
 
 export default AttendanceBtn;
 
