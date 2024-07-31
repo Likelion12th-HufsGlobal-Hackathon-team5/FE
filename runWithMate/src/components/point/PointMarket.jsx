@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { BsCart4 } from "react-icons/bs";
+import { useNavigate } from "react-router-dom"; // useNavigate import
 
-function PointMarket(){
+function PointMarket() {
+  const navigate = useNavigate(); // useNavigate 훅 사용
   const StyledBsCart4 = styled(BsCart4)`
     font-size: 110px;
   `;
 
+  const handleClick = () => {
+    navigate("/pointshop"); // 버튼 클릭 시 경로 이동
+  };
+
   return (
     <>
-      <PointMarketBox>
+      <PointMarketBox onClick={handleClick}> {/* Box 클릭 시 이동 */}
         <Title>포인트 사용처</Title>
         <Coments>
           <Line>내가 차곡 차곡 모은 포인트들,</Line>
@@ -23,7 +29,7 @@ function PointMarket(){
       </PointMarketBox>
     </>
   );
-};
+}
 
 export default PointMarket;
 
@@ -39,11 +45,11 @@ const PointMarketBox = styled.div`
   gap: 1vh;
   border-radius: 2vh;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow  0.3s;
+  transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s;
 
   &:hover {
-    background-color: #1B63BB;
-    border: #1B63BB solid 3px;
+    background-color: #1b63bb;
+    border: #1b63bb solid 3px;
   }
 
   &:active {

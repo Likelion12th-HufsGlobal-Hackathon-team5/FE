@@ -177,6 +177,7 @@ function Main (){
     const navigate = useNavigate();
     const { connected, roomNumber, createRoom }=UseStomp();
     const [onDiv, setonDiv] = useState(true);
+    const kakaoAppKey=import.meta.env.VITE_KAKAO_APP_KEY;
 
     const handleButtonClick = useCallback(async()=>{
         await createRoom();
