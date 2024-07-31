@@ -197,6 +197,7 @@ function Main (){
         const roomId = await createRoom();
         localStorage.setItem("look", true)
         localStorage.setItem("roomId", roomId);
+        navigate('/settingGame');
     }
 
     return (
