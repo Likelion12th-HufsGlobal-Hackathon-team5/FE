@@ -32,7 +32,7 @@ export default function OtherPlayer({playermock}){
     return(
         <OtherPlayerContainer>
             <MdOutlinePerson size='30' />
-            <OtherUserName>{playermock.user2}님</OtherUserName>
+            <OtherUserName>{playermock}님</OtherUserName>
             <Other>
                 <p>참가 플레이어</p>
             </Other>

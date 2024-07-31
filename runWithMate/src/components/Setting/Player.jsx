@@ -36,7 +36,7 @@ export default function Player({playermock}){
     return(
         <PlayerContainer>
             <MdOutlinePerson size='30' />
-            <UserName>{playermock.user1}님</UserName>
+            <UserName>{playermock}님</UserName>
             <Host>
                 <p>Host</p>
             </Host>

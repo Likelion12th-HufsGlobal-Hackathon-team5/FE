@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import Header from '../../components/Header';
-import UseStomp from '../../hooks/useStomp';
 
 import GameIcon from '/img/gameIcon.png';
 import PointIcon from '/img/pointIcon.png';
@@ -14,6 +13,7 @@ import { BsCaretRightFill } from 'react-icons/bs';
 import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 import getUserIdAndToken from '../../server/user/getUserIdAndToken';
+import createRoom from '../../server/gameRoom/createRoom';
 
 const Container=styled.div`
     display: flex;
@@ -114,7 +114,7 @@ const Circle = styled.div`
         height: 22px;
     }
 `;
-const GotoGame = styled(Link)`
+const GotoGame = styled.a`
     display: flex;
     flex-direction: row;
     justify-content: left;
@@ -126,6 +126,7 @@ const GotoGame = styled(Link)`
     color: white;
     background-color: #2E2929;
     border-radius: 20px;
+    cursor: pointer;
 
     .gameIcon {
         width: 38px;
@@ -175,14 +176,7 @@ const GotoHeader = styled.div`
 
 function Main (){
     const navigate = useNavigate();
-    const { connected, roomNumber, createRoom }=UseStomp();
-    const [onDiv, setonDiv] = useState(true);
-    const kakaoAppKey=import.meta.env.VITE_KAKAO_APP_KEY;
-
-    const handleButtonClick = useCallback(async()=>{
-        await createRoom();
-        setonDiv(false);
-    },[createRoom]);
+    // const kakaoAppKey=import.meta.env.VITE_KAKAO_APP_KEY;
 
     useEffect(() => {
         const fetch = async () => {
@@ -197,16 +191,13 @@ function Main (){
         fetch();
     }, []);
 
-    useEffect(()=>{
-        if(connected && roomNumber){
-            navigate('/settingGame');
-        }
-    },[connected,roomNumber,navigate])
 
-    useEffect(() => {
-        // onDiv 상태가 변경될 때마다 로컬 스토리지 업데이트
-        localStorage.setItem("look", onDiv);
-    }, [onDiv]); // onDiv가 변경될 때마다 이 useEffect가 실행됨
+    const handleButtonClick = async () => {
+        const roomId = await createRoom();
+        localStorage.setItem("look", true)
+        localStorage.setItem("roomId", roomId);
+        navigate("/settingGame")
+    }
 
     return (
         <>
@@ -253,7 +244,7 @@ function Main (){
                     </Point>
                 </ContentsBox>
 
-                <GotoGame to='/settingGame' 
+                <GotoGame 
                     onClick={handleButtonClick}
                     >
                     <img src={GameIcon} className='gameIcon'/>
