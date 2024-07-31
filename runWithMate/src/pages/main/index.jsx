@@ -114,7 +114,7 @@ const Circle = styled.div`
         height: 22px;
     }
 `;
-const GotoGame = styled.a`
+const GotoGame = styled(Link)`
     display: flex;
     flex-direction: row;
     justify-content: left;
@@ -192,11 +192,11 @@ function Main (){
     }, []);
 
 
-    const handleButtonClick = async () => {
+    const handleButtonClick = async (event) => {
+        event.preventDefault();
         const roomId = await createRoom();
         localStorage.setItem("look", true)
         localStorage.setItem("roomId", roomId);
-        navigate("/settingGame")
     }
 
     return (
@@ -245,6 +245,7 @@ function Main (){
                 </ContentsBox>
 
                 <GotoGame 
+                    to='/settingGame'
                     onClick={handleButtonClick}
                     >
                     <img src={GameIcon} className='gameIcon'/>
