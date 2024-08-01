@@ -3,7 +3,7 @@ import Header from '../../../components/Header';
 import Content from '../../../components/Setting/Content';
 import Setting from '../../../components/Setting/Setting';
 import Lobby from '../../../components/Setting/Lobby';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 import UseStomp from '../../../hooks/useStomp';
 
