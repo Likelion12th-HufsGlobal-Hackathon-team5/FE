@@ -114,7 +114,7 @@ const Circle = styled.div`
         height: 22px;
     }
 `;
-const GotoGame = styled(Link)`
+const GotoGame = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: left;
@@ -133,7 +133,7 @@ const GotoGame = styled(Link)`
         height: auto;
     }
 `;
-const GotoPointshop = styled(Link)`
+const GotoPointshop = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -176,8 +176,7 @@ const GotoHeader = styled.div`
 
 function Main (){
     const navigate = useNavigate();
-    // const kakaoAppKey=import.meta.env.VITE_KAKAO_APP_KEY;
-
+    
     useEffect(() => {
         const fetch = async () => {
             try {
@@ -192,12 +191,35 @@ function Main (){
     }, []);
 
 
-    const handleButtonClick = async (event) => {
-        event.preventDefault();
-        const roomId = await createRoom();
-        localStorage.setItem("look", true)
-        localStorage.setItem("roomId", roomId);
-        navigate('/settingGame');
+    const handleGotoGameButtonClick = async (event) => {
+        const userData=localStorage.getItem('userID');
+
+        if(userData){
+            event.preventDefault();
+            try{
+                const roomId = await createRoom();
+                localStorage.setItem("look", true)
+                localStorage.setItem("roomId", roomId);
+                navigate('/settingGame');
+            } catch(error) {
+                console.log('Main - error creating room : ',error);
+            }
+        } else{
+            alert('먼저 로그인을 하셔야합니다!');
+            navigate('/login');
+        }
+
+    }
+
+    const handleGotoPointshop = () => {
+        const userData = localStorage.getItem('userId');
+
+        if(userData){
+            navigate('/point');
+        }else{
+            alert('먼저 로그인을 하셔야합니다!');
+            navigate('/login');
+        }
     }
 
     return (
@@ -246,8 +268,7 @@ function Main (){
                 </ContentsBox>
 
                 <GotoGame 
-                    to='/settingGame'
-                    onClick={handleButtonClick}
+                    onClick={handleGotoGameButtonClick}
                     >
                     <img src={GameIcon} className='gameIcon'/>
                     <GotoText>
@@ -258,7 +279,9 @@ function Main (){
                         친구를 초대해 대결을 진행합니다
                     </GotoText>
                 </GotoGame>
-                <GotoPointshop to='/point'>
+                <GotoPointshop 
+                    onClick={handleGotoPointshop}
+                    >
                     <img src={PointIcon} className='pointIcon' />
                     <GotoText>
                         <GotoHeader>
