@@ -281,32 +281,3 @@ const CategoryItem = styled.img`
   width: 30px;
   height: auto;
 `;
-
-// InfoWindow 콘텐츠 스타일 추가
-const InfoWindowContent = styled.div`
-  padding: 10px;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  width: 200px; /* 원하는 너비 */
-  
-  h4 {
-    margin: 0 0 5px;
-    color: #333; /* 제목 색상 */
-  }
-
-  p {
-    margin: 0 0 5px;
-    color: #666; /* 본문 색상 */
-  }
-
-  a {
-    color: #007bff; /* 링크 색상 */
-    text-decoration: none; /* 링크 밑줄 제거 */
-  }
-
-  a:hover {
-    text-decoration: underline; /* 링크 호버 시 밑줄 */
-  }
-`;
