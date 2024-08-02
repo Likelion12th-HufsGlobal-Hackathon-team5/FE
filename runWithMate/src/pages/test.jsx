@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import UseStomp from '../hooks/useStomp';
+import GetMarker from '../components/game/GetMarker';
 
 const Container=styled.div`
     display: flex;
@@ -10,12 +11,16 @@ const Container=styled.div`
 `;
 
 function Test(){
-
+    const test = 'dopamine'
+    const test2 = 'point'
     return(
         <>
             <Container>
-                ws stomp testing
-                <UseStomp roomParam='create'/>
+                {/* ws stomp testing
+                <UseStomp roomParam='create'/> */}
+                getMarker Test
+                <GetMarker markerType={test} />
+                <GetMarker markerType={test2} />
             </Container>
         </>
     )

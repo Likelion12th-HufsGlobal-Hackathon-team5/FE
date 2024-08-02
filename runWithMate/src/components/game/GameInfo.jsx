@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import useWebSocket from '../../hooks/useWebSocket';
 
 import Giveup from '../../components/game/gameGiveUp/giveup';
-// import Timer from './gameResult/GameTimer';
 import Timer from './Timer';
 import axios from 'axios';
 
