@@ -4,10 +4,19 @@ import styled from '@emotion/styled';
 import useWebSocket from '../../hooks/useWebSocket';
 
 import Giveup from '../../components/game/gameGiveUp/giveup';
-import Timer from './gameResult/GameTimer';
+import Timer from './Timer';
 import axios from 'axios';
 
 import useStomp  from '../../hooks/useStomp';
+import GetMarker from './GetMarker';
+
+const Container=styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+`;
 
 const GameInfoDiv=styled.div`
     z-index: 10;
@@ -97,7 +106,7 @@ const Line=styled.div`
 
 // const WEBSOCKET_URL='ws server url'
 
-function GameInfo(){
+function GameInfo({betPoint, timeLimit}){
     const { disconnect } = useStomp();
     
     const [isLoser, setIsLoser]=useState(false);
@@ -138,7 +147,8 @@ function GameInfo(){
 
     return(
         <>
-            <GameInfoDiv>
+            <Container>
+                <GameInfoDiv>
                     <GameInfoHeader>
                         Game Info
                         <GameStopButton onClick={openGiveup}>
@@ -153,12 +163,12 @@ function GameInfo(){
                     <GameInfoContents>  
                         <GameInfoContentEach>
                             남은 시간<br/>
-                            <Timer />
+                            <Timer timeLimit={timeLimit}/>
                         </GameInfoContentEach>
                         <Line />
                         <GameInfoContentEach>
                             베팅 포인트<br/>
-                            2000점
+                            {betPoint}P
                         </GameInfoContentEach>
                         <Line />
                         <GameInfoContentEach>
@@ -167,6 +177,7 @@ function GameInfo(){
                         </GameInfoContentEach>
                     </GameInfoContents>
                 </GameInfoDiv>
+            </Container>
         </>
     )
 }

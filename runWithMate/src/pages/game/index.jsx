@@ -6,6 +6,7 @@ import Map from "../../components/game/Map";
 import GameInfo from "../../components/game/GameInfo";
 import GameRanking from "../../components/game/GameRanking";
 import useStomp from '../../hooks/useStomp';
+import GetMarker from "../../components/game/GetMarker";
 
 const Container = styled.div`
   display: flex;
@@ -21,14 +22,27 @@ const MapContainer = styled.div`
   height: 100%;
 `;
 
+const mock = {
+  type: 'room_joined',
+  user1: "로딩중입니다",
+  user2: "로딩중입니다",
+  bet_point: 100,
+  time_limit: 60
+};
+
 function Game() {
   const navigate = useNavigate();
   const { disconnect } = useStomp();
-  const [timeLimit, setTimeLimit] = useState(3); // 기본값으로 3분 설정 (초 단위)
+  const [timeLimit, setTimeLimit] = useState(mock.time_limit); // 기본값으로 3분 설정 (초 단위)
   const [isGameOver, setIsGameOver] = useState(false); // 게임 오버 상태 추가
 
   const [data, setData] = useState([]);
   
+  const testbetPoint=mock.bet_point;
+  const testtimeLimit=mock.time_limit;
+
+  const testMarkerType='point'
+
   useEffect(() => {
     const mock = [
       {
@@ -111,13 +125,32 @@ function Game() {
     }
   }, [isGameOver, disconnect]);
 
+  const [getMarker,setGetMarker]=useState(false);
+  const handleGetMarker=()=>{
+    setGetMarker(true)
+  }
+  useEffect(()=>{
+    if(getMarker){
+      const visibleAlert=setTimeout(()=>{
+        setGetMarker(false);
+      },1500);
+      return ()=>clearTimeout(visibleAlert);
+    }
+  },[setGetMarker]);
+
   return (
     <>
       <Container>
         {isGameOver && <GameOver />}
-        <GameInfo />
+        <GameInfo 
+          betPoint={testbetPoint}
+          timeLimit={testtimeLimit}
+        />
+        <GetMarker markerType='dopamine'/>
         <MapContainer>
-          <Map />
+          <Map 
+            Get={handleGetMarker}
+            timeLimit={testtimeLimit}/>
         </MapContainer>
         <GameRanking />
       </Container>

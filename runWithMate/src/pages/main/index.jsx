@@ -192,7 +192,7 @@ function Main (){
 
 
     const handleGotoGameButtonClick = async (event) => {
-        const userData=localStorage.getItem('userID');
+        const userData=localStorage.getItem('userId');
 
         if(userData){
             event.preventDefault();
@@ -205,6 +205,7 @@ function Main (){
                 console.log('Main - error creating room : ',error);
             }
         } else{
+            alert(`${userData}`)
             alert('먼저 로그인을 하셔야합니다!');
             navigate('/login');
         }
@@ -215,8 +216,10 @@ function Main (){
         const userData = localStorage.getItem('userId');
 
         if(userData){
+            alert('로그인 성공해서 이동함~')
             navigate('/point');
         }else{
+            alert(`${userData}`)
             alert('먼저 로그인을 하셔야합니다!');
             navigate('/login');
         }
