@@ -44,7 +44,8 @@ const globalStyles = css`
   }
 `;
 
-function Map() {
+
+function Map({Get,testtimeLimit}) {
   const location = useLocation();
   const { connected, stompClientRef, roomNumber } = useStomp();
   
@@ -68,10 +69,10 @@ function Map() {
           }
         }
 
-        console.log(`메세지 송신 - latitude : ${latitude} longitude : ${longitude}`)
+        console.log(`Map 메세지 송신 - latitude : ${latitude} longitude : ${longitude}`)
       }, showError, {
         enableHighAccuracy: true,
-        timeout: 5000,
+        timeout: 1000,
         maximumAge: 0
       });
     }
@@ -95,7 +96,7 @@ function Map() {
               displayMap(latitude, longitude);
             }, showError, {
               enableHighAccuracy: true,
-              timeout: 5000,
+              timeout: 3000,
               maximumAge: 0
             });
           } else {
@@ -188,6 +189,7 @@ function Map() {
         image: pointMarkerImage
       });
       marker.setMap(map);
+      window.kakao.maps.event.addListener(marker, 'click', () => handleClick(Get));
     });
 
     const dopaminMarkerImage = new window.kakao.maps.MarkerImage(
@@ -204,6 +206,7 @@ function Map() {
         image: dopaminMarkerImage
       });
       marker.setMap(map);
+      window.kakao.maps.event.addListener(marker, 'click', () => handleClick(position.title));
     });
 
     setLoading(false); // 맵이 로딩된 후 로딩 상태를 false로 변경
@@ -298,16 +301,16 @@ function Map() {
   const showError = (error) => {
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        alert("사용자가 위치 정보 요청을 거부했습니다.");
+        alert("PERMISSION_DENIED : 사용자가 위치 정보 요청을 거부했습니다.");
         break;
       case error.POSITION_UNAVAILABLE:
-        alert("위치 정보를 사용할 수 없습니다.");
+        alert("POSITION_UNAVAILABLE : 위치 정보를 사용할 수 없습니다.");
         break;
       case error.TIMEOUT:
-        alert("사용자 위치를 가져오는 요청이 시간 초과되었습니다.");
+        alert("TIMEOUT : 사용자 위치를 가져오는 요청이 시간 초과되었습니다.");
         break;
       case error.UNKNOWN_ERROR:
-        alert("알 수 없는 오류가 발생했습니다.");
+        alert("UNKNOWN_ERROR : 알 수 없는 오류가 발생했습니다.");
         break;
       default:
         alert("알 수 없는 오류가 발생했습니다.");
