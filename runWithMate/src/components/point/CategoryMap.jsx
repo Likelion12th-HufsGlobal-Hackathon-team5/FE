@@ -9,7 +9,8 @@ function CategoryMap() {
   const [activeCategory, setActiveCategory] = useState(null);
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-  const [infoWindow, setInfoWindow] = useState(null); // InfoWindow 상태 추가
+  const [activeMarker, setActiveMarker] = useState(null);
+  const [activeInfoWindow, setActiveInfoWindow] = useState(null);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -89,7 +90,6 @@ function CategoryMap() {
     searchPlaces("필라테스", "categoryPilates", 20);
   };
   
-
   const handleCategoryClick = (category) => {
     if (activeCategory === category) {
       removeMarkers();
@@ -97,8 +97,7 @@ function CategoryMap() {
     } else {
       removeMarkers();
       setActiveCategory(category);
-      
-      // 선택한 카테고리에 따라 마커 로드
+
       if (category === "GYM_CATEGORY_CODE") {
         const gymLocations = JSON.parse(localStorage.getItem("categoryGym")) || [];
         if (gymLocations.length > 0) {
@@ -113,94 +112,116 @@ function CategoryMap() {
     }
   };
 
-  let activeMarker = null; // 현재 활성화된 마커를 추적하는 변수
-  let activeInfoWindow = null; // 현재 활성화된 InfoWindow를 추적하는 변수
-  
   const addMarkers = (locations, markerImageSrc, activeMarkerImageSrc) => {
     const markerImage = new kakao.maps.MarkerImage(
-      markerImageSrc,
-      new kakao.maps.Size(23, 31)
+        markerImageSrc,
+        new kakao.maps.Size(23, 31)
     );
-  
+
     const activeMarkerImage = new kakao.maps.MarkerImage(
-      activeMarkerImageSrc,
-      new kakao.maps.Size(23, 31)
+        activeMarkerImageSrc,
+        new kakao.maps.Size(23, 31)
     );
-  
-    const newMarkers = locations.map(({ name, lat, lng, id }) => {
-      const markerPosition = new kakao.maps.LatLng(lat, lng);
-      const marker = new kakao.maps.Marker({
-        position: markerPosition,
-        title: name,
-        image: markerImage,
-      });
-      marker.setMap(map);
-  
-      // 마커 클릭 이벤트 추가
-      kakao.maps.event.addListener(marker, 'click', () => {
-        // 이전 활성화된 마커가 있을 경우
-        if (activeMarker) {
-          activeMarker.setImage(markerImage); // 이전 마커 원래 이미지로 변경
-          if (activeInfoWindow) {
-            activeInfoWindow.close(); // 이전 InfoWindow 닫기
-          }
-        }
-  
-        // 현재 클릭한 마커를 활성화
-        marker.setImage(activeMarkerImage); // 클릭한 마커의 이미지를 변경
-        activeMarker = marker; // 현재 마커를 활성화된 마커로 설정
-  
-        // 장소 ID로 검색하여 정보 가져오기
-        const ps = new kakao.maps.services.Places();
-        ps.keywordSearch(name, (data, status) => {
-          if (status === kakao.maps.services.Status.OK) {
-            const placeDetail = data[0]; // 첫 번째 검색 결과 사용
-            const content = `
-              <div style="display: flex; flex-direction: column; max-width: 300px; white-space: nowrap;">
-                <div style="display: flex; width: 100%; padding: 0.5vh; background-color: #217eef; font-weight: 700; color: #ffffff; font-size: 1.2vh; box-sizing: border-box;">${placeDetail.place_name}</div>
-                <div style="padding: 0.5vh; display: flex; flex-direction: column; gap: 0.3vh; width: auto;">
-                  <p style="margin: 0; color: #666; white-space: nowrap;">주소: ${placeDetail.road_address ? placeDetail.road_address.address_name : placeDetail.address_name}</p>
-                  <p style="margin: 0; color: #666;">전화번호: ${placeDetail.phone || '정보 없음'}</p>
-                  <a href="https://map.kakao.com/link/map/${placeDetail.id}" target="_blank" style="color: #217eef; text-decoration: none;">자세히 보기</a>
-                </div>
-              </div>
-            `;  
-            const newInfoWindow = new kakao.maps.InfoWindow({
-              content,
-              position: markerPosition,
-            });
-            newInfoWindow.open(map, marker); // 마커 위에 InfoWindow 열기
-            activeInfoWindow = newInfoWindow; // 현재 InfoWindow를 활성화된 InfoWindow로 설정
-          }
+
+    const newMarkers = locations.map(({ name, lat, lng }) => {
+        const markerPosition = new kakao.maps.LatLng(lat, lng);
+        const marker = new kakao.maps.Marker({
+            position: markerPosition,
+            title: name,
+            image: markerImage,
         });
-      });
-  
-      return marker;
+        marker.setMap(map);
+
+        kakao.maps.event.addListener(marker, 'click', () => {
+            // 이전 활성화된 마커가 있을 경우
+            if (activeMarker) {
+                const activeImage = activeMarker.getImage();
+
+                // activeImage가 유효한지 확인
+                let previousImage;
+                if (activeImage && typeof activeImage.getSrc === 'function') {
+                    previousImage = activeImage.getSrc().includes('cgon') ? CategoryGymMarker : CategoryPilatesMarker;
+                } else {
+                    previousImage = CategoryGymMarker; // 기본 이미지로 설정
+                }
+
+                activeMarker.setImage(new kakao.maps.MarkerImage(
+                    previousImage, // 기본 이미지로 복원
+                    new kakao.maps.Size(23, 31)
+                ));
+
+                if (activeInfoWindow) {
+                    activeInfoWindow.close();
+                }
+            }
+
+            // 현재 클릭한 마커를 활성화
+            marker.setImage(activeMarkerImage);
+            setActiveMarker(marker);
+
+            const ps = new kakao.maps.services.Places();
+            ps.keywordSearch(name, (data, status) => {
+                if (status === kakao.maps.services.Status.OK) {
+                    const placeDetail = data[0];
+                    const content = `
+                      <div style="display: flex; flex-direction: column; max-width: 300px; white-space: nowrap;">
+                        <div style="display: flex; width: 100%; padding: 0.5vh; background-color: #217eef; font-weight: 700; color: #ffffff; font-size: 1.2vh; box-sizing: border-box;">${placeDetail.place_name}</div>
+                        <div style="padding: 0.5vh; display: flex; flex-direction: column; gap: 0.3vh; width: auto;">
+                          <p style="margin: 0; color: #666; white-space: nowrap;">주소: ${placeDetail.road_address ? placeDetail.road_address.address_name : placeDetail.address_name}</p>
+                          <p style="margin: 0; color: #666;">전화번호: ${placeDetail.phone || '정보 없음'}</p>
+                          <a href="https://map.kakao.com/link/map/${placeDetail.id}" target="_blank" style="color: #217eef; text-decoration: none;">자세히 보기</a>
+                        </div>
+                      </div>
+                    `;
+
+                    const newInfoWindow = new kakao.maps.InfoWindow({
+                        content,
+                        position: markerPosition,
+                    });
+                    newInfoWindow.open(map, marker);
+                    setActiveInfoWindow(newInfoWindow);
+                }
+            });
+        });
+
+        return marker;
     });
-  
+
     setMarkers(prevMarkers => [...prevMarkers, ...newMarkers]);
-  };  
+};
 
-  const removeMarkers = () => {
-    // 모든 마커를 제거
+const removeMarkers = () => {
     markers.forEach((marker) => {
-      marker.setMap(null);
+        marker.setMap(null);
     });
-    setMarkers([]); // 마커 상태 초기화
-  
-    // 현재 활성화된 InfoWindow가 있을 경우 닫기
-    if (activeInfoWindow) {
-      activeInfoWindow.close(); // InfoWindow 닫기
-      activeInfoWindow = null; // 상태 초기화
-    }
-  
-    // activeMarker 초기화
-    if (activeMarker) {
-      activeMarker.setImage(markerImage); // 원래 이미지로 복원
-      activeMarker = null; // 상태 초기화
-    }
-  };
+    setMarkers([]);
 
+    if (activeInfoWindow) {
+        activeInfoWindow.close();
+        setActiveInfoWindow(null);
+    }
+
+    if (activeMarker) {
+        const activeMarkerImage = activeMarker.getImage();
+        const previousImage = (activeMarkerImage && activeMarkerImage.getSrc) 
+            ? (activeMarkerImage.getSrc().includes('cgon') ? CategoryGymMarker : CategoryPilatesMarker)
+            : CategoryGymMarker; // 기본값 설정
+
+        activeMarker.setImage(new kakao.maps.MarkerImage(
+            previousImage, // 기본 이미지로 복원
+            new kakao.maps.Size(23, 31)
+        ));
+        setActiveMarker(null);
+    }
+};
+  useEffect(() => {
+    return () => {
+      if (activeInfoWindow) {
+        activeInfoWindow.close();
+      }
+    };
+  }, [activeInfoWindow]);
+  
   return (
     <Container>
       <CategoryContainer>
