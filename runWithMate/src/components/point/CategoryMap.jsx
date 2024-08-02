@@ -182,14 +182,23 @@ function CategoryMap() {
   };  
 
   const removeMarkers = () => {
+    // 모든 마커를 제거
     markers.forEach((marker) => {
       marker.setMap(null);
     });
-    setMarkers([]);
-    if (infoWindow) {
-      infoWindow.close(); // 마커 제거 시 InfoWindow 닫기
+    setMarkers([]); // 마커 상태 초기화
+  
+    // 현재 활성화된 InfoWindow가 있을 경우 닫기
+    if (activeInfoWindow) {
+      activeInfoWindow.close(); // InfoWindow 닫기
+      activeInfoWindow = null; // 상태 초기화
     }
-    setInfoWindow(null); // InfoWindow 상태 초기화
+  
+    // activeMarker 초기화
+    if (activeMarker) {
+      activeMarker.setImage(markerImage); // 원래 이미지로 복원
+      activeMarker = null; // 상태 초기화
+    }
   };
 
   return (
