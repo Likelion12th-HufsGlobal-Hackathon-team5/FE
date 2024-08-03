@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import Player from './Player';
 import OtherPlayer from './Player2';
 import { BsLink45Deg } from "react-icons/bs";
+import UseStomp from '../../hooks/useStomp';
 
 const LobbyForm = styled.form`
     width: 85%;
@@ -125,22 +126,53 @@ const ReadyContainer = styled.div`
 export default function Lobby({receivedData}) {
     const [user1, setUser1] = useState("");
     const [user2, setUser2] = useState("");
+    const [betPoint,setBetPoint]=useState("");
+    const [timeLimit,setTimeLimit]=useState("");
 
+    const roomId=localStorage.getItem(roomId);
+    
+    const onMessageReceived=(message)=>{
+        const parsedMessage=JSON.parse(message.body);
+        if(parsedMessage.type==='room_joined'){
+            setUser1(parsedMessage.user1);
+            setUser2(parsedMessage.user2);
+            setBetPoint(parsedMessage.bet_point);
+            setTimeLimit(parsedMessage.time_limit);
+        }
+    };
+    
+    const {connected, send } = UseStomp(onMessageReceived);
+    
     useEffect(() => {
         if (receivedData.type === "room_joined") {
             setUser1(receivedData.user1);
             setUser2(receivedData.user2);
+            setBetPoint(receivedData.bet_point);
+            setTimeLimit(receivedData.time_limit);
         }
     },[receivedData]);
 
+    useEffect(()=>{
+        if(connected&&roomId){
+            const message=JSON.stringify({
+                type:'room_joined',
+                user1,
+                user2,
+                bet_point:betPoint,
+                time_limit:timeLimit
+            });
+            send(`/send/join_room/${roomId}`,{},message);
+        }
+    },[connected,send,roomId,user1,user2,betPoint,timeLimit]);
+    
     const copyUrlToClipboard = () => {
         const currentUrl = window.location.href;
         navigator.clipboard.writeText(`${currentUrl}?roomId=${localStorage.getItem("roomId")}`)
             .then(() => {
-                alert('URL이 클립보드에 복사되었습니다.');
+                alert('초대 링크가 복사되었습니다.');
             })
             .catch(err => {
-                console.error('URL 복사 실패', err);
+                console.error('링크 복사 실패', err);
             });
     };
 
