@@ -123,6 +123,8 @@ function CategoryMap() {
         new kakao.maps.Size(23, 31)
     );
 
+    let activeMarker = null; // 외부에서 사용하는 활성화된 마커 변수
+
     const newMarkers = locations.map(({ name, lat, lng }) => {
         const markerPosition = new kakao.maps.LatLng(lat, lng);
         const marker = new kakao.maps.Marker({
@@ -133,31 +135,17 @@ function CategoryMap() {
         marker.setMap(map);
 
         kakao.maps.event.addListener(marker, 'click', () => {
-            // 이전 활성화된 마커가 있을 경우
+            // 이전 활성화된 마커가 있다면, 기본 이미지로 복원
             if (activeMarker) {
-                const activeImage = activeMarker.getImage();
-
-                // activeImage가 유효한지 확인
-                let previousImage;
-                if (activeImage && typeof activeImage.getSrc === 'function') {
-                    previousImage = activeImage.getSrc().includes('cgon') ? CategoryGymMarker : CategoryPilatesMarker;
-                } else {
-                    previousImage = CategoryGymMarker; // 기본 이미지로 설정
-                }
-
-                activeMarker.setImage(new kakao.maps.MarkerImage(
-                    previousImage, // 기본 이미지로 복원
-                    new kakao.maps.Size(23, 31)
-                ));
-
+                activeMarker.setImage(markerImage); // 기본 이미지로 복원
                 if (activeInfoWindow) {
-                    activeInfoWindow.close();
+                    activeInfoWindow.close(); // 이전 정보 창 닫기
                 }
             }
 
             // 현재 클릭한 마커를 활성화
-            marker.setImage(activeMarkerImage);
-            setActiveMarker(marker);
+            marker.setImage(activeMarkerImage); // 활성화된 마커 이미지로 변경
+            activeMarker = marker; // 활성화된 마커 설정
 
             const ps = new kakao.maps.services.Places();
             ps.keywordSearch(name, (data, status) => {
@@ -190,6 +178,7 @@ function CategoryMap() {
     setMarkers(prevMarkers => [...prevMarkers, ...newMarkers]);
 };
 
+
 const removeMarkers = () => {
     markers.forEach((marker) => {
         marker.setMap(null);
@@ -214,6 +203,7 @@ const removeMarkers = () => {
         setActiveMarker(null);
     }
 };
+
   useEffect(() => {
     return () => {
       if (activeInfoWindow) {
@@ -221,7 +211,7 @@ const removeMarkers = () => {
       }
     };
   }, [activeInfoWindow]);
-  
+
   return (
     <Container>
       <CategoryContainer>
