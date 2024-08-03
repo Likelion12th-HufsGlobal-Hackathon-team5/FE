@@ -16,12 +16,12 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
-        name: 'My PWA App',
-        short_name: 'PWA',
+        name: 'Run With Mate PWA App',
+        short_name: 'Run With Mate',
         start_url: '/',
-        display: 'standalone',
+        display: 'fullscreen',
         background_color: '#ffffff',
-        theme_color: '#000000',
+        theme_color: '#217EEF',
         icons: [
           {
             src: '/RWM_PWA_icon.png',
