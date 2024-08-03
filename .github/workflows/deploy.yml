@@ -1,9 +1,9 @@
-name: Deploy Vite React App to Docker Server via Bastion
+name: Deploy Vite React App to k3s
 
 on:
   push:
     branches:
-      - 여기에merge하면배포됨
+      - main
 
 jobs:
   build:
@@ -46,24 +46,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy to server via Bastion
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          BASTION_PRIVATE_KEY: ${{ secrets.BASTION_PRIVATE_KEY }}
+      - name: Set up Kubeconfig
         run: |
-          echo "$BASTION_PRIVATE_KEY" > bastion_key.pem
-          chmod 600 bastion_key.pem
-          echo "$SSH_PRIVATE_KEY" > key.pem
-          chmod 600 key.pem
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+          chmod 600 kubeconfig
+          export KUBECONFIG=kubeconfig
 
-          # 포트 포워딩 설정
-          ssh -o StrictHostKeyChecking=no -i bastion_key.pem -p 2090 -f -N -L 2222:${{ secrets.SERVER_IP }}:22 ${{ secrets.BASTION_USER }}@${{ secrets.BASTION_IP }}
-          
-          # 최종 서버에 접근하여 Docker 작업 수행
-          ssh -o StrictHostKeyChecking=no -i key.pem -p 2222 ${{ secrets.SERVER_USER }}@localhost << EOF
-            docker login ${{ secrets.DOCKER_REGISTRY }} -u ${{ secrets.DOCKER_REGISTRY_USERNAME }} -p ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-            docker pull ${{ secrets.DOCKER_REGISTRY }}/runwithmate_front:latest
-            docker stop runwithmate_front || true
-            docker rm runwithmate_front || true
-            docker run -d --network server --name runwithmate_front ${{ secrets.DOCKER_REGISTRY }}/runwithmate_front:latest
-          EOF
+      - name: Deploy to k3s
+        env:
+          KUBECONFIG: ~/.kube/config
+        run: |
+          kubectl rollout restart deployment/lgtu-back
