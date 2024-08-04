@@ -43,18 +43,15 @@ jobs:
     needs: build
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Kubeconfig
+      - name: Set up KUBECONFIG
         run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-          chmod 600 kubeconfig
-          export KUBECONFIG=kubeconfig
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
-      - name: Deploy to k3s
-        env:
-          KUBECONFIG: ~/.kube/config
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Rollout restart the deployment
         run: |
-          kubectl rollout restart deployment/lgtu-back
+          kubectl rollout restart deployment/lgtu_back
