@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
 import useWebSocket from '../../../hooks/useWebSocket';
+import UseStomp from '../../../hooks/useStomp';
 
 import { useNavigate } from 'react-router-dom';
 import { PiWarningFill } from "react-icons/pi";
@@ -106,16 +107,28 @@ const Giveup = ({ onClose , betting }) => {
   // };
 
   // ws event
-  const handleSendMessage=()=>{
-    const message={type : 'greeting', payload:'hello~ this is jihee~'};
-    sendMessage(message);
+  // const handleSendMessage=()=>{
+  //   const message={type : 'greeting', payload:'hello~ this is jihee~'};
+  //   sendMessage(message);
+  // };
+
+  const [receivedData, setReceivedData] = useState('');
+  const onMessageReceived = (message) => {
+    setReceivedData(JSON.parse(message.body));
   };
+
+  const { connected, send, disconnect }=UseStomp(onMessageReceived);
 
   // handleMainPage 이벤트 합쳐버림
   const handleCloseConnection = async () => {
     setPoint(prevPoint => prevPoint - betting);
-    closeWebSocket();
     // WebSocket이 닫힌 후 navigate 실행
+    closeWebSocket();
+
+    //게임 결과를 받아서 localStorage에 저장
+    
+
+    // ws 닫히고 구독 끊어진 다음 이동
     setTimeout(() => {
       navigate('/gameResult');
     }, 100); // 짧은 지연 시간을 주어 WebSocket이 닫힐 시간을 줍니다.
