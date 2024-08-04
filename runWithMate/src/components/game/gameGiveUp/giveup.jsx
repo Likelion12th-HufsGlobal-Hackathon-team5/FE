@@ -24,15 +24,22 @@ const Container = styled.div`
 const Modal = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  padding: 1%;
+
   width: 20%;
+  min-width: 337px;
   height: 30%;
+  min-height: 240px;
+
   border-radius: 35px;
   border: 5px solid #E96D6D;
   background: #E96D6D;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative; 
 `;
 
 const CancleButton = styled(BsXCircleFill)`
@@ -42,6 +49,9 @@ const CancleButton = styled(BsXCircleFill)`
   top: 1vh; 
   right: 1vh; 
   cursor: pointer;
+  &:hover {
+    color: #f0f0f0;
+  }
 `;
 
 const MainButton = styled.button`
@@ -53,6 +63,7 @@ const MainButton = styled.button`
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
+    font-weight: 900;
   }
 `;
 
@@ -73,7 +84,8 @@ const Content = styled.p`
   font-size: 1.8vh;
   font-style: normal;
   font-weight: 200;
-  line-height: 3.2vh;
+  /* line-height: 3.2vh; */
+  line-height: 1.5;
 `;
 
 const SERVER_URL = 'server-url';
@@ -119,11 +131,11 @@ const Giveup = ({ onClose , betting }) => {
           정말 기권하시겠습니까?     
         </MainContent>
         <Content>
-          배팅한 포인트는 자동으로 상대방에게 넘어갑니다.
+          배팅한 포인트는 <br/>자동으로 상대방에게 넘어갑니다.
         </Content>
         <MainButton onClick={handleCloseConnection}>
           기권하기
-          </MainButton>
+        </MainButton>
       </Modal>
     </Container>,
     document.body
