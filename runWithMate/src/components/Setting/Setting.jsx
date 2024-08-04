@@ -183,6 +183,7 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
     const handleInputChange = (e) => {
         const value = e.target.value === '' ? '' : parseInt(e.target.value, 10);
         setBetting(value);
+        l
     };
 
     useEffect(() => {
@@ -210,10 +211,22 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
         { id: 'custom', label: '수동입력' }
     ];
 
-    const Sendsetting = () => {
+    useEffect(()=>{
         const data = {
             bet_point: betting,
             time_limit: timeLimit
+        };
+        localStorage.setItem("gameResult",data);
+        console.log("settingGame - change setting : ",localStorage.getItem('gameResult'))
+    },[setBetting,setTimeLimit]);
+
+    const Sendsetting = () => {
+        const localStorage_betPoint=localStorage.getItem("gameResult").bet_point;
+        const localStorage_timeLimit=localStorage.getItem("gameResult").time_limit;
+        
+        const data = {
+            bet_point: localStorage_betPoint,
+            time_limit: localStorage_timeLimit
         };
         wsInstance("update_setting", data);
     }

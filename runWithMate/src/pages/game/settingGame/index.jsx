@@ -39,17 +39,18 @@ const StartGame = styled.button`
   margin-bottom: 10vh; /* 버튼 아래에 여백 추가 */
 `;
 
-const mock = {
-  type: 'room_joined',
-  user1: "로딩중입니다",
-  user2: "로딩중입니다",
-  bet_point: 0,
-  time_limit: 0
-};
+// const initialMock = {
+//   type: 'room_joined',
+//   user1: "로딩중입니다",
+//   user2: "로딩중입니다",
+//   bet_point: 0,
+//   time_limit: 0
+// };
 
 function SettingGame() {
   const [Point,setPoint] = useState(23500);
-  const [receivedData, setReceivedData] = useState(mock);
+  // const [receivedData, setReceivedData] = useState(initialMock);
+  const [receivedData, setReceivedData] = useState();
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -80,6 +81,13 @@ function SettingGame() {
     wsInstance("check_room", {})
   }, [connected])
 
+  useEffect(()=>{
+    const bet_point=receivedData.bet_point;
+    const time_limit=receivedData.time_limit;
+    const settingData={bet_point, time_limit};
+    localStorage.setItem('setting',settingData);
+  })
+
   const handleStartGame = () => {
     wsInstance("start_game", {});
     navigate('/game');
@@ -91,7 +99,11 @@ function SettingGame() {
       <Header />
       <Background>
         <Content />
-        <Setting Mypoint={Point} receivedData={receivedData} wsInstance={wsInstance}/>
+        <Setting 
+          Mypoint={Point} 
+          receivedData={receivedData} 
+          wsInstance={wsInstance}
+        />
         <Lobby receivedData={receivedData}/> {/* receivedData의 초기값을 mock데이터로 설정하고 변경했습니다! */}
         <StartGame onClick={handleStartGame}>게임 시작하기</StartGame>
       </Background>
