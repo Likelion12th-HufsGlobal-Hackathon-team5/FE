@@ -5,8 +5,9 @@ import { useLocation } from 'react-router-dom';
 import useWebSocket from '../../hooks/useWebSocket';
 import useStomp from '../../hooks/useStomp';
 
-import PointMarkerImg from '../../assets/images/pointMarker.png';
-import DopamineMarkerImg from '../../assets/images/dopamineMarker.png';
+
+import PointMarkerImg from '/img/pp.png';
+import DopamineMarkerImg from '/img/dp.png';
 
 import ClipLoader from 'react-spinners/ClipLoader';
 
@@ -50,6 +51,8 @@ function Map({Get,testtimeLimit}) {
   const { connected, stompClientRef, roomNumber } = useStomp();
   
   const [currentPosition, setCurrentPosition] = useState({ lat: null, lng: null });
+  const [currentPositionMarker, setCurrentPositionMarker]=useState(null);
+
   const [loading, setLoading] = useState(true);
 
   const updatePosition = useCallback(() => {
@@ -69,6 +72,10 @@ function Map({Get,testtimeLimit}) {
           }
         }
 
+        if (currentPosition){
+          const newPosition=new window.kakao.map.LatLng(latitude,longitude);
+          currentPositionMarker.setPosition(newPosition);
+        }
         console.log(`Map 메세지 송신 - latitude : ${latitude} longitude : ${longitude}`)
       }, showError, {
         enableHighAccuracy: true,
@@ -76,7 +83,7 @@ function Map({Get,testtimeLimit}) {
         maximumAge: 0
       });
     }
-  }, [location.pathname, connected, roomNumber, stompClientRef]);
+  }, [location.pathname, connected, roomNumber, stompClientRef, currentPositionMarker]);
 
   // 수정한 부분
   useEffect(() => {
@@ -93,7 +100,7 @@ function Map({Get,testtimeLimit}) {
             navigator.geolocation.getCurrentPosition((position) => {
               const { latitude, longitude } = position.coords;
               setCurrentPosition({ lat: latitude, lng: longitude });
-              displayMap(latitude, longitude);
+              displayMap(latitude,longitude);
             }, showError, {
               enableHighAccuracy: true,
               timeout: 3000,
@@ -125,6 +132,15 @@ function Map({Get,testtimeLimit}) {
     };
 
     const map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+    // 아래 코드 에러터짐 
+    // const newCurrentLocationMarker=new window.kakao.maps.Marker({
+    //   map:map,
+    //   position:new window.kakao.maps.LatLng(lat, lng),
+    //   title:'current position - Map.jsx'
+    // });
+    // currentPositionMarker.setMap(map);
+    // setCurrentPositionMarker(newCurrentLocationMarker);
 
     const currentLocationMarker = new window.kakao.maps.Marker({
       map: map,
@@ -177,7 +193,7 @@ function Map({Get,testtimeLimit}) {
 
     const pointMarkerImage = new window.kakao.maps.MarkerImage(
       PointMarkerImg,
-      new window.kakao.maps.Size(32, 40.61),
+      new window.kakao.maps.Size(32.8, 48),
       { offset: new window.kakao.maps.Point(16, 34.5) }
     );
 
@@ -194,7 +210,7 @@ function Map({Get,testtimeLimit}) {
 
     const dopaminMarkerImage = new window.kakao.maps.MarkerImage(
       DopamineMarkerImg,
-      new window.kakao.maps.Size(32, 40.61),
+      new window.kakao.maps.Size(32.8, 48),
       { offset: new window.kakao.maps.Point(16, 34.5) }
     );
 
