@@ -10,33 +10,31 @@ import UseStomp from '../../../hooks/useStomp';
 const Container = styled.div`
   display : flex;
   flex-direction: column;
+
   width : 100%;
   height : 100%;
 `
 
 const Background = styled.div`
+  display : flex;
+  flex-direction: column;
+  align-items: center;
+
+  width : 100%;
+  height : 100%;
+  padding: 2rem 0;
   background-image: url('https://i.imgur.com/VNjJZio.png');
   background-size: cover;
   background-position: center;
-  width : 100%;
-  height : 100%;
+  gap: 2rem;
 `
-// 추후 변경
 const StartGame = styled.button`
-  margin-top: 13vh;
-  margin-left: 5vh;
-  width: 80%;
-  height: 100%;
-  padding : 1vh;
-  justify-content: center;  
-  align-items: center;
-  gap: 0.46vh;
-  align-self: stretch;
+  width: 85%;
+  height: 40px;
   border-radius: 0.93vh;
   border: 0.18vh solid #217EEF;
   background: #217EEF;
   color: white;
-  margin-bottom: 10vh; /* 버튼 아래에 여백 추가 */
 `;
 
 // const initialMock = {
@@ -52,8 +50,8 @@ function SettingGame() {
   // const [receivedData, setReceivedData] = useState(initialMock);
   const [receivedData, setReceivedData] = useState();
   const navigate = useNavigate();
-
   const location = useLocation();
+
   const queryParams = new URLSearchParams(location.search);
   if (queryParams.get("roomId")) {
     const roomId = queryParams.get("roomId");
@@ -78,7 +76,7 @@ function SettingGame() {
   // --------------------------
 
   useEffect(() => {
-    wsInstance("check_room", {})
+    wsInstance("check_room", {});
   }, [connected])
 
   useEffect(()=>{
@@ -92,6 +90,9 @@ function SettingGame() {
     wsInstance("start_game", {});
     navigate('/game');
   };
+
+  // --------------------------
+
 
   return (
   <>
