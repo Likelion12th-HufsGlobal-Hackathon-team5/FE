@@ -5,41 +5,49 @@ import { MdOutlinePerson } from "react-icons/md";
 
 const PlayerContainer = styled.div`
     display : flex;
-    margin-top : 3vh;
-    margin-left : 2vh;
+    justify-content: space-between;
+    align-items : center;
     width : 100%;
     height : 100%;
 `
 
-const UserName = styled.p`
-    margin-left : 1.5vh;
-    margin-top : 1vh;
-    width : 20%;
-    height : 5%;
+const PlayerBox = styled.div`
+    display : flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items : center;
+    
+    height : 100%;
+    gap: 1rem;
+`
 
+const UserName = styled.p`
+    font-size : 1.5rem;
 `
 
 const Host = styled.div`
     display: flex;
-    width : 12vh;
-    height : 5vh;
     justify-content: center;
     align-items: center;
+
+    width : 7rem;
+    height : 3rem;
+
+    font-size: 1.5rem;
     border-radius: 1vh;
     background: var(--Grays-Gray-4, #D1D1D6);
-    margin-left: 10vh;
 `
 
 
 
-export default function Player({playermock}){
+export default function Player({playermock, userType}){
     return(
         <PlayerContainer>
-            <MdOutlinePerson size='30' />
-            <UserName>{playermock}님</UserName>
-            <Host>
-                <p>Host</p>
-            </Host>
+            <PlayerBox>
+                <MdOutlinePerson size='30' />
+                <UserName>{playermock} 님</UserName>
+            </PlayerBox>
+            <Host>{userType}</Host>
         </PlayerContainer>
     );
 }
