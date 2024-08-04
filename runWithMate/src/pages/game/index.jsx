@@ -121,6 +121,7 @@ function Game() {
   }, [data]);
 
   useEffect(() => {
+    // 게임 오버
     const timer = setTimeout(() => {
       setIsGameOver(true); // 게임 오버 상태 변경
       setTimeout(() => {
@@ -132,6 +133,7 @@ function Game() {
   }, [timeLimit, navigate]);
 
   useEffect(() => {
+    // 게임 오버가 된 순간 ws 연결 끊어짐
     if (isGameOver) {
       disconnect();
     }

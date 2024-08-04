@@ -82,11 +82,13 @@ function SettingGame() {
   useEffect(()=>{
     const bet_point=receivedData.bet_point;
     const time_limit=receivedData.time_limit;
-    const settingData={bet_point, time_limit};
+    const settingData=[bet_point, time_limit];
     localStorage.setItem('setting',settingData);
   })
 
   const handleStartGame = () => {
+    const bet_point=receivedData.bet_point;
+    console.log(`bet_point : ${bet_point}`)
     wsInstance("start_game", {});
     navigate('/game');
   };

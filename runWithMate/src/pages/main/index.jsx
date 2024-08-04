@@ -205,7 +205,7 @@ function Main (){
                 console.log('Main - error creating room : ',error);
             }
         } else{
-            alert(`${userData}`)
+            alert(`user id : ${userData}`)
             alert('먼저 로그인을 하셔야합니다!');
             navigate('/login');
         }

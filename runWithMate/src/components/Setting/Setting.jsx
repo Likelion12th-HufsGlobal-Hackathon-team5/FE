@@ -218,8 +218,11 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
             bet_point: betting,
             time_limit: timeLimit
         };
-        localStorage.setItem("gameResult",data);
-        console.log("settingGame - change setting : ",localStorage.getItem('gameResult'))
+        // localStorage.setItem("gameResult",data);
+        // console.log("settingGame - change setting : ",localStorage.getItem('gameResult'))
+        
+        localStorage.setItem("gameResult", JSON.stringify(data));
+        console.log("settingGame - change setting(근데 게임하기 버튼 누르면 이게 출력됨) : ", JSON.parse(localStorage.getItem('test01')));
     },[setBetting,setTimeLimit]);
 
     const Sendsetting = () => {
