@@ -45,6 +45,7 @@ jobs:
     steps:
       - name: Set up KUBECONFIG
         run: |
+          mkidr $HOME/.kube
           echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
       - name: Install kubectl
