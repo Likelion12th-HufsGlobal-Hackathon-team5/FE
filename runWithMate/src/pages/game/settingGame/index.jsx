@@ -39,18 +39,18 @@ const StartGame = styled.button`
   margin-bottom: 10vh; /* 버튼 아래에 여백 추가 */
 `;
 
-// const initialMock = {
-//   type: 'room_joined',
-//   user1: "로딩중입니다",
-//   user2: "로딩중입니다",
-//   bet_point: 0,
-//   time_limit: 0
-// };
+const initialMock = {
+  type: 'room_joined',
+  user1: "로딩중입니다",
+  user2: "로딩중입니다",
+  bet_point: 0,
+  time_limit: 0
+};
 
 function SettingGame() {
   const [Point,setPoint] = useState(23500);
-  // const [receivedData, setReceivedData] = useState(initialMock);
-  const [receivedData, setReceivedData] = useState();
+  const [receivedData, setReceivedData] = useState(initialMock);
+  // const [receivedData, setReceivedData] = useState();
   const navigate = useNavigate();
 
   const location = useLocation();
