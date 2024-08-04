@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import GameOver from "../../components/game/GameOver/GameOver";
+
+import useStomp from '../../hooks/useStomp';
+
 import Map from "../../components/game/Map";
 import GameInfo from "../../components/game/GameInfo";
+// import GetMarker from "../../components/game/GetMarker";
+import GameOver from "../../components/game/GameOver/GameOver";
 import GameRanking from "../../components/game/GameRanking";
-import useStomp from '../../hooks/useStomp';
+
 import GetMarker from "../../components/game/GetMarker";
 
 const Container = styled.div`
@@ -30,11 +34,19 @@ const mock = {
   time_limit: 60
 };
 
+const testBtn=styled.button`
+  z-index: 10;
+  color: white;
+  background-color: yellow;
+  padding: 10%;
+  font-size: 24px;
+`;
 function Game() {
   const navigate = useNavigate();
   const { disconnect } = useStomp();
   const [timeLimit, setTimeLimit] = useState(mock.time_limit); // 기본값으로 3분 설정 (초 단위)
   const [isGameOver, setIsGameOver] = useState(false); // 게임 오버 상태 추가
+  const [isGetMarker, setIsGetMarker]=useState(false);
 
   const [data, setData] = useState([]);
   
@@ -125,18 +137,18 @@ function Game() {
     }
   }, [isGameOver, disconnect]);
 
-  const [getMarker,setGetMarker]=useState(false);
+  // const [getMarker,setGetMarker]=useState(false);
   const handleGetMarker=()=>{
-    setGetMarker(true)
+    setIsGetMarker(true)
   }
   useEffect(()=>{
-    if(getMarker){
+    if(isGetMarker){
       const visibleAlert=setTimeout(()=>{
-        setGetMarker(false);
+        setIsGetMarker(false);
       },1500);
       return ()=>clearTimeout(visibleAlert);
     }
-  },[setGetMarker]);
+  },[setIsGetMarker]);
 
   return (
     <>
@@ -146,7 +158,7 @@ function Game() {
           betPoint={testbetPoint}
           timeLimit={testtimeLimit}
         />
-        <GetMarker markerType='dopamine'/>
+        {isGetMarker && <GetMarker markerType='point'/>}
         <MapContainer>
           <Map 
             Get={handleGetMarker}
