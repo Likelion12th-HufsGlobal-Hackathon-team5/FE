@@ -55,4 +55,4 @@ jobs:
 
       - name: Rollout restart the deployment
         run: |
-          kubectl rollout restart deployment/lgtu_back
+          kubectl rollout restart deployments/lgtu-front
