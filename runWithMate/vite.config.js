@@ -24,12 +24,12 @@ export default defineConfig({
         theme_color: '#217EEF',
         icons: [
           {
-            src: '/RWM_PWA_icon.png',
+            src: '/img/RWM_PWA_icon.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: '/RWM_PWA_icon.png',
+            src: '/img/RWM_PWA_icon.png',
             sizes: '512x512',
             type: 'image/png'
           }
