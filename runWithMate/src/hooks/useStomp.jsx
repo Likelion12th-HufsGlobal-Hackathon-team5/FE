@@ -35,7 +35,8 @@ const UseStomp = (onMessageReceived) => {
         console.log('받은 메시지:', message.body);
         const getMessage=message.body;
         // localStorage.setItem('getMessage',JSON.parse(message.body));
-        localStorage.setItem('useStomp-getMessage',JSON.stringify(message.body));
+        // localStorage.setItem('useStomp-getMessage',JSON.stringify(message.body));
+        localStorage.setItem('useStomp-getMessage',JSON.parse(message.body));
         // if (onMessageReceived) onMessageReceived(message);
         if (onMessageReceived) onMessageReceived(getMessage);
       });
