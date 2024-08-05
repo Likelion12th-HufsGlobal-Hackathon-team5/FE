@@ -68,7 +68,7 @@ function Mypage() {
                     <LogoutText>
                         <LogoutHeader>
                             로그아웃 하기
-                            <MdNavigateNext size={15} />
+                            <MdNavigateNext size={30} />
                         </LogoutHeader>
                         카카오 계정을 로그아웃 합니다. 
                     </LogoutText>
