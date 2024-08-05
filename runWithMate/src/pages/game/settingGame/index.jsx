@@ -3,9 +3,9 @@ import Header from '../../../components/Header';
 import Content from '../../../components/Setting/Content';
 import Setting from '../../../components/Setting/Setting';
 import Lobby from '../../../components/Setting/Lobby';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
-import UseStomp from '../../../hooks/useStomp';
+import { useNavigate, useLocation } from 'react-router-dom';
+import useWsInstance from '../../../hooks/useWsInstance';
+import { useEffect, useState } from 'react';
 
 const Container = styled.div`
   display : flex;
@@ -37,18 +37,17 @@ const StartGame = styled.button`
   color: white;
 `;
 
-// const initialMock = {
-//   type: 'room_joined',
-//   user1: "로딩중입니다",
-//   user2: "로딩중입니다",
-//   bet_point: 0,
-//   time_limit: 0
-// };
+const initialMock = {
+  type: 'room_joined',
+  user1: "로딩중입니다",
+  user2: "로딩중입니다",
+  bet_point: 0,
+  time_limit: 0
+};
 
 function SettingGame() {
   const [Point,setPoint] = useState(23500);
-  // const [receivedData, setReceivedData] = useState(initialMock);
-  const [receivedData, setReceivedData] = useState();
+  const [receivedData, setReceivedData] = useState(initialMock);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -59,21 +58,9 @@ function SettingGame() {
     window.history.replaceState({}, null, location.pathname);
   }
 
-  // --------------------------
-  // 수신 함수
-  const onMessageReceived = (message) => {
-    setReceivedData(JSON.parse(message.body));
-  };
-
-  const { connected, send, disconnect }=UseStomp(onMessageReceived);
-
-  // 송신 함수
-  const wsInstance = useCallback((wsMethod, data) => {
-    if (connected) {
-      send(`/send/${wsMethod}/${localStorage.getItem('roomId')}`, {}, JSON.stringify(data));
-    }
-  }, [connected, send]);
-  // --------------------------
+  // 인자로 받은 setReceivedData를 사용하여 수신된 데이터를 저장하는 커스텀 훅입니당~
+  // 코드 너무 길어져서 따로 빼놨어요!
+  const { wsInstance, connected, disconnect } = useWsInstance(setReceivedData);
 
   useEffect(() => {
     wsInstance("check_room", {});
@@ -86,9 +73,14 @@ function SettingGame() {
     localStorage.setItem('setting',settingData);
   })
 
+  useEffect(()=>{
+    if(receivedData.type==="game_started"){
+      navigate('/game');
+    }
+  },[receivedData]);
+
   const handleStartGame = () => {
     wsInstance("start_game", {});
-    navigate('/game');
   };
 
   // --------------------------
