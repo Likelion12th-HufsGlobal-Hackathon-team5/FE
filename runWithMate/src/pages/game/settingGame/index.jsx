@@ -41,13 +41,14 @@ const initialMock = {
   type: 'room_joined',
   user1: "로딩중입니다",
   user2: "로딩중입니다",
-  bet_point: 0,
-  time_limit: 0
+  bet_point: 7,
+  time_limit: 7
 };
 
 function SettingGame() {
   const [Point,setPoint] = useState(23500);
-  const [receivedData, setReceivedData] = useState(initialMock); // initialMock 빼지 말아주세요~ tsx가 아니라서 자료형 선언해주려면 필요합니다!
+  // initialMock 빼지 말아주세요~ tsx가 아니라서 자료형 선언해주려면 필요합니다!
+  const [receivedData, setReceivedData] = useState(initialMock); 
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -60,18 +61,20 @@ function SettingGame() {
 
   // 인자로 받은 setReceivedData를 사용하여 수신된 데이터를 저장하는 커스텀 훅입니당~
   // 코드 너무 길어져서 따로 빼놨어요!
-  const { wsInstance, connected, disconnect } = useWsInstance(setReceivedData);
-
-  useEffect(() => {
-    wsInstance("check_room", {});
-  }, [connected])
+  const { wsInstance, connected } = useWsInstance(setReceivedData);
 
   useEffect(()=>{
     const bet_point=receivedData.bet_point;
     const time_limit=receivedData.time_limit;
-    const settingData=[bet_point, time_limit];
-    localStorage.setItem('setting',settingData);
-  })
+    console.log('main에서 settingGame 이동 버튼 클릭! - setting page')
+    console.log(`bet_point : ${bet_point}`);
+    console.log(`time_limit : ${time_limit}`);
+
+    // 아래코드 무조건 살리기
+    wsInstance("check_room", {});
+    const currentURL=window.location.href;
+    localStorage.setItem('invitedURL',`${currentURL}?roomId=${localStorage.getItem("roomId")}`);
+  },[connected])
 
   useEffect(()=>{
     if(receivedData.type==="game_started"){
@@ -81,9 +84,20 @@ function SettingGame() {
 
   const handleStartGame = () => {
     const bet_point=receivedData.bet_point;
-    console.log(`bet_point : ${bet_point}`)
+    const time_limit=receivedData.time_limit;
+    console.log(`bet_point : ${bet_point}`);
+    console.log(`time_limit : ${time_limit}`);
     wsInstance("start_game", {});
   };
+
+  useEffect(() => {
+    if (!localStorage.getItem('userId')) {
+      // userId가 localStorage에 없을 때만 실행됩니다.
+      localStorage.setItem('join_user2',true);
+      alert('먼저 로그인을 하셔야 합니다. 로그인 화면으로 이동합니다.');
+      navigate('/login');
+    }
+  }, [navigate]); // navigate가 변경될 때만 useEffect 실행
 
   return (
   <>
