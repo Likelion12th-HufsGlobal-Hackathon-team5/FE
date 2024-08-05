@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import {useRef, useEffect, useState } from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import UseStomp from '../hooks/useStomp';
@@ -76,15 +76,28 @@ const StyledLink=styled(Link)`
 
 function Header(){
     const location = useLocation();
-    const { disconnect}=UseStomp();
+    const { disconnect } = UseStomp();
 
-    useEffect(()=>{
-        if(location.pathname==='/main'){
+    const [icon, setIcon] = useState(false);
+    const prevIconRef = useRef();
+    const isInitialMount = useRef(true);
+
+    const handleIcon = () => {
+        setIcon(!icon);
+    };
+//
+    useEffect(() => {
+        if (prevIconRef.current !== icon&& location.pathname === '/main' ) {
+            console.log('header click event - disconnect');
             disconnect();
-            localStorage.clear();
+            if(localStorage.getItem("roomId")){
+                localStorage.clear("look");
+                localStorage.clear("roomId");
+                // localStorage.clear("useSTomp-getMessage");
+            }
         }
-    },[location.pathname]);
-
+    }, [icon, disconnect]);
+    
     return(
         <>
             <Container>
@@ -99,7 +112,7 @@ function Header(){
                         Mate<br />
                     </Text>
                 </Background>
-                <StyledLink to={'/'}>
+                <StyledLink to={'/main'} onClick={handleIcon}>
                     <BsHouseDoorFill className='Home'/>
                 </StyledLink>
             </Container>
