@@ -25,7 +25,7 @@ export const initializeMap = (setMap, setCurrentLocationMarker, setLoading) => {
       const mapContainer = document.getElementById('map');
       const mapOption = {
         center: new window.kakao.maps.LatLng(latitude, longitude),
-        level: 11,
+        level: 3,
       };
 
       const newMap = new window.kakao.maps.Map(mapContainer, mapOption);
@@ -33,16 +33,16 @@ export const initializeMap = (setMap, setCurrentLocationMarker, setLoading) => {
 
       const currentMarker = new window.kakao.maps.Marker({
         map: newMap,
-        position: new window.kakao.maps.LatLng(latitude, longitude),
+        // position: new window.kakao.maps.LatLng(latitude, longitude),
         title: '현재 위치',
       });
       setCurrentLocationMarker(currentMarker);
 
-      addMarkers(newMap, mockPointBoxes, '/img/pp.png');
-      addMarkers(newMap, mockDopamineBoxes, '/img/dp.png');
+      // addMarkers(newMap, mockPointBoxes, '/img/pp.png');
+      // addMarkers(newMap, mockDopamineBoxes, '/img/dp.png');
 
-      setLoading(false);
-    }, showError, { enableHighAccuracy: true, timeout: 1000, maximumAge: 0 });
+      // setLoading(false);
+    }, showError, { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 });
   }
 };
 
