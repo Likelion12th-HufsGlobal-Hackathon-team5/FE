@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 
+import UseStomp from '../hooks/useStomp';
+
 import Icon from '/img/NoBgIcon.png';
 import { BsHouseDoorFill } from 'react-icons/bs';
 
@@ -74,9 +76,11 @@ const StyledLink=styled(Link)`
 
 function Header(){
     const location = useLocation();
+    const { disconnect}=UseStomp();
 
     useEffect(()=>{
         if(location.pathname==='/main'){
+            disconnect();
             localStorage.clear();
         }
     },[location.pathname]);

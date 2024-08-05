@@ -89,51 +89,41 @@ const Content = styled.p`
   line-height: 1.5;
 `;
 
-const SERVER_URL = 'server-url';
-const roomId='roomId'
 
 const Giveup = ({ onClose , betting }) => {
 
   const [Point, setPoint] = useState(0);
   const navigate = useNavigate();
 
-  const { sendMessage, closeWebSocket } = useWebSocket(`ws://${SERVER_URL}/surrender/${roomId}`);
-
-  // WebSocket을 더 공부해봐야 알겠지만
-  // 우선 버튼을 눌렀을떄 포인트가 빠져나가는 형식으로 제작
-  // const handleMainPage = () => {
-  //   setPoint(prevPoint => prevPoint - betting);
-  //   navigate('/main');
-  // };
-
-  // ws event
-  // const handleSendMessage=()=>{
-  //   const message={type : 'greeting', payload:'hello~ this is jihee~'};
-  //   sendMessage(message);
-  // };
-
   const [receivedData, setReceivedData] = useState('');
   const onMessageReceived = (message) => {
     setReceivedData(JSON.parse(message.body));
   };
 
-  const { connected, send, disconnect }=UseStomp(onMessageReceived);
+  const { disconnect }=UseStomp(onMessageReceived);
 
   // handleMainPage 이벤트 합쳐버림
-  const handleCloseConnection = async () => {
-    setPoint(prevPoint => prevPoint - betting);
-    // WebSocket이 닫힌 후 navigate 실행
-    closeWebSocket();
+  // const handleCloseConnection = async () => {
+  //   setPoint(prevPoint => prevPoint - betting);
+  //   // WebSocket이 닫힌 후 navigate 실행
+  //   closeWebSocket();
+  //   //게임 결과를 받아서 localStorage에 저장
+  //   // ws 닫히고 구독 끊어진 다음 이동
+  //   setTimeout(() => {
+  //     navigate('/gameResult');
+  //   }, 100); // 짧은 지연 시간을 주어 WebSocket이 닫힐 시간을 줍니다.
+  // };
 
-    //게임 결과를 받아서 localStorage에 저장
-    
+  const handleGiveUp=async(onMessageReceived)=>{
+    setPoint(prevPoint=>prevPoint-betting);
+    const gameResult=JSON.parse(onMessageReceived);
+    localStorage.setItem("GameResult",gameResult);
+    disconnect();
 
-    // ws 닫히고 구독 끊어진 다음 이동
-    setTimeout(() => {
+    setTimeout(()=>{
       navigate('/gameResult');
-    }, 100); // 짧은 지연 시간을 주어 WebSocket이 닫힐 시간을 줍니다.
+    },100)
   };
-
 
   return ReactDOM.createPortal(
     <Container>
@@ -146,7 +136,7 @@ const Giveup = ({ onClose , betting }) => {
         <Content>
           배팅한 포인트는 <br/>자동으로 상대방에게 넘어갑니다.
         </Content>
-        <MainButton onClick={handleCloseConnection}>
+        <MainButton onClick={handleGiveUp}>
           기권하기
         </MainButton>
       </Modal>
