@@ -1,7 +1,10 @@
 import styled from '@emotion/styled'
 import Header from '../../components/Header';
 import LogoutIcon from '/img/LogoutIcon.png';
+import { useNavigate } from 'react-router-dom';
 import { MdNavigateNext } from "react-icons/md";
+
+import { Cookies } from 'react-cookie';
 
 const Container = styled.div`
     display: flex;
@@ -59,11 +62,25 @@ const LogoutHeader = styled.div`
 `;
 
 function Mypage() {
+    const navigate = useNavigate();
+    const cookies = new Cookies();
+
+    const handleLogout=()=>{
+        localStorage.clear();
+        alert('로그아웃 되었습니다.')
+        // navigate('/main');
+        cookies.getAll().forEach(cookie => {
+            // 경로를 맞춰주어야 합니다.
+            cookies.remove(cookie, { path: '/main' });
+            cookies.remove(cookie, { path: '/mypage' }); 
+          });
+    }
+
     return (
         <>
             <Container>
                 <Header />
-                <Logout>
+                <Logout onClick={handleLogout}>
                     <img src={LogoutIcon} className='logoutIcon' />
                     <LogoutText>
                         <LogoutHeader>
