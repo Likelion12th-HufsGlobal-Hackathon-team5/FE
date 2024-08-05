@@ -14,6 +14,7 @@ import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 import getUserIdAndToken from '../../server/user/getUserIdAndToken';
 import createRoom from '../../server/gameRoom/createRoom';
+import useWsInstance from '../../hooks/useWsInstance';
 
 const Container=styled.div`
     display: flex;
@@ -176,6 +177,7 @@ const GotoHeader = styled.div`
 
 function Main (){
     const navigate = useNavigate();
+    const { wsInstance } = useWsInstance();
     
     useEffect(() => {
         const fetch = async () => {
@@ -183,6 +185,11 @@ function Main (){
                 const myInfo = await getUserIdAndToken();
                 localStorage.setItem("userId", myInfo.userId);
                 localStorage.setItem("accessToken", myInfo.accessToken);
+
+                if(localStorage.getItem('join_user2')){
+                    wsInstance("join_room", {});
+                    window.location.href=localStorage.getItem('invitedURL');
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -200,6 +207,7 @@ function Main (){
                 const roomId = await createRoom();
                 localStorage.setItem("look", true)
                 localStorage.setItem("roomId", roomId);
+                alert('settingGame으로이동!')
                 navigate('/settingGame');
             } catch(error) {
                 console.log('Main - error creating room : ',error);

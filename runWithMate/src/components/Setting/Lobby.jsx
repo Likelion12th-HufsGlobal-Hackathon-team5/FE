@@ -101,21 +101,32 @@ export default function Lobby({ receivedData }) {
         }
     }, [receivedData]);
     
-    const copyUrlToClipboard = () => {
-        const currentUrl = window.location.href;
-        navigator.clipboard.writeText(`${currentUrl}?roomId=${localStorage.getItem("roomId")}`)
-            .then(() => {
+    // const copyUrlToClipboard = () => {
+    //     const currentUrl = window.location.href;
+    //     navigator.clipboard.writeText(`${currentUrl}?roomId=${localStorage.getItem("roomId")}`)
+    //         .then(() => {
+    //             alert('초대 링크가 복사되었습니다.');
+    //             localStorage.setItem("GameSettingData-copylink",receivedData)
+    //         })
+    //         .catch(err => {
+    //             console.error('링크 복사 실패', err);
+    //         });
+    // };
+
+    const handleCopyURL=()=>{
+        navigator.clipboard.writeText(localStorage.getItem('invitedURL'))
+            .then(()=>{
                 alert('초대 링크가 복사되었습니다.');
             })
-            .catch(err => {
-                console.error('링크 복사 실패', err);
+            .catch((err)=>{
+                console.error('링크 복사 실패 : ',err)
             });
-    };
+    }
 
     return (
         <LobbyForm>
             <LobbyTitle>게임 로비</LobbyTitle>
-            <CopyBtn onClick={copyUrlToClipboard}>
+            <CopyBtn onClick={handleCopyURL}>
                 <LinkImg className='icon' />
                 <p>초대 링크 공유하기</p>
             </CopyBtn>

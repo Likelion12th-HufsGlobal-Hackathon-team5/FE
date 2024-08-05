@@ -5,7 +5,7 @@ import UseStomp from "./useStomp";
 export default function useWsInstance(setReceivedData) {
   // 수신 함수
   const onMessageReceived = (message) => {
-    setReceivedData(JSON.parse(message.body));
+      setReceivedData(JSON.parse(message));
   };
 
   const { connected, send, disconnect }=UseStomp(onMessageReceived);

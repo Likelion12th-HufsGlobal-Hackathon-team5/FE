@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import UseStomp from "../../hooks/useStomp";
 
 const SettingForm = styled.form`
     position: relative;
@@ -147,76 +146,77 @@ const SettingInput = styled.input`
     display: ${props => props.show ? 'block' : 'none'};
 `;
 
-const SaveSetting = styled.button`
+const SaveSetting = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     width: 100%;
     height: 40px;
-    border-radius: 0.6rem;
-    border: 0.3rem solid #217EEF;
-    background: #217EEF;
+
     color: white;
+    font-size: 20px;
+    font-weight: 400;
+
+    background: #217EEF;
+    border-radius: 0.6rem;    
+    &:hover{
+        transition: background-color 0.3s, color 0.3s, border 0.2s;
+        background: #1B63BB;
+    }
+    &:active{
+        transition: background-color 0.3s, color 0.3s, border 0.2s, font 0.2s;
+        font-weight: 600;
+        background: #217EEF;
+        border: 0.3rem solid #1B63BB;
+    }
 `;
 
 export default function Setting({ Mypoint, receivedData, wsInstance }) {
-    const [nowDiv, setnowDiv] = useState(false);
+    const [nowDiv, setnowDiv] = useState(true);
+
     const [betting, setBetting] = useState(0);
     const [initpoint, setInitPoint] = useState(Mypoint || 0);
+    
     const [activeButton, setActiveButton] = useState("");
     const [timeLimit, setTimeLimit] = useState(0);
-    const [customTime, setCustomTime] = useState(0);
+    const [customTime, setCustomTime] = useState("");
 
-    const {connected, send, disconnec} = UseStomp(onMessageReceived);
-
-    // settingGame 페이지로 넘어갈때
-    // connected가 바뀔때마다
-    // localStorage에 저장된 userId가 message로 받은 user1의 아이디와 같다면
-    // setNowDiv 상태 유지
-    // 아니라면 setnowDiv의 상태를 반대로 설정.
     useEffect(()=>{
-        const roomData=JSON.parse(message.body);
-        if(localStorage.getItem("userId")===roomData.user1){
-            setnowDiv(localStorage.getItem("look"));
-            // return;
-        }else if(localStorage.getItem("userId")!==roomData.user1){
-            setnowDiv(!localStorage.getItem("look"));
-        }
-    },[connected, betting, timeLimit]);
-
+        localStorage.setItem("received-betPoint" ,receivedData.bet_point)
+    },[]);
     useEffect(() => {
         if (receivedData.type === "room_joined") {
+            // setBetting(receivedData.bet_point||0);
+            // setTimeLimit(receivedData.time_limit||0);
             setBetting(receivedData.bet_point);
             setTimeLimit(receivedData.time_limit);
             const button = buttons.find(button => button.id === receivedData.time_limit);
             if (button) {
-                setActiveButton(button.id);
+                setActiveButton(buttons.id);
                 setCustomTime("");
+                console.log('setActiveButton',activeButton);
+                console.log('setCustomTime',customTime);
             } else {
                 setActiveButton("custom");
-                setCustomTime(receivedData.time_limit);
+                // setCustomTime(receivedData.time_limit);
+                setCustomTime(receivedData.time_limit ? receivedData.time_limit.toString() : "");
             }
         }
     }, [receivedData]);
 
+    // useEffect(() => {
+    //     const bettingValue = betting === '' ? 0 : betting;
+    //     setInitPoint(Mypoint - bettingValue);
+    // }, [betting, Mypoint]);
     useEffect(() => {
         const bettingValue = betting === '' ? 0 : betting;
         setInitPoint(Mypoint - bettingValue);
-    }, [betting, Mypoint]);
+    }, [initpoint]);
 
     const handleInputChange = (e) => {
         const value = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
         setBetting(value);
-    };
-
-    const handleButtonClick = (id) => {
-        setActiveButton(id);
-        setTimeLimit(id);
-        setCustomTime("");
-    };
-
-    const InputTime = (e) => {
-        const value = e.target.value === '' ? 0 : parseInt(e.target.value, 10)
-        setTimeLimit(value);
-        setActiveButton('custom'); // input 액티브 시 버튼 액티브 해제
-        setCustomTime(e.target.value);
     };
 
     const buttons = [
@@ -225,16 +225,19 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
         { id: 600, label: '10분' },
         { id: 'custom', label: '수동\n입력' }
     ];
-
-    // Goto 버튼 클릭시 맨 처음으로 실행됨. setBetting, setTimerLimit 때문.
-    // useEffect(()=>{
-    //     const data = {
-    //         bet_point: betting,
-    //         time_limit: timeLimit
-    //     };
-    //     localStorage.setItem("test01", JSON.stringify(data));
-    //     console.log("settingGame - change setting(근데 게임하기 버튼 누르면 이게 출력됨) : ", JSON.parse(localStorage.getItem('test01')));
-    // },[setBetting,setTimeLimit]);
+    
+    const InputTime = (e) => {
+        const value = e.target.value === '' ? 0 : parseInt(e.target.value, 10)
+        setTimeLimit(value);
+        setActiveButton('custom'); // input 액티브 시 버튼 액티브 해제
+        setCustomTime(e.target.value);
+    };
+    
+    const handleSettingSave = (id) => {
+        setActiveButton(id);
+        setTimeLimit(id);
+        setCustomTime("");
+    };
 
     const Sendsetting = () => {
         const localStorage_betPoint=localStorage.getItem("gameResult").bet_point;
@@ -244,9 +247,11 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
             bet_point: localStorage_betPoint,
             time_limit: localStorage_timeLimit
         };
-        console.log(`update_setting : ${data}`);
+        console.log(`update_setting :  ${JSON.stringify(data)}`);
         wsInstance("update_setting", data);
     }
+
+    
 
     return (
         <>
@@ -272,13 +277,13 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
                 <TimeSetBox>
                     <SetSubtitle>시간제한 : {timeLimit} 초</SetSubtitle>
                     <ButtonContainer>
-                        {buttons.map(button => (
+                        {buttons.map(buttons => (
                             <SettingButton 
-                                key={button.id}
-                                active={activeButton === button.id}
-                                onClick={() => handleButtonClick(button.id)}
+                                key={buttons.id}
+                                active={activeButton === buttons.id}
+                                onClick={() => handleSettingSave(buttons.id)}
                             >
-                                {button.label}
+                                {buttons.label}
                             </SettingButton>
                         ))}
                     </ButtonContainer>
@@ -289,7 +294,7 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
                         show={activeButton === 'custom'}
                     />
                 </TimeSetBox>
-                <SaveSetting onClick={Sendsetting}>설정 저장</SaveSetting>
+                <SaveSetting Role = "button" onClick={Sendsetting}>설정 저장</SaveSetting>
             </SettingForm>
         </>
     );
