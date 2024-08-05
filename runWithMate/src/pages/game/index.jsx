@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 
 import useStomp from '../../hooks/useStomp';
@@ -9,8 +8,9 @@ import GameInfo from "../../components/game/GameInfo";
 // import GetMarker from "../../components/game/GetMarker";
 import GameOver from "../../components/game/GameOver/GameOver";
 import GameRanking from "../../components/game/GameRanking";
-
 import GetMarker from "../../components/game/GetMarker";
+import mockStartCheck from "../../server/inGame/mockStartCheck";
+import useWsInstance from "../../hooks/useWsInstance";
 
 const Container = styled.div`
   display: flex;
@@ -26,13 +26,6 @@ const MapContainer = styled.div`
   height: 100%;
 `;
 
-const mock = {
-  type: 'room_joined',
-  user1: "로딩중입니다",
-  user2: "로딩중입니다",
-  bet_point: 100,
-  time_limit: 60
-};
 
 const testBtn=styled.button`
   z-index: 10;
@@ -42,129 +35,25 @@ const testBtn=styled.button`
   font-size: 24px;
 `;
 function Game() {
-  const navigate = useNavigate();
-  const { disconnect } = useStomp();
-  const [timeLimit, setTimeLimit] = useState(mock.time_limit); // 기본값으로 3분 설정 (초 단위)
-  const [isGameOver, setIsGameOver] = useState(false); // 게임 오버 상태 추가
-  const [isGetMarker, setIsGetMarker]=useState(false);
-
-  const [data, setData] = useState([]);
-  
-  const testbetPoint=mock.bet_point;
-  const testtimeLimit=mock.time_limit;
-
-  const testMarkerType='point'
+  const [receivedData, setReceivedData] = useState(mockStartCheck);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const { wsInstance, connected, disconnect } = useWsInstance(setReceivedData);
 
   useEffect(() => {
-    const mock = [
-      {
-        "box_type": "dopamine",
-        "id": 1,
-        "lat": 30,
-        "lng": 50,
-        "box_amount": 10
-      },
-      {
-        "box_type": "dopamine",
-        "id": 2,
-        "lat": 30,
-        "lng": 50,
-        "box_amount": 10
-      },
-      {
-        "box_type": "dopamine",
-        "id": 3,
-        "lat": 30,
-        "lng": 50,
-        "box_amount": 10
-      },
-      {
-        "box_type": "point",
-        "id": 1,
-        "lat": 30,
-        "lng": 50,
-        "box_amount": 10
-      },
-      {
-        "box_type": "point",
-        "id": 2,
-        "lat": 30,
-        "lng": 50,
-        "box_amount": 10
-      },
-      {
-        "box_type": "point",
-        "id": 3,
-        "lat": 30,
-        "lng": 50,
-        "box_amount": 10
-      }
-    ];
-
-    setData(mock);
-  }, []);
-
-  useEffect(() => {
-    // 데이터 그룹화
-    const groupedData = data.reduce((acc, item) => {
-      if (!acc[item.box_type]) {
-        acc[item.box_type] = [];
-      }
-      acc[item.box_type].push(item);
-      return acc;
-    }, {});
-
-    // 각각의 box_type에 대해 localStorage에 저장
-    for (const [key, value] of Object.entries(groupedData)) {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
-  }, [data]);
-
-  useEffect(() => {
-    // 게임 오버
-    const timer = setTimeout(() => {
-      setIsGameOver(true); // 게임 오버 상태 변경
-      setTimeout(() => {
-        navigate("/gameResult");
-      }, 2000);
-    }, timeLimit * 1000);
-
-    return () => clearTimeout(timer); // clear the timer when the component is unmounted
-  }, [timeLimit, navigate]);
-
-  useEffect(() => {
-    // 게임 오버가 된 순간 ws 연결 끊어짐
-    if (isGameOver) {
-      disconnect();
-    }
-  }, [isGameOver, disconnect]);
-
-  // const [getMarker,setGetMarker]=useState(false);
-  const handleGetMarker=()=>{
-    setIsGetMarker(true)
-  }
-  useEffect(()=>{
-    if(isGetMarker){
-      const visibleAlert=setTimeout(()=>{
-        setIsGetMarker(false);
-      },1500);
-      return ()=>clearTimeout(visibleAlert);
-    }
-  },[setIsGetMarker]);
+  }, [receivedData]);
 
   return (
     <>
       <Container>
         {isGameOver && <GameOver />}
         <GameInfo 
-          betPoint={testbetPoint}
-          timeLimit={testtimeLimit}
+        // TODO : 백엔드에서 bet_point받아오기
+          betPoint={1000}
+          timeLimit={receivedData.time_left}
         />
-        {isGetMarker && <GetMarker markerType='point'/>}
+        <GetMarker markerType='point'/>
         <MapContainer>
-          <Map 
-            Get={handleGetMarker}
-            timeLimit={testtimeLimit}/>
+          <Map/>
         </MapContainer>
         <GameRanking />
       </Container>

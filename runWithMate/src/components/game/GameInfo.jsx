@@ -106,43 +106,13 @@ const Line=styled.div`
 // const WEBSOCKET_URL='ws server url'
 
 function GameInfo({betPoint, timeLimit}){
-    const { disconnect } = useStomp();
-    
-    const [isLoser, setIsLoser]=useState(false);
-    // const [isGameOver, setIsGameOver] = useState(false); // 게임 오버 상태 추가
-    
-    // const { sendMessage } = useWebSocket(WEBSOCKET_URL);
 
     //이하 모달창의 상태관리
     const [isGiveupOpen, setIsGiveupOpen] = useState(false);
     
-    const openGiveup = () => {
-        setIsGiveupOpen(true);
+    const handleGiveup = () => {
+        setIsGiveupOpen(!isGiveupOpen);
     };
-
-    const closeGiveup = () => {
-        setIsGiveupOpen(false);
-    };
-
-
-    // const handleSurrender=async()=>{
-    //     // true : 사용자가 기권했음
-    //     setIsLoser(true);
-    //     disconnect();
-
-    //     // ws로 서버에 기권 사실을 알림 / {} 빈 바디
-    //     sendMessage({type:`surrender`,user:userName});
-    
-    //     try{
-    //         await axios.post(`/surrender/&{roomId}`,{})
-    //     } catch (error) {
-    //         console.error('Error message - during surrender : ', error);
-    //     }
-
-    //     // giveup 모달창을 닫기 위해 false로 설정
-    //     setIsGiveupOpen(false);
-    // };
-
 
     return(
         <>
@@ -150,14 +120,12 @@ function GameInfo({betPoint, timeLimit}){
                 <GameInfoDiv>
                     <GameInfoHeader>
                         Game Info
-                        <GameStopButton onClick={openGiveup}>
+                        <GameStopButton onClick={handleGiveup}>
                             기권
                         </GameStopButton>
                         {isGiveupOpen && 
-                            <Giveup 
-                                onClose={closeGiveup} 
-                                // onSurrender={handleSurrender}
-                                />}
+                            <Giveup onClose={handleGiveup} />
+                        }
                     </GameInfoHeader>
                     <GameInfoContents>  
                         <GameInfoContentEach>
