@@ -12,5 +12,5 @@ createRoot(rootElement).render(
     <Global styles={globalStyles} />
     <App />
   </>
-  /* </React.StrictMode> */
+  // </React.StrictMode>
 );

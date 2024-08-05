@@ -124,6 +124,7 @@ const Giveup = ({ onClose , betting }) => {
       navigate('/gameResult');
     },100)
   };
+  
 
   return ReactDOM.createPortal(
     <Container>
