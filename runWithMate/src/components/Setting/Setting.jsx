@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
+import UseStomp from "../../hooks/useStomp";
 
 const SettingForm = styled.form`
     position: relative;
@@ -163,10 +164,22 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
     const [timeLimit, setTimeLimit] = useState(0);
     const [customTime, setCustomTime] = useState(0);
 
-    useEffect(() => {
-        setnowDiv(localStorage.getItem("look"));
-        localStorage.removeItem("look");
-    }, []);
+    const {connected, send, disconnec} = UseStomp(onMessageReceived);
+
+    // settingGame 페이지로 넘어갈때
+    // connected가 바뀔때마다
+    // localStorage에 저장된 userId가 message로 받은 user1의 아이디와 같다면
+    // setNowDiv 상태 유지
+    // 아니라면 setnowDiv의 상태를 반대로 설정.
+    useEffect(()=>{
+        const roomData=JSON.parse(message.body);
+        if(localStorage.getItem("userId")===roomData.user1){
+            setnowDiv(localStorage.getItem("look"));
+            // return;
+        }else if(localStorage.getItem("userId")!==roomData.user1){
+            setnowDiv(!localStorage.getItem("look"));
+        }
+    },[connected, betting, timeLimit]);
 
     useEffect(() => {
         if (receivedData.type === "room_joined") {
@@ -213,17 +226,15 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
         { id: 'custom', label: '수동\n입력' }
     ];
 
-    useEffect(()=>{
-        const data = {
-            bet_point: betting,
-            time_limit: timeLimit
-        };
-        // localStorage.setItem("gameResult",data);
-        // console.log("settingGame - change setting : ",localStorage.getItem('gameResult'))
-        
-        localStorage.setItem("test01", JSON.stringify(data));
-        console.log("settingGame - change setting(근데 게임하기 버튼 누르면 이게 출력됨) : ", JSON.parse(localStorage.getItem('test01')));
-    },[setBetting,setTimeLimit]);
+    // Goto 버튼 클릭시 맨 처음으로 실행됨. setBetting, setTimerLimit 때문.
+    // useEffect(()=>{
+    //     const data = {
+    //         bet_point: betting,
+    //         time_limit: timeLimit
+    //     };
+    //     localStorage.setItem("test01", JSON.stringify(data));
+    //     console.log("settingGame - change setting(근데 게임하기 버튼 누르면 이게 출력됨) : ", JSON.parse(localStorage.getItem('test01')));
+    // },[setBetting,setTimeLimit]);
 
     const Sendsetting = () => {
         const localStorage_betPoint=localStorage.getItem("gameResult").bet_point;
@@ -233,6 +244,7 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
             bet_point: localStorage_betPoint,
             time_limit: localStorage_timeLimit
         };
+        console.log(`update_setting : ${data}`);
         wsInstance("update_setting", data);
     }
 
