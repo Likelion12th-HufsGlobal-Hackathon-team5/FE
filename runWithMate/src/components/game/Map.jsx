@@ -26,17 +26,20 @@ const LoadingContainer = styled.div`
   z-index: 1000;
 `;
 
-export default function Map ({wsInstance, receivedData, handleBetPoint}) {
+export default function Map ({wsInstance, receivedData}) {
   const [isGameStarted, setIsGameStarted] = useState(false);
+  const [isMarkerAdded, setIsMarkerAdded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [map, setMap] = useState(null);
   const [currentLocationMarker, setCurrentLocationMarker] = useState(null);
   const [pointBoxes, setPointBoxes] = useState([]);
   const [dopamineBoxes, setDopamineBoxes] = useState([]);
+  const [markers, setMarkers] = useState([]);
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     loadKakaoMapScript(() => {
-      initializeMap(setMap, setCurrentLocationMarker, pointBoxes, dopamineBoxes);
+      initializeMap(setMap, setCurrentLocationMarker, setLoading);
     });
   }, []);
 
@@ -50,7 +53,6 @@ export default function Map ({wsInstance, receivedData, handleBetPoint}) {
       setPointBoxes(pointBoxesTransformed);
       setDopamineBoxes(dopamineBoxesTransformed);
       setIsGameStarted(receivedData.started);
-      handleBetPoint(receivedData.bet_point);
 
       // 내 위치 1초마다 전송 -> 혹시 몰라서 intervalId 저장했음
       const intervalId = setInterval(() => {
@@ -58,14 +60,26 @@ export default function Map ({wsInstance, receivedData, handleBetPoint}) {
           const { latitude, longitude } = position.coords;
           wsInstance("update_position", { lat: latitude, lng: longitude });
         }, showError, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
-      }, 3000);
+      }, 2000);
     }
   }, [receivedData, map]);
 
   useEffect(() => {
-    if (map && isGameStarted) {
-      addMarkers(map, pointBoxes, '/img/pp.png');
-      addMarkers(map, dopamineBoxes, '/img/dp.png');
+    if (receivedData.type !== "box_removed") return;
+    // 박스 제거\
+    console.log('박스가 제거를 요청했습니다.');
+    const removedMarker = markers.find(marker => marker.getTitle() === receivedData.box_type+receivedData.box_id);
+    if (removedMarker) {
+      removedMarker.setMap(null);
+      console.log('removed marker', removedMarker);
+    }
+  }, [receivedData]);
+
+  useEffect(() => {
+    if (!isMarkerAdded && map && isGameStarted) {
+      addMarkers(map, setMarkers, pointBoxes, '/img/pp.png');
+      addMarkers(map, setMarkers, dopamineBoxes, '/img/dp.png');
+      setIsMarkerAdded(true);
     }
   }, [map, isGameStarted, pointBoxes, dopamineBoxes]);
 
@@ -84,7 +98,7 @@ export default function Map ({wsInstance, receivedData, handleBetPoint}) {
   const transformBoxData = (boxes) => {
     return boxes.map(box => ({
       latlng: new window.kakao.maps.LatLng(box.lat, box.lng),
-      title: box.title
+      title: box.box_type+box.id
     }));
   };
 
@@ -93,7 +107,9 @@ export default function Map ({wsInstance, receivedData, handleBetPoint}) {
       {!isGameStarted && (
         <LoadingContainer>
           <ClipLoader color={"#217EEF"} loading={!isGameStarted} />
-          로딩중입니다...
+          {
+            loading ? "로딩중입니다..." : "다른 플레이어를 기다리는 중입니다..."
+          }
         </LoadingContainer>
       )}
       <MapContainer id="map"/>
