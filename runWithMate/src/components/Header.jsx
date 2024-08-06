@@ -9,13 +9,12 @@ const Container = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+
     width: 100%;
     border-bottom: 3px solid #2E2929;
 
     .myPage {
-        /* margin-left: 10vh; */
         margin-left: 8rem;
-        /* margin-right: 3vh; */
         margin-right: 3rem;
         width:4rem;
         height: auto;
@@ -28,9 +27,12 @@ const Background = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: left;
-    padding: 1.5vh;
+
+    padding: 15px;
+
     flex-wrap: wrap;
-    gap: 1.2vw;
+    gap: 12px;
+
     color: white;
     font-weight: 700;
     width: 110%;
@@ -38,8 +40,8 @@ const Background = styled.div`
     clip-path: polygon(0 0, 60% 0, 70% 100%, 0% 100%);
 
     img {
-        margin-left: 1vh;
-        width: 4.5vh;
+        margin-left: 10px;
+        width: 42px;
         height: auto;
     }
 `;
@@ -48,6 +50,7 @@ const Text = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: left;
+
     font-size: 18px;
     text-align: left;
     line-height: 0.65;
@@ -66,6 +69,7 @@ const StyledLink = styled(Link)`
     display: flex;
     flex-direction: row;
     align-items: center;
+
     text-decoration: none;
     margin: 0;
     width: 100%;
@@ -94,7 +98,7 @@ function Header() {
                     <Text>
                         <p>
                             Run
-                            <span className='with'>with</span>
+                            <span className='with'>  with</span>
                         </p> 
                         <br />
                          Mate<br />

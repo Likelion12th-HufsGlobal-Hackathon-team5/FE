@@ -62,17 +62,19 @@ function MyWalletToggle() {
 export default MyWalletToggle;
 
 const ToggleContainer = styled.div`
-  padding: 5vh 2vh 3vh 2vh;
+  /* padding: 5vh 2vh 3vh 2vh; */
+  padding: 40px 20px 30px 20px;
   background-color: #cde4ff;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 1.5vh;
-  border-radius: 0vh 0vh 2vh 2vh;
+  gap: 12px;
+  /* border-radius: 0vh 0vh 2vh 2vh; */
+  border-radius: 0px 0px 20px 20px;
 `;
 
 const ItemBox = styled.div`
- padding: 2vh;
+ padding: 16px;
   background-color: ${({ isActive }) =>
     isActive ? "#1b63bb" : "#ffffff"}; // active 상태에 따라 배경색 변경
   color: ${({ isActive }) =>
@@ -81,7 +83,7 @@ const ItemBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center; // 수직 가운데 정렬
-  border-radius: 3vh;
+  border-radius: 25px;
   cursor: pointer;
   position: relative; // position 속성 추가
   z-index: ${({ isActive }) => (isActive ? "2" : "1")};
@@ -104,18 +106,20 @@ const IconBox = styled.div`
 const ToggleItemsStyled = styled.div`
   z-index: 1;
   position: relative; // position 속성 추가
-  top: -3vh; // width를 100%로 설정하여 ItemBox 아래에 위치하도록 함
+  /* top: -3vh;  */
+  top: -24px;
+  // width를 100%로 설정하여 ItemBox 아래에 위치하도록 함
 `;
 
 const ToggleItemsContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 2vh;
-  padding: 5vh 2vh 2vh 2vh;
+  gap: 16px;
+  padding: 40px 15px 20px 15px;
   background-color: #ffffff;
-  border-radius: 0vh 0vh 2vh 2vh;
-  margin: 0vh 0vh -2vh 0vh;
+  border-radius: 0px 0px 20px 20px;
+  margin: 0px 0px -16px 0px;
 `;
 
 const ContentsBox = styled.div`

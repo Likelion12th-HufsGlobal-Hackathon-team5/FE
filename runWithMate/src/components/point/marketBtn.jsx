@@ -9,7 +9,8 @@ function MarketBtn() {
   `;
   const StyledCgGym = styled(CgGym)`
     font-size: 40px;
-    margin: -0.52vh -0.3vh;
+    /* margin: -0.52vh -0.3vh; */
+    margin: -4px -3px;
   `;
   return (
     <Container>
@@ -37,7 +38,8 @@ const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  gap: 1vh;
+  /* gap: 1vh; */
+  gap: 8.5px;
   justify-content: center;
 `;
 
@@ -49,12 +51,15 @@ const ButtonBox = styled.button`
   align-items: center;
   font-weight: 300;
   font-size: 16px;
-  gap: 1vh;
+  /* gap: 1vh; */
+  gap: 8.5px;
   color: #ffffff;
   background-color: #42e19d;
   border: #42e19d solid 3px;
-  padding: 2vh;
-  border-radius: 2vh;
+  /* padding: 2vh; */
+  padding: 17px;
+  /* border-radius: 2vh; */
+  border-radius: 17px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s;
 

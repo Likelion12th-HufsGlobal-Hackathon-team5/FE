@@ -165,10 +165,10 @@ function CategoryMap() {
             const placeDetail = data[0];
             const content = `
                       <div style="display: flex; flex-direction: column; max-width: 300px; white-space: nowrap;">
-                        <div style="display: flex; width: 100%; padding: 0.5vh; background-color: #217eef; font-weight: 700; color: #ffffff; font-size: 1.2vh; box-sizing: border-box;">${
+                        <div style="display: flex; width: 100%; padding: 4.25px; background-color: #217eef; font-weight: 700; color: #ffffff; font-size: 10.2px; box-sizing: border-box;">${
                           placeDetail.place_name
                         }</div>
-                        <div style="padding: 0.5vh; display: flex; flex-direction: column; gap: 0.3vh; width: auto;">
+                        <div style="padding: 4.25px; display: flex; flex-direction: column; gap: 2.55px; width: auto;">
                           <p style="margin: 0; color: #666; white-space: nowrap;">주소: ${
                             placeDetail.road_address
                               ? placeDetail.road_address.address_name
@@ -250,7 +250,7 @@ function CategoryMap() {
             style={{
               fontSize: "10px",
               fontWeight: "700",
-              margin: "0vh 0.624vh",
+              margin: "0px 5.1px",
             }}
           >
             헬스장
@@ -266,7 +266,8 @@ function CategoryMap() {
       </CategoryContainer>
       <MapContainer
         id="map"
-        style={{ width: "100%", height: "45vh" }}
+        // style={{ width: "100%", height: "45vh" }}
+        style={{ width: "100%", height: "300px" }}
       ></MapContainer>
     </Container>
   );
@@ -289,14 +290,18 @@ const CategoryContainer = styled.div`
   display: flex;
   flex-direction: row;
   border: solid 1px #ffffff;
-  border-radius: 2.5vh;
+  /* border-radius: 2.5vh; */
+  border-radius: 18.85px;
   background-color: #ffffff;
-  gap: 1vh;
-  padding: 1vh;
+  /* gap: 1vh; */
+  gap: 8.5px;
+  /* padding: 1vh; */
+  padding: 8.5px;
   position: absolute;
   align-items: center;
   justify-content: center;
-  margin: 1vh;
+  /* margin: 1vh; */
+  margin: 8.5px;
   top: 10px;
   z-index: 10;
   box-shadow: 0 0 5px rgba(86, 86, 86, 0.5);
@@ -305,13 +310,16 @@ const CategoryContainer = styled.div`
 const ItemBox = styled.div`
   background-color: ${({ active }) => (active ? "#217eef" : "#cde4ff")};
   border: solid 1px ${({ active }) => (active ? "#217eef" : "#cde4ff")};
-  border-radius: 2vh;
+  /* border-radius: 2vh; */
+  border: 17px;
   display: flex;
   flex-direction: column;
-  gap: 0.5vh;
+  /* gap: 0.5vh; */
+  gap: 4.25px;
   align-items: center;
   justify-content: center;
-  padding: 1vh;
+  /* padding: 1vh; */
+  padding: 8.5px;
   color: ${({ active }) => (active ? "#ffffff" : "#2e2929")};
   cursor: pointer;
   transition: all 0.2s;

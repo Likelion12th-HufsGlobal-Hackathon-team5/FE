@@ -8,6 +8,18 @@ import PointMarket from '../../components/point/PointMarket';
 import MyWallet from '../../components/point/MyWallet';
 
 import postAttendance from '../../server/user/postAttendance';
+import getUserData from '../../server/user/getUserData';
+
+const Container=styled.div`
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    /* gap: 3vh; */
+    gap: 24px;
+
+    min-height: 889px;
+    max-height: 100vh;
+`;
 
 const mockData={
     id:'runwmate01',
@@ -52,9 +64,3 @@ function Point(){
 export default Point;
 
 
-const Container=styled.div`
-    margin: 4vh;
-    display: flex;
-    flex-direction: column;
-    gap: 3vh;
-`;

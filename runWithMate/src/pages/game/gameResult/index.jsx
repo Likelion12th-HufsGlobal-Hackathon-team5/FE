@@ -31,9 +31,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   flex-wrap: wrap;
-  gap: 3vh;
+  /* gap: 3vh; */
+  gap: 25.5px;
   box-sizing: border-box;
   .text {
     text-align: center;
@@ -41,6 +42,10 @@ const Container = styled.div`
     font-size: 16px;
     font-weight: 500;
     line-height: 1.4;
-    margin-bottom: -2vh;
+    /* margin-bottom: -2vh; */
+    margin-bottom: -17px;
   }
+
+  min-height: 889px;
+  max-height: 100vh;
 `;

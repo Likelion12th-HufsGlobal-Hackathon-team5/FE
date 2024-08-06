@@ -94,8 +94,10 @@ const ResultContainer = styled.div`
 `;
 
 const UserPhoto = styled.div`
-  margin: 3vh;
-  padding: 13vh;
+  /* margin: 3vh; */
+  margin: 22.5px;
+  /* padding: 13vh; */
+  padding: 100px;
   border-radius: 100%;
   background-image: url("/img/Winner.png");
   background-size: cover;
@@ -106,7 +108,8 @@ const Title = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 1vh;
+  /* gap: 1vh; */
+  gap: 8.5px;
   align-items: center;
   justify-content: center;
 `;
@@ -129,8 +132,10 @@ const Point = styled.div`
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 2vh;
-  padding: 3vh 2vh;
+  /* gap: 2vh; */
+  gap: 17px;
+  /* padding: 3vh 2vh; */
+  padding: 22px 17px;
 `;
 
 const PointResultBox = styled.div`
@@ -138,7 +143,8 @@ const PointResultBox = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 10vh;
+  /* gap: 10vh; */
+  gap: 75px;
   width: 100%;
 
   p {
@@ -154,6 +160,7 @@ const PointResultBox = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    gap: 1vh;
+    /* gap: 1vh; */
+    gap: 8.5px;
   }
 `;
