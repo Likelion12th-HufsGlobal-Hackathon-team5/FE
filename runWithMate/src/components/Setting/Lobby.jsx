@@ -45,6 +45,9 @@ const CopyBtn = styled.div`
     justify-content: flex-start;
     align-items: center;
 
+    flex-wrap: wrap;
+    gap: 10px;
+
     width: 100%;
     height: 40px;
     padding-left: 0.6rem;
@@ -67,6 +70,7 @@ const CopyBtn = styled.div`
         background: #FFF;
         color: #000;
 
+        font-weight: 900;
         .icon {
             color: black;
         }

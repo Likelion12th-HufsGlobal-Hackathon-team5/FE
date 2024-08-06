@@ -34,16 +34,19 @@ function PointMarket() {
 export default PointMarket;
 
 const PointMarketBox = styled.div`
-  padding: 2vh;
-  background-color: #217eef;
-  color: #ffffff;
-  border: #217eef solid 3px;
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
   align-items: left;
-  gap: 1vh;
-  border-radius: 2vh;
+  
+  padding: 15px;
+  flex-wrap: wrap;
+  gap: 8px;
+  
+  color: #ffffff;
+  background-color: #217eef;
+  border: #217eef solid 3px;
+  border-radius: 15px;
+  
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s;
 
@@ -69,7 +72,7 @@ const Coments = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 0.5vh;
+  gap: 4px;
 `;
 
 const IconBox = styled.div`

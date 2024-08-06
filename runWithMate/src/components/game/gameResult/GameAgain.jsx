@@ -33,7 +33,8 @@ const AgainGame = styled.button`
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  gap: 2vh;
+  /* gap: 2vh; */
+  gap: 17px;
   width: 70%;
   box-sizing: border-box;
   padding: 3.5% 4.5%;

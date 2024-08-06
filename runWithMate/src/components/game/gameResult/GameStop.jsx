@@ -34,7 +34,8 @@ const GotoMain = styled.button`
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  gap: 2vh;
+  /* gap: 2vh; */
+  gap: 17px;
   width: 70%;
   padding: 3.5% 4%;
   color: white;
@@ -43,8 +44,9 @@ const GotoMain = styled.button`
   border-radius: 10px;
   font-size: 14px;
   font-weight: 700;
-  margin-bottom: -1vh;
-
+  /* margin-bottom: -1vh; */
+  margin-bottom: -8.5px;
+  
   &:hover,
   :active {
     transition: all 0.2s;

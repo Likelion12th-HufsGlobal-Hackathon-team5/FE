@@ -5,14 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import Header from '../../components/Header';
+import Content from '../../components/main/Content';
 
 import GameIcon from '/img/gameIcon.png';
 import PointIcon from '/img/pointIcon.png';
-import BrainIcon from '/img/brainIcon.png';
 
 import { BsCaretRightFill } from 'react-icons/bs';
-import { FaRunning } from "react-icons/fa";
-import { IoPeople } from "react-icons/io5";
 import getUserIdAndToken from '../../server/user/getUserIdAndToken';
 import createRoom from '../../server/gameRoom/createRoom';
 
@@ -26,10 +24,11 @@ const Container=styled.div`
 
     min-height: 889px;
     max-height: 100vh;
+    /* max-height: 889px; */
 `;
 const MainHeader = styled.p`
     padding: 0% 1%;
-    margin-top: 8vh;
+    margin-top: 67px;
     
     font-size: 42px;
     font-weight: 900;
@@ -49,80 +48,18 @@ const Intro = styled.p`
         font-weight: 700;
     }
 `;
-const ContentsBox = styled.div`
-    display: flex;
-    flex-direction: column; 
 
-    padding: 2vh;
-
-    width: 80%;
-    border: 2.5px solid #AEAEB2;
-    border-radius: 10px;
-
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 1.2;
-`;
-const Point = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    flex-wrap: wrap;
-    gap: 3vh;
-
-    margin-top: 2vh;
-`;
-const PointText = styled.div`
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-
-    flex-wrap: wrap;
-    gap: 0.3vh;
-
-    p {
-        font-weight: 700;
-        font-size: 16px;
-    }
-
-    font-size: 13px;
-`;
-const Circle = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    width: 5vh;
-    height: 5vh;
-    padding: 1vh;
-
-    color: white;
-    background-color: #2E2929;
-    border-radius: 100%;
-
-    .run {
-        width: 22px;
-        height: 28px;
-    }
-    .people {
-        width: 28px;
-        height: 21px;
-    }
-    .brain {
-        width: 24px;
-        height: 22px;
-    }
-`;
 const GotoGame = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: left;
     align-items: center;
 
-    padding: 4vh 4vh;
+    padding: 30px 35px;
     width: 80%;
+
+    flex-wrap: wrap;
+    gap: 20px;
 
     color: white;
     background-color: #2E2929;
@@ -137,11 +74,14 @@ const GotoGame = styled.div`
 const GotoPointshop = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
 
-    padding: 4vh 3vh;
+    padding: 30px 35px;
     width: 80%;
+
+    flex-wrap: wrap;
+    gap: 19.1px;
 
     color: white;
     background-color: #217EEF;
@@ -156,9 +96,8 @@ const GotoText = styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    gap: 1vh;
+    gap: 8.5px;
 
-    margin-left: 3vh;
     text-align: left;
     line-height: 1.2;
 `;
@@ -169,7 +108,7 @@ const GotoHeader = styled.div`
     justify-content: center;
 
     flex-wrap: wrap;
-    gap: 1vh;
+    gap: 10px;
     font-size: 20px;
     font-weight: 700;
 `;
@@ -235,39 +174,7 @@ function Main (){
                     <span className='blue'>Run With Mate!</span>와 함께<br />
                     친구와 당신의 능력을 시험해보세요!
                 </Intro>
-                <ContentsBox>
-                    경쟁은 간혹 부정적인 의미로 많이 남죠.<br />
-                    하지만 잘 갖춰진 경쟁의 세계는<br />
-                    오히려 긍정적인 효과를 극대화시킬 수 있습니다!
-                    <Point>
-                        <Circle>
-                            <FaRunning className='run' />
-                        </Circle>
-                        <PointText>
-                            <p>일단 뛰세요!</p>
-                            너, 너무 게을러.
-                        </PointText>
-                    </Point>
-                    <Point>
-                        <Circle>
-                            <IoPeople className='people' />
-                        </Circle>
-                        <PointText>
-                            <p>친구와 함께해서 더 재밌게!</p>
-                            당신...친구 없어?
-                        </PointText>
-                    </Point>
-                    <Point>
-                        <Circle>
-                            <img src={BrainIcon} className='brain' />
-                        </Circle>
-                        <PointText>
-                            <p>도파민을 자극합니다</p>
-                            건강한 도파민 자극!
-                        </PointText>
-                    </Point>
-                </ContentsBox>
-
+                <Content />
                 <GotoGame 
                     onClick={handleGotoGameButtonClick}
                     >

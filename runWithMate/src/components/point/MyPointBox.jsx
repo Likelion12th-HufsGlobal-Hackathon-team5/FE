@@ -67,7 +67,7 @@ const MyBox = styled.div`
 const TitleBox = styled.div`
   text-align: left;
   justify-content: center;
-  margin-bottom: 1vh;
+  margin-bottom: 8px;
 
   p {
     font-weight: 900;
@@ -84,15 +84,16 @@ const ContentsBox = styled.div`
   flex-direction: row;
   justify-content: center; // 수평 방향 가운데 정렬
   align-items: center; // 수직 방향 가운데 정렬
-  gap: 1vh;
+  gap: 9px;
   text-align: center;
-  margin-top: 4vh;
+  margin-top: 26px;
 `;
 
 const ProfileImgBox = styled.div`
   background-size: cover;
   background-position: center;
-  padding: 7vh;
+  /* padding: 7vh; */
+  padding: 70px;
   border-radius: 50%;
   width: 80px; // 이미지 박스 크기 설정
   height: 80px; // 이미지 박스 크기 설정
@@ -114,12 +115,12 @@ const MyPoint = styled.div`
   flex-wrap: wrap;
   flex-direction: column;
   justify-content: center;
-  gap: 0.5vh;
+  gap: 5px;
 `;
 
 const Line = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  gap: 0.5vh;
+  gap: 5px;
 `;

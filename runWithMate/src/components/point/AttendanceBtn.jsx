@@ -56,7 +56,7 @@ function AttendanceBtn() {
 
   return (
     <AttendanceButton onClick={handleClick}>
-      <BsCheckCircleFill />
+      <BsCheckCircleFill className="icon"/>
       출석하고 포인트 적립하기!
     </AttendanceButton>
   );
@@ -66,18 +66,23 @@ export default AttendanceBtn;
 
 const AttendanceButton = styled.button`
   display: flex;
-  flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  
+  flex-wrap: wrap;
+  gap: 10px;
+
   font-weight: 900;
   font-size: medium;
-  gap: 1vh;
+
   color: #ffffff;
   background-color: #2e2929;
   border: #2e2929 solid 3px;
-  padding: 1.5vh;
-  border-radius: 2vh;
+
+  padding: 11px;
+  border-radius: 15px;
+
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s;
   &:hover {
@@ -90,5 +95,9 @@ const AttendanceButton = styled.button`
     color: #23dc8c;
     border: #ffffff solid 3px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+
+  .icon{
+    margin: 0px;
   }
 `;

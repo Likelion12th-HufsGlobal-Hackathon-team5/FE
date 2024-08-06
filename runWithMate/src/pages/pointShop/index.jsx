@@ -55,15 +55,19 @@ const Wrapper =styled.div`
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    gap: 2.5vh;
-`
+    /* gap: 2.5vh; */
+    gap: 20px;
+
+    min-height: 889px;
+    max-height: 100vh;
+`;
 
 const Container = styled.div`
-  margin: 0vh 4vh;
+  margin: 0px 34px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 2.5vh;
+  gap: 20px;
 `;
 
 const PointShopTitle = styled.div`
@@ -71,13 +75,16 @@ const PointShopTitle = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1vh;
-  padding: 1vh;
-  margin-top: 3vh;
+  /* gap: 1vh; */
+  gap: 8.5px;
+  /* padding: 1vh; */
+  padding: 8.5px;
+  margin-top: 25.5px;
   border-bottom: 3px solid #2e2929;
   p {
     font-weight: 900;
-    font-size: 2vh;
+    /* font-size: 2vh; */
+    font-size: 17px;
     line-height: 17px;
     letter-spacing: -1px;
     color: #2e2929;
@@ -90,7 +97,8 @@ const GotoExercise = styled.div`
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 1vh;
+  /* gap: 1vh; */
+  gap: 8.5px;
   background-color: #ffffff;
 `;
 
@@ -100,7 +108,8 @@ const BeHealthy = styled.div`
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 1vh;
+  /* gap: 1vh; */
+  gap: 8.5px;
   background-color: #ffffff;
 `;
 
@@ -110,7 +119,8 @@ const Title = styled.div`
   display: flex;
   flex-direction: row;
   align-items: end;
-  gap: 0.3vh;
+  /* gap: 0.3vh; */
+  gap: 3px;
   justify-content: center;
   text-align: center;
   color: ${(props) =>
