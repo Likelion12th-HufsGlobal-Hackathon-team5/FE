@@ -21,7 +21,7 @@ function MyWalletToggle() {
 
   return (
     <ToggleContainer>
-      {["2024.07.17", "2024.07.02", "2024.07.09", "2024.07.09"].map((date, index) => (
+      {["2024.08.06", "2024.08.05", "2024.08.04", "2024.08.03"].map((date, index) => (
         <React.Fragment key={index}>
           <HeaderWrap>
             <ItemBox
@@ -41,11 +41,11 @@ function MyWalletToggle() {
                     <PointAddedMinus reason="출석">+ 50</PointAddedMinus>
                   </ContentsBox>
                   <ContentsBox>
-                    <ReasonBox>홍수지님과의 게임 승리 보상</ReasonBox>
+                    <ReasonBox>김런메님과의 게임 승리 보상</ReasonBox>
                     <PointAddedMinus reason="게임">+ 300</PointAddedMinus>
                   </ContentsBox>
                   <ContentsBox>
-                    <ReasonBox>유지희님과의 게임 승리 보상</ReasonBox>
+                    <ReasonBox>룩굿미님과의 게임 결과 획득</ReasonBox>
                     <PointAddedMinus reason="게임">+ 200</PointAddedMinus>
                   </ContentsBox>
                 </ToggleItemsContainer>
