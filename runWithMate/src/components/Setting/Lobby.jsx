@@ -99,7 +99,6 @@ export default function Lobby({ receivedData }) {
             setUser1(receivedData.user1);
             setUser2(receivedData.user2);
         }
-        alert(receivedData.user1);
     }, [receivedData]);
 
     const handleCopyURL=()=>{

@@ -57,7 +57,6 @@ function SettingGame() {
     const roomId = queryParams.get("roomId");
 
     if (!localStorage.getItem('userId')) {
-      // userId가 localStorage에 없을 때만 실행됩니다.
       localStorage.setItem('redirect_roomId',true);
       alert('먼저 로그인을 하셔야 합니다. 로그인 화면으로 이동합니다.');
       navigate('/login');

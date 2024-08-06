@@ -200,7 +200,7 @@ function Main (){
         if(localStorage.getItem('userId')){
             event.preventDefault();
             try{
-                const roomId = await createRoom();
+                const {roomId} = await createRoom();
                 localStorage.setItem("look", true)
                 localStorage.setItem("roomId", roomId);
                 navigate('/settingGame');

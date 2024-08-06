@@ -205,10 +205,6 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
         }
     }, [receivedData]);
 
-    // useEffect(() => {
-    //     const bettingValue = betting === '' ? 0 : betting;
-    //     setInitPoint(Mypoint - bettingValue);
-    // }, [betting, Mypoint]);
     useEffect(() => {
         const bettingValue = betting === '' ? 0 : betting;
         setInitPoint(Mypoint - bettingValue);
