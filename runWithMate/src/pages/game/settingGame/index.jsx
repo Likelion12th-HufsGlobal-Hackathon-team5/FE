@@ -46,15 +46,22 @@ const initialMock = {
 };
 
 function SettingGame() {
-  const [Point,setPoint] = useState(23500);
   // initialMock 빼지 말아주세요~ tsx가 아니라서 자료형 선언해주려면 필요합니다!
   const [receivedData, setReceivedData] = useState(initialMock); 
+  const [point,setPoint] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
   if (queryParams.get("roomId")) {
     const roomId = queryParams.get("roomId");
+
+    if (!localStorage.getItem('userId')) {
+      localStorage.setItem('redirect_roomId',true);
+      alert('먼저 로그인을 하셔야 합니다. 로그인 화면으로 이동합니다.');
+      navigate('/login');
+    }
+
     localStorage.setItem("roomId",roomId);
     window.history.replaceState({}, null, location.pathname);
   }
@@ -64,16 +71,7 @@ function SettingGame() {
   const { wsInstance, connected } = useWsInstance(setReceivedData);
 
   useEffect(()=>{
-    const bet_point=receivedData.bet_point;
-    const time_limit=receivedData.time_limit;
-    console.log('main에서 settingGame 이동 버튼 클릭! - setting page')
-    console.log(`bet_point : ${bet_point}`);
-    console.log(`time_limit : ${time_limit}`);
-
-    // 아래코드 무조건 살리기
-    wsInstance("check_room", {});
-    const currentURL=window.location.href;
-    localStorage.setItem('invitedURL',`${currentURL}?roomId=${localStorage.getItem("roomId")}`);
+    wsInstance("join_room", {});
   },[connected])
 
   useEffect(()=>{
@@ -83,21 +81,8 @@ function SettingGame() {
   },[receivedData]);
 
   const handleStartGame = () => {
-    const bet_point=receivedData.bet_point;
-    const time_limit=receivedData.time_limit;
-    console.log(`bet_point : ${bet_point}`);
-    console.log(`time_limit : ${time_limit}`);
     wsInstance("start_game", {});
   };
-
-  useEffect(() => {
-    if (!localStorage.getItem('userId')) {
-      // userId가 localStorage에 없을 때만 실행됩니다.
-      localStorage.setItem('join_user2',true);
-      alert('먼저 로그인을 하셔야 합니다. 로그인 화면으로 이동합니다.');
-      navigate('/login');
-    }
-  }, [navigate]); // navigate가 변경될 때만 useEffect 실행
 
   return (
   <>
@@ -106,11 +91,15 @@ function SettingGame() {
       <Background>
         <Content />
         <Setting 
-          Mypoint={Point} 
+          point={point}
+          setPoint={setPoint}
           receivedData={receivedData} 
           wsInstance={wsInstance}
         />
-        <Lobby receivedData={receivedData}/> {/* receivedData의 초기값을 mock데이터로 설정하고 변경했습니다! */}
+        <Lobby 
+          receivedData={receivedData}
+          hostPoint={point} 
+        /> {/* receivedData의 초기값을 mock데이터로 설정하고 변경했습니다! */}
         <StartGame onClick={handleStartGame}>게임 시작하기</StartGame>
       </Background>
     </Container>

@@ -1,7 +1,6 @@
-import { useRef, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import useWsInstance from '../hooks/useWsInstance';
 import Icon from '/img/NoBgIcon.png';
 import { BsPersonFill } from 'react-icons/bs';
 
@@ -76,90 +75,19 @@ const StyledLink = styled(Link)`
 `;
 
 function Header() {
-    const { disconnect } = useWsInstance();
     const navigate = useNavigate();
     const [icon, setIcon] = useState(false);
-    const prevIconRef = useRef();
-    const isInitialMount = useRef(true);
 
     const handleIcon = () => {
         setIcon(!icon);
-    };
-//
-    useEffect(() => {
-        if (prevIconRef.current !== icon&& location.pathname === '/main' ) {
-            console.log('header click event - disconnect');
-            disconnect();
-            if(localStorage.getItem("roomId")){
-                localStorage.clear("look");
-                localStorage.clear("roomId");
-            }
-        }
-    }, [icon, disconnect]);
-
-    const handleLoginTrue = () => {
-        // setIcon(!icon);
-        setIsLogin(true);
     };
 
     const handleMypage=()=>{
         navigate('/mypage');
     }
 
-    useEffect(() => {
-        if (!isInitialMount.current) {
-            console.log('header click event - disconnect');
-            disconnect();
-            if (localStorage.getItem("roomId")) {
-                localStorage.removeItem("look");
-                localStorage.removeItem("roomId");
-            }
-        } else {
-            isInitialMount.current = false;
-        }
-    }, [icon, disconnect, location.pathname]);
-
     return (
         <Container>
-            {/* {isLogin ? (
-                <Background to='/login' onClick={handleLoginFalse}>
-                    <img src={Icon} />
-                    <Text>
-                        <p>
-                            Runs
-                            <span className='with'>with</span>
-                        </p>
-                        <br />
-                        Mate<br />
-                    </Text>
-                </Background>
-            ) : (
-                <Background to='/main' onClick={handleLoginTrue}>
-                    <img src={Icon} />
-                    <Text>
-                        <p>
-                            Run
-                            <span className='with'>with</span>
-                        </p>
-                        <br />
-                        Mate<br />
-                    </Text>
-                </Background>
-            )} */}
-
-            {/* <StyledLink to={'/main'}>
-                    <Background onClick={handleIcon}>
-                        <img src={Icon} /> 
-                        <Text>
-                            <p>
-                                Run
-                                <span className='with'>with</span>
-                            </p> 
-                            <br />
-                            Mate<br />
-                        </Text>
-                    </Background>
-                </StyledLink> */}
             <Background onClick={handleIcon}>
                 <StyledLink to={'/main'}>
                     <img src={Icon} /> 
@@ -173,10 +101,6 @@ function Header() {
                     </Text>
                 </StyledLink>
             </Background>
-
-            {/* <StyledLink to='/mypage'>
-                <BsPersonFill className='myPage' />
-            </StyledLink> */}
             <BsPersonFill onClick={handleMypage} className='myPage' />
         </Container>
     );

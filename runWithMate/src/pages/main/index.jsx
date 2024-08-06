@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect} from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
 import styled from '@emotion/styled';
@@ -14,7 +15,6 @@ import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 import getUserIdAndToken from '../../server/user/getUserIdAndToken';
 import createRoom from '../../server/gameRoom/createRoom';
-import useWsInstance from '../../hooks/useWsInstance';
 
 const Container=styled.div`
     display: flex;
@@ -177,19 +177,17 @@ const GotoHeader = styled.div`
 
 function Main (){
     const navigate = useNavigate();
-    const { wsInstance } = useWsInstance();
-    
     useEffect(() => {
+        if (localStorage.getItem('redirect_roomId')){
+            localStorage.setItem('roomId', localStorage.getItem('redirect_roomId'));
+            localStorage.removeItem('redirect_roomId');
+            navigate('/settingGame');
+        }
         const fetch = async () => {
             try {
                 const myInfo = await getUserIdAndToken();
                 localStorage.setItem("userId", myInfo.userId);
                 localStorage.setItem("accessToken", myInfo.accessToken);
-
-                if(localStorage.getItem('join_user2')){
-                    wsInstance("join_room", {});
-                    window.location.href=localStorage.getItem('invitedURL');
-                }
             } catch (error) {
                 console.log(error);
             }
@@ -199,21 +197,17 @@ function Main (){
 
 
     const handleGotoGameButtonClick = async (event) => {
-        const userData=localStorage.getItem('userId');
-
-        if(userData){
+        if(localStorage.getItem('userId')){
             event.preventDefault();
             try{
                 const roomId = await createRoom();
                 localStorage.setItem("look", true)
                 localStorage.setItem("roomId", roomId);
-                alert('settingGame으로이동!')
                 navigate('/settingGame');
             } catch(error) {
                 console.log('Main - error creating room : ',error);
             }
         } else{
-            alert(`user id : ${userData}`)
             alert('먼저 로그인을 하셔야합니다!');
             navigate('/login');
         }
@@ -221,13 +215,9 @@ function Main (){
     }
 
     const handleGotoPointshop = () => {
-        const userData = localStorage.getItem('userId');
-
-        if(userData){
-            alert('로그인 성공해서 이동함~')
+        if(localStorage.getItem('userId')){
             navigate('/point');
         }else{
-            alert(`${userData}`)
             alert('먼저 로그인을 하셔야합니다!');
             navigate('/login');
         }
