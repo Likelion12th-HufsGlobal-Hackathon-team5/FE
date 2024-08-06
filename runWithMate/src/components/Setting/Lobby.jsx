@@ -99,19 +99,8 @@ export default function Lobby({ receivedData }) {
             setUser1(receivedData.user1);
             setUser2(receivedData.user2);
         }
+        alert(receivedData.user1);
     }, [receivedData]);
-    
-    // const copyUrlToClipboard = () => {
-    //     const currentUrl = window.location.href;
-    //     navigator.clipboard.writeText(`${currentUrl}?roomId=${localStorage.getItem("roomId")}`)
-    //         .then(() => {
-    //             alert('초대 링크가 복사되었습니다.');
-    //             localStorage.setItem("GameSettingData-copylink",receivedData)
-    //         })
-    //         .catch(err => {
-    //             console.error('링크 복사 실패', err);
-    //         });
-    // };
 
     const handleCopyURL=()=>{
         navigator.clipboard.writeText(localStorage.getItem('invitedURL'))

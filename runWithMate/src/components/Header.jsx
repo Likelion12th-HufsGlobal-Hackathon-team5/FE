@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import UseStomp from '../hooks/useStomp';
+import useWsInstance from '../hooks/useWsInstance';
 import Icon from '/img/NoBgIcon.png';
 import { BsPersonFill } from 'react-icons/bs';
 
@@ -24,7 +24,7 @@ const Container = styled.div`
     }
 `;
 
-const Background = styled(Link)`
+const Background = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -76,13 +76,11 @@ const StyledLink = styled(Link)`
 `;
 
 function Header() {
-    const { disconnect } = UseStomp();
-
+    const { disconnect } = useWsInstance();
+    const navigate = useNavigate();
     const [icon, setIcon] = useState(false);
     const prevIconRef = useRef();
     const isInitialMount = useRef(true);
-
-    const navigate = useNavigate();
 
     const handleIcon = () => {
         setIcon(!icon);
@@ -95,7 +93,6 @@ function Header() {
             if(localStorage.getItem("roomId")){
                 localStorage.clear("look");
                 localStorage.clear("roomId");
-                // localStorage.clear("useSTomp-getMessage");
             }
         }
     }, [icon, disconnect]);

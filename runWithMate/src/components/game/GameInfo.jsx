@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
+
 import Giveup from '../../components/game/gameGiveUp/giveup';
 import Timer from './Timer';
+
 
 const Container=styled.div`
     display: flex;

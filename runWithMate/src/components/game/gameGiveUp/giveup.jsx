@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from '@emotion/styled';
 
-import useWebSocket from '../../../hooks/useWebSocket';
-import UseStomp from '../../../hooks/useStomp';
+import useWsInstance from '../../../hooks/useWsInstance';
 
 import { useNavigate } from 'react-router-dom';
 import { PiWarningFill } from "react-icons/pi";
@@ -100,7 +99,7 @@ const Giveup = ({ onClose , betting }) => {
     setReceivedData(JSON.parse(message.body));
   };
 
-  const { disconnect }=UseStomp(onMessageReceived);
+  const { disconnect }=useWsInstance(onMessageReceived);
 
   // handleMainPage 이벤트 합쳐버림
   // const handleCloseConnection = async () => {
