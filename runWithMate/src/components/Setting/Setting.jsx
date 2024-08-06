@@ -199,6 +199,15 @@ export default function Setting({ betPoint, setBetPoint, receivedData, wsInstanc
         if (receivedData.type === "room_updated") {
             setBetPoint(receivedData.bet_point);
             setTimeLimit(receivedData.time_limit);
+            const button = buttons.find(button => button.id === receivedData.time_limit);
+            if (button) {
+                setActiveButton(buttons.id);
+                setCustomTime("");
+            } else {
+                setActiveButton("custom");
+                // setCustomTime(receivedData.time_limit);
+                setCustomTime(receivedData.time_limit ? receivedData.time_limit.toString() : "");
+            }
         }
     }, [receivedData]);
 
