@@ -55,6 +55,14 @@ function SettingGame() {
   const queryParams = new URLSearchParams(location.search);
   if (queryParams.get("roomId")) {
     const roomId = queryParams.get("roomId");
+
+    if (!localStorage.getItem('userId')) {
+      // userId가 localStorage에 없을 때만 실행됩니다.
+      localStorage.setItem('redirect_roomId',true);
+      alert('먼저 로그인을 하셔야 합니다. 로그인 화면으로 이동합니다.');
+      navigate('/login');
+    }
+
     localStorage.setItem("roomId",roomId);
     window.history.replaceState({}, null, location.pathname);
   }
@@ -64,16 +72,7 @@ function SettingGame() {
   const { wsInstance, connected } = useWsInstance(setReceivedData);
 
   useEffect(()=>{
-    const bet_point=receivedData.bet_point;
-    const time_limit=receivedData.time_limit;
-    console.log('main에서 settingGame 이동 버튼 클릭! - setting page')
-    console.log(`bet_point : ${bet_point}`);
-    console.log(`time_limit : ${time_limit}`);
-
-    // 아래코드 무조건 살리기
     wsInstance("check_room", {});
-    const currentURL=window.location.href;
-    localStorage.setItem('invitedURL',`${currentURL}?roomId=${localStorage.getItem("roomId")}`);
   },[connected])
 
   useEffect(()=>{
@@ -89,15 +88,6 @@ function SettingGame() {
     console.log(`time_limit : ${time_limit}`);
     wsInstance("start_game", {});
   };
-
-  useEffect(() => {
-    if (!localStorage.getItem('userId')) {
-      // userId가 localStorage에 없을 때만 실행됩니다.
-      localStorage.setItem('join_user2',true);
-      alert('먼저 로그인을 하셔야 합니다. 로그인 화면으로 이동합니다.');
-      navigate('/login');
-    }
-  }, [navigate]); // navigate가 변경될 때만 useEffect 실행
 
   return (
   <>
