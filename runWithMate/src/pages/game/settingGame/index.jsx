@@ -48,7 +48,8 @@ const initialMock = {
 function SettingGame() {
   // initialMock 빼지 말아주세요~ tsx가 아니라서 자료형 선언해주려면 필요합니다!
   const [receivedData, setReceivedData] = useState(initialMock); 
-  const [point,setPoint] = useState(0);
+  const [betPoint,setBetPoint] = useState(0);
+  const [isGameAvailable, setIsGameAvailable] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -81,6 +82,10 @@ function SettingGame() {
   },[receivedData]);
 
   const handleStartGame = () => {
+    if (!isGameAvailable){
+      alert("포인트가 부족한 유저가 있으므로, 게임을 시작할 수 없습니다.");
+      return;
+    }
     wsInstance("start_game", {});
   };
 
@@ -91,14 +96,15 @@ function SettingGame() {
       <Background>
         <Content />
         <Setting 
-          point={point}
-          setPoint={setPoint}
+          betPoint={betPoint}
+          setBetPoint={setBetPoint}
           receivedData={receivedData} 
           wsInstance={wsInstance}
         />
         <Lobby 
           receivedData={receivedData}
-          hostPoint={point} 
+          betPoint={betPoint} 
+          setIsGameAvailable={setIsGameAvailable}
         /> {/* receivedData의 초기값을 mock데이터로 설정하고 변경했습니다! */}
         <StartGame onClick={handleStartGame}>게임 시작하기</StartGame>
       </Background>

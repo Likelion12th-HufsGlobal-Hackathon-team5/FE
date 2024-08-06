@@ -90,7 +90,7 @@ const ReadyContainer = styled.div`
     gap: 5px;
 `;
 
-export default function Lobby({ receivedData, hostPoint }) {
+export default function Lobby({ setIsGameAvailable, receivedData, betPoint }) {
     const [user1, setUser1] = useState("");
     const [user2, setUser2] = useState("");
     const [userOnePoint, setUserOnePoint] = useState(0);
@@ -106,14 +106,16 @@ export default function Lobby({ receivedData, hostPoint }) {
         }
     }, [receivedData]);
 
-    const handleCopyURL=()=>{
-        navigator.clipboard.writeText(localStorage.getItem('invitedURL'))
-            .then(()=>{
-                alert('초대 링크가 복사되었습니다.');
-            })
-            .catch((err)=>{
-                console.error('링크 복사 실패 : ',err)
-            });
+    useEffect(() => {
+        setIsGameAvailable(userOnePoint >= betPoint && userTwoPoint >= betPoint);
+    }, [userOnePoint, userTwoPoint, betPoint]);
+
+    const handleCopyURL = () => {
+        const currentURL = window.location.href;
+        const roomId = localStorage.getItem('roomId');
+        navigator.clipboard.writeText(`${currentURL}?roomId=${roomId}`)
+            .then(() => alert('초대 링크가 복사되었습니다.'))
+            .catch((err) => console.error('링크 복사 실패 : ', err));
     }
 
     return (
@@ -130,14 +132,14 @@ export default function Lobby({ receivedData, hostPoint }) {
                     playermock={user1}
                     point={userOnePoint}
                     userType={"방장"}
-                    isPointEnough={userOnePoint >= hostPoint}
+                    isPointEnough={userOnePoint >= betPoint}
                 />
                 <HorizontalLine />
                 <Player 
                     playermock={user2} 
                     point={userTwoPoint}
                     userType={"참가자"}
-                    isPointEnough={userTwoPoint >= hostPoint}
+                    isPointEnough={userTwoPoint >= betPoint}
                 />
             </ReadyContainer>
         </LobbyForm>
