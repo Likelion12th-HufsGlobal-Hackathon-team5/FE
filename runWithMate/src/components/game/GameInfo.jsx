@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 
-import useWebSocket from '../../hooks/useWebSocket';
-
 import Giveup from '../../components/game/gameGiveUp/giveup';
 import Timer from './Timer';
 import axios from 'axios';
 
-import useStomp  from '../../hooks/useStomp';
 import GetMarker from './GetMarker';
 
 const Container=styled.div`
