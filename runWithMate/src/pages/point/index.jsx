@@ -43,10 +43,6 @@ function Point(){
         setMessage(attendanceMessage.message);
     };
 
-    useEffect(()=>{
-        alert(message);
-    },[state])
-
     return(
         <>
             <Header />

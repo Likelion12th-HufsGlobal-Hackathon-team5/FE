@@ -19,7 +19,7 @@ function AttendanceBtn() {
     const response = await postAttendance();
 
     // 상태에 따라 알림 메시지 표시
-    alert(response.message);
+    // alert(response.message);
 
     setIsClicked(false); // 알림 후 상태 초기화
   };

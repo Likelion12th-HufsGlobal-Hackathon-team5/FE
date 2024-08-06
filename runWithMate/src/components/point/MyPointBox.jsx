@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import PointImg from "/img/profile.png";
+import getUserPointForShop from "../../server/user/getUserPointForShop";
+
+const mockUserData = {
+  nickname: "김런메",
+  profile_image: "/img/profile.png", // 이미지 경로를 사용하여 프로필 이미지 표시
+  point: "1200",
+  last_check: "2024-07-26 10:00:00",
+};
 
 function MyPointBox() {
-  const [UserData, setUserData] = useState(null);
+  const [UserData, setUserData] = useState(mockUserData);
+  const [nickname, setNickname] = useState(mockUserData.nickname);
+  const [userPoint, setUserPoint] = useState(mockUserData.point);
 
   useEffect(() => {
-    // 목 데이터 생성
-    const mockUserData = {
-      id: "user123",
-      nickname: "김런메",
-      profile_image: "/img/profile.png", // 이미지 경로를 사용하여 프로필 이미지 표시
-      point: "1200",
-      last_check: "2024-07-26 10:00:00",
-    };
-
-    // 목 데이터를 상태에 즉시 설정
-    setUserData(mockUserData);
+    const fetchdata = async () => {
+      const result = await getUserPointForShop();
+      setUserData(result);
+      setNickname(result.nickname);
+      setUserPoint(result.point);
+    }
+    fetchdata();
   }, []);
 
   // gameData가 null인지 확인
@@ -28,7 +34,7 @@ function MyPointBox() {
     <>
       <MyBox>
         <TitleBox>
-          <p>{UserData.nickname}님의 포인트 페이지</p>
+          <p>{nickname}님의 포인트 페이지</p>
         </TitleBox>
         <hr
           style={{ height: "3px", backgroundColor: "#2E2929", border: "none" }}
@@ -37,11 +43,11 @@ function MyPointBox() {
           <ProfileImgBox style={{ backgroundImage: `url(${UserData.profile_image})` }}></ProfileImgBox>
           <MyPoint>
             <Line>
-              <MyPointCurrunt isBold>{UserData.nickname}</MyPointCurrunt>
+              <MyPointCurrunt isBold>{nickname}</MyPointCurrunt>
               <MyPointCurrunt>님은</MyPointCurrunt>
             </Line>
             <Line>
-              <MyPointCurrunt isBold>{UserData.point}</MyPointCurrunt>
+              <MyPointCurrunt isBold>{userPoint}</MyPointCurrunt>
               <MyPointCurrunt isBold style={{ fontSize: "16px" }}>
                 point
               </MyPointCurrunt>

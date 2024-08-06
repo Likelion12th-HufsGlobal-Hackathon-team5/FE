@@ -14,7 +14,7 @@ import Test from './pages/test';
 const routes=[
     {
         path: '/',
-        element: <SiteMap />,
+        element: <Main />,
         name: '00.이동 페이지'
     },
     {
