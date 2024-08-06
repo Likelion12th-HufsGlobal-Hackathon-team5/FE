@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useEffect, useState } from 'react';
 import {BsFillPersonFill} from 'react-icons/bs';
 
 const GameRankingDiv=styled.div`
@@ -82,7 +83,34 @@ const GameRankingInfoHeader=styled.div`
     }
 `;
 
-function GameRanking(){
+function GameRanking({receivedData}){
+    const [pointOne, setPointOne]=useState(0);
+    const [pointTwo, setPointTwo]=useState(0);
+    const [playerOne, setPlayerOne]=useState('');
+    const [playerTwo, setPlayerTwo]=useState('');
+
+    useEffect(()=>{
+        if (receivedData.type !== "player_points") return;
+        setPointOne(receivedData.player_points[localStorage.getItem('userId')]?.point);
+        for (const key in receivedData.player_points){
+            if(key!==localStorage.getItem('userId')){
+                setPointTwo(receivedData.player_points[key].point);
+                break;
+            }
+        }
+    },[receivedData]);
+
+
+    useEffect(()=>{
+        if (receivedData.type !== "start_check") return;
+        setPlayerOne(receivedData.user_nicknames[localStorage.getItem('userId')]);
+        for (const key in receivedData.user_nicknames){
+            if(key!==localStorage.getItem('userId')){
+                setPlayerTwo(receivedData.user_nicknames[key]);
+                break;
+            }
+        }
+    },[receivedData]);
 
     return(
         <>
@@ -90,16 +118,16 @@ function GameRanking(){
                     <GameRankingInfoAboutMe>
                         <GameRankingInfoHeader>
                             <BsFillPersonFill className='icon'/>
-                            이수혁(나)
+                            {playerOne} (나)
                         </GameRankingInfoHeader>
-                        <p className='score'>900점</p>
+                        <p className='score'>{pointOne}점</p>
                     </GameRankingInfoAboutMe>
                     <GameRankingInfoAboutOpponent>
                         <GameRankingInfoHeader className='user'>
                             <BsFillPersonFill className='icon'/>
-                            유지희 (상대)
+                            {playerTwo} (상대)
                         </GameRankingInfoHeader>
-                        <p className='score'>1200점</p>
+                        <p className='score'>{pointTwo}점</p>
                     </GameRankingInfoAboutOpponent>
                 </GameRankingDiv>
         </>

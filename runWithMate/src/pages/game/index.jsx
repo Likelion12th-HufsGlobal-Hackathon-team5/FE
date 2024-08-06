@@ -25,7 +25,6 @@ const MapContainer = styled.div`
 function Game() {
   const [receivedData, setReceivedData] = useState(mockStartCheck);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [betPoint, setBetPoint] = useState(0);
   const { wsInstance, connected, disconnect } = useWsInstance(setReceivedData);
 
   useEffect(() => {
@@ -41,18 +40,17 @@ function Game() {
       <Container>
         {isGameOver && <GameOver />}
         <GameInfo 
-        // TODO : 백엔드에서 bet_point받아오기
-          betPoint={betPoint}
+          receivedData={receivedData}
           timeLimit={receivedData.time_left}
         />
         <MapContainer>
           <Map 
             wsInstance={wsInstance}
             receivedData={receivedData}
-            handleBetPoint={setBetPoint}
             />
         </MapContainer>
-        <GameRanking />
+        <GameRanking 
+            receivedData={receivedData}/>
       </Container>
     </>
   );

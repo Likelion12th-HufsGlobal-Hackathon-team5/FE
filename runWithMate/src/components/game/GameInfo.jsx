@@ -3,9 +3,7 @@ import styled from '@emotion/styled';
 
 import Giveup from '../../components/game/gameGiveUp/giveup';
 import Timer from './Timer';
-import axios from 'axios';
 
-import GetMarker from './GetMarker';
 
 const Container=styled.div`
     display: flex;
@@ -102,10 +100,21 @@ const Line=styled.div`
 
 // const WEBSOCKET_URL='ws server url'
 
-function GameInfo({betPoint, timeLimit}){
-
+function GameInfo({timeLimit, receivedData}){
     //이하 모달창의 상태관리
     const [isGiveupOpen, setIsGiveupOpen] = useState(false);
+    const [betPoint, setBetPoint] = useState(0);
+    const [myPoint, setMyPoint] = useState(0);
+
+    useEffect(() => {
+        if (receivedData.type !== "start_check") return;
+        setBetPoint(receivedData.bet_point);
+    }, [receivedData]);
+
+    useEffect(() => {
+        if (receivedData.type !== "player_points") return;
+        setMyPoint(receivedData.player_points[localStorage.getItem('userId')]?.point);
+    }, [receivedData]);
     
     const handleGiveup = () => {
         setIsGiveupOpen(!isGiveupOpen);
@@ -137,7 +146,7 @@ function GameInfo({betPoint, timeLimit}){
                         <Line />
                         <GameInfoContentEach>
                             획득 포인트<br/>
-                            300P
+                            {myPoint}P
                         </GameInfoContentEach>
                     </GameInfoContents>
                 </GameInfoDiv>

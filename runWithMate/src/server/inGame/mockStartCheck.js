@@ -2,6 +2,8 @@ export default {
     type : "start_check",
     is_started: false,
     time_left: 60,
+    user_nicknames:[
+    ],
     point_boxes: [
         {
         "box_type":"point",

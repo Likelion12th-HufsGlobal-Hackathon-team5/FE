@@ -17,8 +17,7 @@ const getSeconds = (time) => {
 }
 
 const Timer = ({timeLimit}) => {
-    // const [time, setTime] = useState(300); // 남은 시간 현재는 초 단위이기 때문에 받아오는 타이머값에 1000나눠야 합니다
-    const [time, setTime] = useState(timeLimit)
+    const [time, setTime] = useState(600)
     
     useEffect(() => {
         const timer = setInterval(() => {
@@ -26,6 +25,11 @@ const Timer = ({timeLimit}) => {
         }, 1000);
         return () => clearInterval(timer);
     }, [time]);
+
+    useEffect(() => {
+        setTime(timeLimit);
+    }, [timeLimit]);
+
     return (
         <div>
             <div>
