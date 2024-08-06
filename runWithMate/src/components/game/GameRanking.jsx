@@ -91,10 +91,10 @@ function GameRanking({receivedData}){
 
     useEffect(()=>{
         if (receivedData.type !== "player_points") return;
-        setPointOne(receivedData.player_points[localStorage.getItem('userId')]?.point);
+        setPointOne(receivedData.player_points[localStorage.getItem('userId')]?.dopamine);
         for (const key in receivedData.player_points){
             if(key!==localStorage.getItem('userId')){
-                setPointTwo(receivedData.player_points[key].point);
+                setPointTwo(receivedData.player_points[key].dopamine);
                 break;
             }
         }
