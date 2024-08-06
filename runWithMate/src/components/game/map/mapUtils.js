@@ -1,5 +1,3 @@
-import mockPointBoxes from '../../../server/inGame/mockPointBoxes';
-import mockDopamineBoxes from '../../../server/inGame/mockDopamineBoxes';
 import showError from './showError';
 
 export const loadKakaoMapScript = (callback) => {

@@ -1,60 +1,34 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import PointImg from "/img/profile.png";
 import ClipLoader from 'react-spinners/ClipLoader';
 
-const mockData = {
-  type: "game_finished",
-  finish_type: "time_exceed",
-  winner: "user1",
-  game_info: {
-    bet_point: 30,
-    users_info: [
-      {
-        user_id: "user1",
-        user_name: "홍길동",
-        point: 20,
-        dopamine: 15,
-      },
-      {
-        user_id: "user2",
-        user_name: "김철수",
-        point: 10,
-        dopamine: 5,
-      },
-    ],
-  },
-};
-
 function GameResultBox() {
+  const [gameData, setGameData] = useState(null);
   const [winnerInfo, setWinnerInfo] = useState(null);
   const [loserInfo, setLoserInfo] = useState(null);
-  const [betPoint, setBetPoint] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 목데이터를 로컬 스토리지에 저장
-    localStorage.setItem("gameData", JSON.stringify(mockData));
-
-    // 로컬 스토리지에서 게임 데이터 불러오기
-    const storedGameData = localStorage.getItem("gameData");
+    const storedGameData = localStorage.getItem("game_result");
     if (storedGameData) {
       const gameData = JSON.parse(storedGameData);
-      const winner = gameData.winner;
-      const usersInfo = gameData.game_info.users_info;
+      setGameData(gameData);
 
-      // 승자 정보와 패자 정보 구조화
-      const winnerData = usersInfo.find(user => user.user_id === winner);
-      const loserData = usersInfo.find(user => user.user_id !== winner);
+      const winner = gameData.users_info.find(info => info.user_id === gameData.winner_id);
+      const loser = gameData.users_info.find(info => info.user_id !== gameData.winner_id);
 
-      setWinnerInfo(winnerData);
-      setLoserInfo(loserData);
-      setBetPoint(gameData.game_info.bet_point); // 베팅 포인트 설정
+      setWinnerInfo(winner || {});
+      setLoserInfo(loser || {});
     }
+    setIsLoading(false);
   }, []);
 
-  // 승자와 패자 정보가 없을 경우 로딩 메시지를 보여줌
-  if (!winnerInfo || !loserInfo) {
-    return <div>게임결과를 불러오고 있습니다.</div>;
+  if (isLoading) {
+    return <ClipLoader color={"#123abc"} loading={isLoading} size={50} />;
+  }
+
+  if (!gameData || !winnerInfo || !loserInfo) {
+    return <div>게임 결과를 불러올 수 없습니다.</div>;
   }
 
   return (
@@ -70,7 +44,7 @@ function GameResultBox() {
             <p>{winnerInfo.user_name}님이</p>
             <p>획득한 point</p>
           </span>
-          <p className="point">{winnerInfo.point + betPoint} point</p> {/* 베팅 포인트를 승자 포인트에 합산 */}
+          <p className="point">{winnerInfo.point + gameData.bet_point} point</p>
         </PointResultBox>
         <PointResultBox>
           <span>
@@ -86,6 +60,7 @@ function GameResultBox() {
 
 export default GameResultBox;
 
+// 스타일 컴포넌트 정의
 const ResultContainer = styled.div`
   display: flex;
   flex-direction: column;

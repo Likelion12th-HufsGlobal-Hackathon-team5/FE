@@ -26,7 +26,7 @@ const LoadingContainer = styled.div`
   z-index: 1000;
 `;
 
-export default function Map ({wsInstance, receivedData}) {
+export default function Map ({wsInstance, receivedData, isGameOver, setInervalId}) {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [isMarkerAdded, setIsMarkerAdded] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -55,12 +55,14 @@ export default function Map ({wsInstance, receivedData}) {
       setIsGameStarted(receivedData.started);
 
       // 내 위치 1초마다 전송 -> 혹시 몰라서 intervalId 저장했음
-      const intervalId = setInterval(() => {
+      const sendMyLocId = setInterval(() => {
         navigator.geolocation.getCurrentPosition((position) => {
           const { latitude, longitude } = position.coords;
           wsInstance("update_position", { lat: latitude, lng: longitude });
         }, showError, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
       }, 2000);
+
+      setInervalId(sendMyLocId);
     }
   }, [receivedData, map]);
 
@@ -74,6 +76,12 @@ export default function Map ({wsInstance, receivedData}) {
       console.log('removed marker', removedMarker);
     }
   }, [receivedData]);
+
+  // useEffect(() => {
+  //   if (isGameOver){
+  //     clearInterval(intervalId);
+  //   }
+  // }, [isGameOver] )
 
   useEffect(() => {
     if (!isMarkerAdded && map && isGameStarted) {

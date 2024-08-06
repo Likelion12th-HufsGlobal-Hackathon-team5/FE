@@ -7,6 +7,7 @@ import GameRanking from "../../components/game/GameRanking";
 import mockStartCheck from "../../server/inGame/mockStartCheck";
 import useWsInstance from "../../hooks/useWsInstance";
 import showError from "../../components/game/map/showError";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -25,7 +26,9 @@ const MapContainer = styled.div`
 function Game() {
   const [receivedData, setReceivedData] = useState(mockStartCheck);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [intervalId , setInervalId] = useState();
   const { wsInstance, connected, disconnect } = useWsInstance(setReceivedData);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!connected) return;
@@ -34,6 +37,19 @@ function Game() {
       wsInstance("start_check", { lat: latitude, lng: longitude });
     }, showError, { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 });
   }, [connected]);
+
+  useEffect(() => {
+    if (receivedData.type !== "game_finished") return;
+    disconnect();
+    setIsGameOver(true);
+    clearInterval(intervalId);
+    const data = JSON.stringify(receivedData);
+    localStorage.setItem("game_result",data);
+
+    setTimeout(() => {
+      navigate("/gameResult")
+    },3000);
+  }, [receivedData]);
 
   return (
     <>
@@ -47,6 +63,8 @@ function Game() {
           <Map 
             wsInstance={wsInstance}
             receivedData={receivedData}
+            isGameOver={isGameOver}
+            setInervalId={setInervalId}
             />
         </MapContainer>
         <GameRanking 
