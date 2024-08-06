@@ -90,14 +90,19 @@ const ReadyContainer = styled.div`
     gap: 5px;
 `;
 
-export default function Lobby({ receivedData }) {
+export default function Lobby({ receivedData, hostPoint }) {
     const [user1, setUser1] = useState("");
     const [user2, setUser2] = useState("");
+    const [userOnePoint, setUserOnePoint] = useState(0);
+    const [userTwoPoint, setUserTwoPoint] = useState(0);
     
     useEffect(() => {
+        console.log(receivedData);
         if (receivedData.type === "room_joined") {
             setUser1(receivedData.user1);
             setUser2(receivedData.user2);
+            setUserOnePoint(receivedData.user1_point);
+            setUserTwoPoint(receivedData.user2_point);
         }
     }, [receivedData]);
 
@@ -123,12 +128,16 @@ export default function Lobby({ receivedData }) {
             <ReadyContainer>
                 <Player 
                     playermock={user1}
+                    point={userOnePoint}
                     userType={"방장"}
+                    isPointEnough={userOnePoint >= hostPoint}
                 />
                 <HorizontalLine />
                 <Player 
                     playermock={user2} 
+                    point={userTwoPoint}
                     userType={"참가자"}
+                    isPointEnough={userTwoPoint >= hostPoint}
                 />
             </ReadyContainer>
         </LobbyForm>

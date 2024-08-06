@@ -46,9 +46,9 @@ const initialMock = {
 };
 
 function SettingGame() {
-  const [Point,setPoint] = useState(23500);
   // initialMock 빼지 말아주세요~ tsx가 아니라서 자료형 선언해주려면 필요합니다!
   const [receivedData, setReceivedData] = useState(initialMock); 
+  const [point,setPoint] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -71,7 +71,7 @@ function SettingGame() {
   const { wsInstance, connected } = useWsInstance(setReceivedData);
 
   useEffect(()=>{
-    wsInstance("check_room", {});
+    wsInstance("join_room", {});
   },[connected])
 
   useEffect(()=>{
@@ -81,10 +81,6 @@ function SettingGame() {
   },[receivedData]);
 
   const handleStartGame = () => {
-    const bet_point=receivedData.bet_point;
-    const time_limit=receivedData.time_limit;
-    console.log(`bet_point : ${bet_point}`);
-    console.log(`time_limit : ${time_limit}`);
     wsInstance("start_game", {});
   };
 
@@ -95,11 +91,15 @@ function SettingGame() {
       <Background>
         <Content />
         <Setting 
-          Mypoint={Point} 
+          point={point}
+          setPoint={setPoint}
           receivedData={receivedData} 
           wsInstance={wsInstance}
         />
-        <Lobby receivedData={receivedData}/> {/* receivedData의 초기값을 mock데이터로 설정하고 변경했습니다! */}
+        <Lobby 
+          receivedData={receivedData}
+          hostPoint={point} 
+        /> {/* receivedData의 초기값을 mock데이터로 설정하고 변경했습니다! */}
         <StartGame onClick={handleStartGame}>게임 시작하기</StartGame>
       </Background>
     </Container>

@@ -83,7 +83,6 @@ const PontInput = styled.input`
     padding: 1.2rem;
     border-radius: 0.6rem;
     border: 0.12rem solid black;
-    direction: rtl;
     color: #217EEF;
 
     &:hover {
@@ -172,31 +171,25 @@ const SaveSetting = styled.div`
     }
 `;
 
-export default function Setting({ Mypoint, receivedData, wsInstance }) {
+export default function Setting({ point, setPoint, receivedData, wsInstance }) {
     const [nowDiv, setnowDiv] = useState(true);
 
     const [betting, setBetting] = useState(0);
-    const [initpoint, setInitPoint] = useState(Mypoint || 0);
+    const [calcedPoint, setCalcedPoint] = useState(0);
     
     const [activeButton, setActiveButton] = useState("");
     const [timeLimit, setTimeLimit] = useState(0);
     const [customTime, setCustomTime] = useState("");
 
-    useEffect(()=>{
-        localStorage.setItem("received-betPoint" ,receivedData.bet_point)
-    },[]);
     useEffect(() => {
         if (receivedData.type === "room_joined") {
-            // setBetting(receivedData.bet_point||0);
-            // setTimeLimit(receivedData.time_limit||0);
-            setBetting(receivedData.bet_point);
             setTimeLimit(receivedData.time_limit);
+            setPoint(receivedData.bet_point);
+            setCalcedPoint(receivedData.bet_point);
             const button = buttons.find(button => button.id === receivedData.time_limit);
             if (button) {
                 setActiveButton(buttons.id);
                 setCustomTime("");
-                console.log('setActiveButton',activeButton);
-                console.log('setCustomTime',customTime);
             } else {
                 setActiveButton("custom");
                 // setCustomTime(receivedData.time_limit);
@@ -205,14 +198,17 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
         }
     }, [receivedData]);
 
-    useEffect(() => {
-        const bettingValue = betting === '' ? 0 : betting;
-        setInitPoint(Mypoint - bettingValue);
-    }, [initpoint]);
-
     const handleInputChange = (e) => {
-        const value = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
-        setBetting(value);
+        const value = e.target.value;
+    
+        // 숫자로 변환 가능한지 확인
+        if (/^\d*$/.test(value)) {
+            const inputValue = value === '' ? 0 : parseInt(value, 10); // const 키워드로 변경
+            setBetting(inputValue); // inputValue로 setBetting 호출
+            const calculatedPoint = point - inputValue; // 현재 포인트에서 입력 값을 뺌
+            setCalcedPoint(calculatedPoint); // 계산된 포인트를 업데이트
+            pointHandler.setPoint(calculatedPoint); // 계산된 포인트를 핸들러로 전달
+        }
     };
 
     const buttons = [
@@ -243,7 +239,6 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
             bet_point: localStorage_betPoint,
             time_limit: localStorage_timeLimit
         };
-        console.log(`update_setting :  ${JSON.stringify(data)}`);
         wsInstance("update_setting", data);
     }
 
@@ -258,13 +253,14 @@ export default function Setting({ Mypoint, receivedData, wsInstance }) {
                 <BetPointBox>
                     <SetSubtitle>배팅 포인트</SetSubtitle>
                     <PontInput 
+                        type="text"
                         placeholder='포인트를 입력해주세요 P' 
-                        value={betting} 
+                        value={betting === 0 ? '' : betting}
                         onChange={handleInputChange} 
                     />
                     <MypointBox>
-                        <MypointTitle>내 포인트</MypointTitle>
-                        <ViewPoint>{initpoint}P</ViewPoint>
+                        <MypointTitle>방장 포인트</MypointTitle>
+                        <ViewPoint>{calcedPoint}P</ViewPoint>
                     </MypointBox>
                 </BetPointBox>
 

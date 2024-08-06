@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styled from '@emotion/styled';
 
@@ -14,7 +14,6 @@ import { FaRunning } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 import getUserIdAndToken from '../../server/user/getUserIdAndToken';
 import createRoom from '../../server/gameRoom/createRoom';
-import useWsInstance from '../../hooks/useWsInstance';
 
 const Container=styled.div`
     display: flex;
@@ -200,7 +199,7 @@ function Main (){
         if(localStorage.getItem('userId')){
             event.preventDefault();
             try{
-                const {roomId} = await createRoom();
+                const roomId = await createRoom();
                 localStorage.setItem("look", true)
                 localStorage.setItem("roomId", roomId);
                 navigate('/settingGame');

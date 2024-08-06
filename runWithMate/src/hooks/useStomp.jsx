@@ -32,8 +32,10 @@ const UseStomp = (onMessageReceived) => {
 
       // 특정 주제(채팅 방)를 구독
       stompClient.subscribe(`/room/${roomId}`, (message) => {
-        console.log('받은 메시지:', message.body);
-        // if (onMessageReceived) onMessageReceived(getMessage);
+        if (onMessageReceived) {
+          console.log('받은 메시지:', message.body);
+          onMessageReceived(message.body);
+        }
       });
     };
 

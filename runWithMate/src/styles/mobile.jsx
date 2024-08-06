@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 const Container = styled.div`
@@ -23,8 +23,6 @@ const Content = styled.div`
 `;
 
 const Mobile = () => {
-    const navigate=useNavigate();
-    const location = useLocation();
     
     return (
         <>
