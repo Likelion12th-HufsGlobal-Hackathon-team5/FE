@@ -15,12 +15,17 @@ function MarketBtn() {
 
   const healthShop_URL='https://ckdmall.co.kr/category/%EA%B1%B4%EA%B0%95%EA%B8%B0%EB%8A%A5%EC%8B%9D%ED%92%88/61/'
   const gymShop_URL='https://zerotohero.co.kr/?gad_source=1&gclid=Cj0KCQjwlvW2BhDyARIsADnIe-JJ2JKa0E-7fuLNYnjdAe8FIEkUrVtJDl4TlWT8IHzrVAp4L3SYRxEaAsUHEALw_wcB'
+  
+  const clickEvent=()=>{
+    alert("btn click!")
+  }
   return (
     <Container>
       <ButtonBox >
         <StyledBsCapsulePill />
         <StyledParagraph 
           // onClick={()=>{window.open(healthShop_URL)}}
+          onClick={clickEvent}
           href={healthShop_URL}
           fontWeight="700" fontSize="16px">
           건강 기능 식품
@@ -31,6 +36,7 @@ function MarketBtn() {
         <StyledCgGym />
         <StyledParagraph
           // onClick={()=>{window.open(gymShop_URL)}}
+          onClick={clickEvent}
           href={gymShop_URL}
           fontWeight="700" fontSize="16px">
           헬스 용품
