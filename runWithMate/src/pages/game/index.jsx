@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
+
 import Map from "../../components/game/Map";
 import GameInfo from "../../components/game/GameInfo";
 import GameOver from "../../components/game/GameOver/GameOver";
 import GameRanking from "../../components/game/GameRanking";
+import GetMarker from '../../components/game/GetMarker';
+
 import mockStartCheck from "../../server/inGame/mockStartCheck";
 import useWsInstance from "../../hooks/useWsInstance";
 import showError from "../../components/game/map/showError";
-import { useNavigate } from "react-router-dom";
+
 
 const Container = styled.div`
   display: flex;
@@ -45,6 +49,12 @@ function Game() {
     clearInterval(intervalId);
     const data = JSON.stringify(receivedData);
     localStorage.setItem("game_result",data);
+
+    if(receivedData.type === "box_removed"){
+      // modal 창 띄우기
+      GetMarker(receivedData.box_type);
+      console.log(`box-type : ${receivedData.box_type}`);
+    }
 
     setTimeout(() => {
       navigate("/gameResult")

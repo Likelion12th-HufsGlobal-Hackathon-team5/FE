@@ -12,18 +12,27 @@ function MarketBtn() {
     /* margin: -0.52vh -0.3vh; */
     margin: -4px -3px;
   `;
+
+  const healthShop_URL='https://ckdmall.co.kr/category/%EA%B1%B4%EA%B0%95%EA%B8%B0%EB%8A%A5%EC%8B%9D%ED%92%88/61/'
+  const gymShop_URL='https://zerotohero.co.kr/?gad_source=1&gclid=Cj0KCQjwlvW2BhDyARIsADnIe-JJ2JKa0E-7fuLNYnjdAe8FIEkUrVtJDl4TlWT8IHzrVAp4L3SYRxEaAsUHEALw_wcB'
   return (
     <Container>
-      <ButtonBox>
+      <ButtonBox >
         <StyledBsCapsulePill />
-        <StyledParagraph fontWeight="700" fontSize="16px">
+        <StyledParagraph 
+          // onClick={()=>{window.open(healthShop_URL)}}
+          href={healthShop_URL}
+          fontWeight="700" fontSize="16px">
           건강 기능 식품
         </StyledParagraph>{" "}
         구매하러 가기
       </ButtonBox>
       <ButtonBox>
         <StyledCgGym />
-        <StyledParagraph fontWeight="700" fontSize="16px">
+        <StyledParagraph
+          // onClick={()=>{window.open(gymShop_URL)}}
+          href={gymShop_URL}
+          fontWeight="700" fontSize="16px">
           헬스 용품
         </StyledParagraph>{" "}
         구매하러 가기
@@ -49,6 +58,7 @@ const ButtonBox = styled.button`
   flex-direction: row;
   justify-content: baseline;
   align-items: center;
+  
   font-weight: 300;
   font-size: 16px;
   /* gap: 1vh; */
@@ -77,8 +87,10 @@ const ButtonBox = styled.button`
   }
 `;
 
-const StyledParagraph = styled.p`
+const StyledParagraph = styled.a`
   font-weight: ${(props) => props.fontWeight || "normal"};
   font-size: ${(props) => props.fontSize || "16px"};
   margin: 0; // 기본 p 태그의 마진을 제거
+  text-decoration:none;
+  color:inherit;
 `;
