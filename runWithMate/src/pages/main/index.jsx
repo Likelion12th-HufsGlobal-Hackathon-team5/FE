@@ -1,7 +1,5 @@
 import React, { useEffect} from 'react';
-
 import { useNavigate } from 'react-router-dom';
-
 import styled from '@emotion/styled';
 
 import Header from '../../components/Header';
@@ -9,8 +7,8 @@ import Content from '../../components/main/Content';
 
 import GameIcon from '/img/gameIcon.png';
 import PointIcon from '/img/pointIcon.png';
-
 import { BsCaretRightFill } from 'react-icons/bs';
+
 import getUserIdAndToken from '../../server/user/getUserIdAndToken';
 import createRoom from '../../server/gameRoom/createRoom';
 
