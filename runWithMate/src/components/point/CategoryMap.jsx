@@ -15,7 +15,7 @@ function CategoryMap() {
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
-      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=70b6406b2ded139d1c5117b59f7d6ab8&libraries=services,clusterer,drawing";
+      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=0fa1123d0ef6b7d9022c894e92f4852c&libraries=services,clusterer,drawing";
     script.async = true;
     script.onload = initializeMap;
     document.head.appendChild(script);

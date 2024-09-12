@@ -14,6 +14,7 @@ function MyPointBox() {
   const [UserData, setUserData] = useState(mockUserData);
   const [nickname, setNickname] = useState(mockUserData.nickname);
   const [userPoint, setUserPoint] = useState(mockUserData.point);
+  const [profileImage, setProfileImage] = useState(mockUserData.profile_image);
 
   useEffect(() => {
     const fetchdata = async () => {
@@ -21,6 +22,7 @@ function MyPointBox() {
       setUserData(result);
       setNickname(result.nickname);
       setUserPoint(result.point);
+      setProfileImage(result.profileImg);
     }
     fetchdata();
   }, []);
@@ -40,7 +42,7 @@ function MyPointBox() {
           style={{ height: "3px", backgroundColor: "#2E2929", border: "none" }}
         />
         <ContentsBox>
-          <ProfileImgBox style={{ backgroundImage: `url(${UserData.profile_image})` }}></ProfileImgBox>
+          <ProfileImgBox profileImg={profileImage}/>
           <MyPoint>
             <Line>
               <MyPointCurrunt isBold>{nickname}</MyPointCurrunt>
@@ -98,6 +100,7 @@ const ContentsBox = styled.div`
 const ProfileImgBox = styled.div`
   background-size: cover;
   background-position: center;
+  background-image: ${(props) => `url(${props.profileImg})` || "/img/profile.png"};
   /* padding: 7vh; */
   padding: 70px;
   border-radius: 50%;
